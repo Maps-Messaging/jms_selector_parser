@@ -24,11 +24,10 @@ import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.maps.selector.Identifier;
-import org.maps.selector.Message;
 import org.maps.selector.MessageBuilder;
 import org.maps.selector.ParseException;
 import org.maps.selector.operators.FunctionOperator;
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 import org.maps.selector.operators.extentions.ParserFactory;
 
 public class ParserTest {

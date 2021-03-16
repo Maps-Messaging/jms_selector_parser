@@ -2,7 +2,6 @@ package org.maps.selector;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.maps.selector.operators.IdentifierResolver;
 
 public class MessageBuilder {
 

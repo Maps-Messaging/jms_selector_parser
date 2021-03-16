@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
-import org.maps.selector.operators.IdentifierResolver;
 import org.maps.selector.operators.ParserExecutor;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;

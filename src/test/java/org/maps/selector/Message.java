@@ -1,7 +1,6 @@
 package org.maps.selector;
 
 import java.util.Map;
-import org.maps.selector.operators.IdentifierResolver;
 
 public class Message implements IdentifierResolver {
 

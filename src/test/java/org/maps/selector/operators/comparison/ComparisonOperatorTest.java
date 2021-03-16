@@ -21,7 +21,7 @@ package org.maps.selector.operators.comparison;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.BeforeEach;
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 
 public class ComparisonOperatorTest {
 
