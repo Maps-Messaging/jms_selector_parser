@@ -18,7 +18,7 @@
 
 package org.maps.selector.operators.bool;
 
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 import org.maps.selector.operators.Operation;
 
 public class FalseOperator extends Operation {

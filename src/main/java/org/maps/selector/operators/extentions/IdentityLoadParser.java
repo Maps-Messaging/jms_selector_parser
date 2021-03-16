@@ -22,7 +22,7 @@ import java.util.List;
 import org.maps.selector.Identifier;
 import org.maps.selector.ParseException;
 import org.maps.selector.operators.FunctionOperator;
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 
 public class IdentityLoadParser extends FunctionOperator {
 

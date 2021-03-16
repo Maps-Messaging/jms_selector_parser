@@ -19,7 +19,7 @@
 package org.maps.selector.operators.arithmetic;
 
 import org.maps.selector.ParseException;
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 import org.maps.selector.operators.Operation;
 
 public class NegateOperator extends Operation {

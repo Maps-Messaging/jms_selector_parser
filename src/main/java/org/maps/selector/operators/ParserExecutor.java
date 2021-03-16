@@ -18,6 +18,8 @@
 
 package org.maps.selector.operators;
 
+import org.maps.selector.IdentifierResolver;
+
 public interface ParserExecutor {
 
   boolean evaluate(IdentifierResolver resolver);

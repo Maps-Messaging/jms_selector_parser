@@ -24,7 +24,7 @@ import java.util.StringTokenizer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.maps.selector.ParseException;
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 import org.maps.selector.operators.extentions.ParserExtension;
 
 public class JsonParserExtension implements ParserExtension {

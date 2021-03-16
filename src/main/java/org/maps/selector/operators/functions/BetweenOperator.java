@@ -21,7 +21,7 @@ package org.maps.selector.operators.functions;
 import org.maps.selector.ParseException;
 import org.maps.selector.operators.ComparisonOperator;
 import org.maps.selector.operators.FunctionOperator;
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 import org.maps.selector.operators.Operation;
 import org.maps.selector.operators.comparison.GreaterOrEqualOperator;
 import org.maps.selector.operators.comparison.LessOrEqualOperator;

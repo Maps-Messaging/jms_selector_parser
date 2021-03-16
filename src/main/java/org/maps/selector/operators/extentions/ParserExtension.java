@@ -20,7 +20,7 @@ package org.maps.selector.operators.extentions;
 
 import java.util.List;
 import org.maps.selector.ParseException;
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 
 public interface ParserExtension {
 

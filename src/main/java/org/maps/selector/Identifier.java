@@ -18,7 +18,6 @@
 
 package org.maps.selector;
 
-import org.maps.selector.operators.IdentifierResolver;
 import org.maps.selector.operators.Operation;
 
 public class Identifier extends Operation {

@@ -21,7 +21,7 @@ package org.maps.selector.operators.functions;
 import java.util.Set;
 import org.maps.selector.ParseException;
 import org.maps.selector.operators.FunctionOperator;
-import org.maps.selector.operators.IdentifierResolver;
+import org.maps.selector.IdentifierResolver;
 
 public class InOperator extends FunctionOperator {
 

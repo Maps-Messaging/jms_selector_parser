@@ -18,6 +18,7 @@
 
 package org.maps.selector.operators;
 
+import org.maps.selector.IdentifierResolver;
 import org.maps.selector.ParseException;
 import org.maps.selector.validators.NumericValidator;
 

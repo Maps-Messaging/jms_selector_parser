@@ -16,7 +16,7 @@
  *
  */
 
-package org.maps.selector.operators;
+package org.maps.selector;
 
 public interface IdentifierResolver {
   Object get(String key);
