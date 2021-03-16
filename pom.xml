@@ -46,7 +46,7 @@
         <version>2.22.2</version>
         <configuration>
           <argLine>
-            -Dfile.encoding=UTF-8
+            @{argLine} -Dfile.encoding=UTF-8
           </argLine>
           <includes>
             <include>**/*Test.java</include>
