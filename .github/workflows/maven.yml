@@ -34,6 +34,6 @@ jobs:
     - name: Publish package
       run: |
         mvn -B org.codehaus.mojo:versions-maven-plugin:2.5:set -DnewVersion=${GITHUB_REF##*/}
-        mvn -B -Pgithub deploy
+        mvn -B deploy
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
