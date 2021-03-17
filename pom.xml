@@ -30,13 +30,17 @@
     <url>https://github.com/Maps-Messaging/jms-selector</url>
   </scm>
 
+
+
   <distributionManagement>
     <repository>
-      <id>internal.repo</id>
-      <name>Temporary Staging Repository</name>
-      <url>file://${project.build.directory}/mvn-repo</url>
+      <id>github</id>
+      <name>GitHub</name>
+      <url>https://maven.pkg.github.com/Maps-Messaging/jms-selector</url>
     </repository>
   </distributionManagement>
+
+
 
 
 
@@ -67,6 +71,7 @@
     <sonar.objc.file.suffixes>-</sonar.objc.file.suffixes>
 
     <github.global.server>github</github.global.server>
+    <project.scm.id>github</project.scm.id>
   </properties>
 
 
