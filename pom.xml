@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.mapsmessaging</groupId>
-  <artifactId>Extensible_Selector_Parser</artifactId>
+  <artifactId>Extensible_JMS_Selector_Parser</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
 
-  <name>JMS Selector</name>
+  <name>Extensible JMS Selector Parser</name>
   <description>Provides an extensible Selector Parser conforms to the JMS Selector Syntax that is based on a subset of the SQL92</description>
   <url>http://www.mapsmessaging.io</url>
 
@@ -39,7 +39,7 @@
     <!-- Below property indicates the pattern of the test suite -->
     <runSuite>**/*Suite.class</runSuite>
     <sonar.test.exclusions>
-      **/*Test.*,**/*IT.*,**/apache_pulsar/*, **.*JMH.*
+      **/*Test.*,**.*JMH.*
     </sonar.test.exclusions>
 
     <!-- Sonar-JaCoCo properties -->
