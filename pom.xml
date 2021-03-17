@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.mapsmessaging</groupId>
-  <artifactId>JMSSelectorParser</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>Extensible_Selector_Parser</artifactId>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>Maps Messaging</name>
-  <description>A multi adapter and protocol server</description>
+  <description>Provides an extensible Selector Parser conforms to the JMS Selector Syntax that is based on a subset of the SQL92</description>
   <url>http://www.mapsmessaging.io</url>
 
   <licenses>
@@ -55,13 +55,11 @@
     <sonar.c.file.suffixes>-</sonar.c.file.suffixes>
     <sonar.cpp.file.suffixes>-</sonar.cpp.file.suffixes>
     <sonar.objc.file.suffixes>-</sonar.objc.file.suffixes>
-
   </properties>
 
 
   <build>
     <plugins>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -137,9 +135,7 @@
           </compilerArgs>
         </configuration>
       </plugin>
-
     </plugins>
-
   </build>
 
   <dependencies>

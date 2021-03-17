@@ -33,17 +33,17 @@ options {
 
 PARSER_BEGIN(SelectorParser)
 
-package org.maps.selector;
+package io.mapsmessaging.selector;
 
-import org.maps.selector.operators.ParserBooleanOperation;
-import org.maps.selector.operators.ParserExecutor;
-import org.maps.selector.operators.Operation;
-import org.maps.selector.operators.ParserOperationExecutor;
-import org.maps.selector.operators.arithmetic.*;
-import org.maps.selector.operators.comparison.*;
-import org.maps.selector.operators.logical.*;
-import org.maps.selector.operators.functions.*;
-import org.maps.selector.operators.extentions.ParserFactory;
+import io.mapsmessaging.selector.operators.ParserBooleanOperation;
+import io.mapsmessaging.selector.operators.ParserExecutor;
+import io.mapsmessaging.selector.operators.Operation;
+import io.mapsmessaging.selector.operators.ParserOperationExecutor;
+import io.mapsmessaging.selector.operators.arithmetic.*;
+import io.mapsmessaging.selector.operators.comparison.*;
+import io.mapsmessaging.selector.operators.logical.*;
+import io.mapsmessaging.selector.operators.functions.*;
+import io.mapsmessaging.selector.operators.extentions.ParserFactory;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
@@ -139,7 +139,7 @@ TOKEN [IGNORE_CASE]:
   | < LIKE:      "LIKE" >
   | < IN:        "IN" >
   | < IS:        "IS" >
-  | < PARSER:    "PARSER">
+  | < EXTENSION:    "EXTENSION">
   | < ESCAPE:    "ESCAPE" >
   | < LPAREN:    "(" >
   | < RPAREN:    ")" >
@@ -427,14 +427,14 @@ Object unaryExpressionNotPlusMinus() :
    | t=<FALSE> { return Boolean.FALSE; }
    | <LPAREN> exp=logicExpression() <RPAREN>
       { return exp; }
-   | <PARSER> <LPAREN> exp=parserName() <COMMA> { list = new ArrayList<String>(); } stringList(list) <RPAREN>
+   | <EXTENSION> <LPAREN> exp=extensionName() <COMMA> { list = new ArrayList<String>(); } stringList(list) <RPAREN>
        {
          return ParserFactory.getInstance().loadParser(exp, list);
        }
    | <TIME>   {  return System.currentTimeMillis();}
 }
 
-Object parserName() :
+Object extensionName() :
 {
    Token t = null;
    Object exp = null;
