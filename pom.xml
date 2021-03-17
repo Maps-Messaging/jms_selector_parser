@@ -33,8 +33,8 @@
   <distributionManagement>
     <repository>
       <id>github</id>
-      <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/mapsmessaging.io/env-config</url>
+      <name>GitHub mapsmessaging.io Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/mapsmessaging.io/jms-selector</url>
     </repository>
   </distributionManagement>
 
