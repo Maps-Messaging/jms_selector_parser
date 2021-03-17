@@ -9,7 +9,7 @@
   <version>1.0.0</version>
   <packaging>jar</packaging>
 
-  <name>Maps Messaging</name>
+  <name>JMS Selector</name>
   <description>Provides an extensible Selector Parser conforms to the JMS Selector Syntax that is based on a subset of the SQL92</description>
   <url>http://www.mapsmessaging.io</url>
 
