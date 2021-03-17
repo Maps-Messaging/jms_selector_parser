@@ -36,11 +36,14 @@ jobs:
       with:
         java-version: 13
 
+    - name: Compile for analysis
+      run: mvn -B clean compile --file pom.xml
+
     - name: Analyse with Sonar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B sonar:sonar --file pom.xml -DskipTests
+      run: mvn -B sonar:sonar --file pom.xml
 
   artifact:
     runs-on: ubuntu-18.04
