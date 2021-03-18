@@ -20,7 +20,6 @@ package io.mapsmessaging.selector.extensions;
 
 import java.util.List;
 import io.mapsmessaging.selector.IdentifierResolver;
-import io.mapsmessaging.selector.ParseException;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class CounterExtension implements ParserExtension {

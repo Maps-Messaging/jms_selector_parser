@@ -3,7 +3,6 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>io.mapsmessaging</groupId>
   <artifactId>Extensible_JMS_Selector_Parser</artifactId>
   <version>1.0.0</version>
@@ -31,17 +30,13 @@
   </scm>
 
 
-
   <distributionManagement>
     <repository>
       <id>github</id>
       <name>GitHub</name>
-      <url>https://maven.pkg.github.com/Maps-Messaging/jms-selector</url>
+      <url>https://maven.pkg.github.com/mapsmessaging.io/jms-selector</url>
     </repository>
   </distributionManagement>
-
-
-
 
 
   <properties>
