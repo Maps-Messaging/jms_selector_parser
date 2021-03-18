@@ -5,6 +5,7 @@ JMS Selector parser, this is a 2 pass parser that compiles the selector to the s
 
 # pom.xml setup
 
+``` xml
  <repositories>
     <!-- Main GitHub Repo for the project io.mapsmessaging -->
     <repository>
@@ -21,7 +22,7 @@ JMS Selector parser, this is a 2 pass parser that compiles the selector to the s
       <version>1.0.0</version>
     </dependency>
  </dependencies>    
-    
+```    
     
 
 
