@@ -29,15 +29,18 @@
     <url>https://github.com/Maps-Messaging/jms-selector</url>
   </scm>
 
-
   <distributionManagement>
     <repository>
-      <id>github</id>
-      <name>GitHub</name>
-      <url>https://maven.pkg.github.com/mapsmessaging.io/jms-selector</url>
+      <id>central</id>
+      <name>artifactory-releases</name>
+      <url>http//10.140.62.179:8081/artifactory/mapsmessaging-mvn-prod</url>
     </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>artifactory-snapshots</name>
+      <url>http://10.140.62.179:8081/artifactory/mapsmessaging-mvn-prod</url>
+    </snapshotRepository>
   </distributionManagement>
-
 
   <properties>
     <maven.compiler.source>13</maven.compiler.source>
@@ -72,37 +75,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>0.11</version>
-        <configuration>
-          <message>Maven artifacts for ${project.version}</message> <!-- git commit message -->
-          <noJekyll>true</noJekyll>  <!-- disable webpage processing -->
-          <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-          <branch>refs/heads/mvn-repo</branch> <!-- remote branch name -->
-          <includes><include>**/*</include></includes>
-          <repositoryName>jms-selector</repositoryName> <!-- github repo name -->
-          <repositoryOwner>Maps-Messaging</repositoryOwner> <!-- organization or user name  -->
-        </configuration>
-        <executions> <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <phase>deploy</phase>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.8.2</version>
-        <configuration>
-          <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
-        </configuration>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
