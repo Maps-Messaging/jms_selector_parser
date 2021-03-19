@@ -6,15 +6,6 @@ JMS Selector parser, this is a 2 pass parser that compiles the selector to the s
 # pom.xml setup
 
 ``` xml
- <repositories>
-    <!-- Main GitHub Repo for the project io.mapsmessaging -->
-    <repository>
-      <id>github</id>
-      <name>GitHub io.mapsmessaging Apache Maven Packages</name>
-      <url>https://my-user:a846b09f75f3f617f1ee60efda6e00ff738fa83d@maven.pkg.github.com/Maps-Messaging</url>
-    </repository>
-  </repositories>
-
  <dependencies>    
     <dependency>
       <groupId>io.mapsmessaging</groupId>
