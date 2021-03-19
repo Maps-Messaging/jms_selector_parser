@@ -32,13 +32,13 @@
   <distributionManagement>
     <repository>
       <id>central</id>
-      <name>artifactory-releases</name>
-      <url>http//10.140.62.179:8081/artifactory/mapsmessaging-mvn-prod</url>
+      <name>MapsMessaging Repository-releases</name>
+      <url>http://repo.mapsmessaging.io:8081/artifactory/mapsmessaging-mvn-prod</url>
     </repository>
     <snapshotRepository>
       <id>snapshots</id>
-      <name>artifactory-snapshots</name>
-      <url>http://10.140.62.179:8081/artifactory/mapsmessaging-mvn-prod</url>
+      <name>MapsMessaging Repository-snapshots</name>
+      <url>http://repo.mapsmessaging.io:8081/artifactory/mapsmessaging-mvn-prod</url>
     </snapshotRepository>
   </distributionManagement>
 
