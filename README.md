@@ -5,6 +5,16 @@ JMS Selector parser, this is a 2 pass parser that compiles the selector to the s
 
 # pom.xml setup
 
+Add the repository configuration into the pom.xml
+``` xml
+<repository>
+  <id>mapsmessaging.io</id>
+  <name>artifactory-releases</name>
+  <url>http://repo.mapsmessaging.io:8081/artifactory/mapsmessaging-mvn-prod</url>
+</repository>
+```    
+
+Then include the dependency
 ``` xml
  <dependencies>    
     <dependency>
