@@ -7,22 +7,24 @@ JMS Selector parser, this is a 2 pass parser that compiles the selector to the s
 
 Add the repository configuration into the pom.xml
 ``` xml
-<repository>
-  <id>mapsmessaging.io</id>
-  <name>artifactory-releases</name>
+    <!-- MapsMessaging jfrog server -->
+    <repository>
+      <id>mapsmessaging.io</id>
+      <name>artifactory-releases</name>
       <url>https://mapsmessaging.jfrog.io/artifactory/mapsmessaging-mvn-prod</url>
-</repository>
+    </repository>
 ```    
 
 Then include the dependency
 ``` xml
- <dependencies>    
-    <dependency>
-      <groupId>io.mapsmessaging</groupId>
-      <artifactId>Extensible_JMS_Selector_Parser</artifactId>
-      <version>1.0.0</version>
-    </dependency>
- </dependencies>    
+    <!-- JMS Selector logic module -->
+     <dependencies>    
+        <dependency>
+          <groupId>io.mapsmessaging</groupId>
+          <artifactId>Extensible_JMS_Selector_Parser</artifactId>
+          <version>1.0.0</version>
+        </dependency>
+     </dependencies>    
 ```    
     
 
