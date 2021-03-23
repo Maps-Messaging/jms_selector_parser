@@ -29,19 +29,6 @@
     <url>https://github.com/Maps-Messaging/jms-selector</url>
   </scm>
 
-  <distributionManagement>
-    <repository>
-      <id>mapsmessaging.io</id>
-      <name>MapsMessaging Repository-releases</name>
-      <url>https://mapsmessaging.jfrog.io/artifactory/mapsmessaging-mvn-prod</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <name>MapsMessaging Repository-snapshots</name>
-      <url>https://mapsmessaging.jfrog.io/artifactory/mapsmessaging-mvn-prod</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <properties>
     <maven.compiler.source>13</maven.compiler.source>
     <maven.compiler.target>13</maven.compiler.target>
@@ -71,7 +58,6 @@
     <github.global.server>github</github.global.server>
     <project.scm.id>github</project.scm.id>
   </properties>
-
 
   <build>
     <plugins>
@@ -150,6 +136,29 @@
           </compilerArgs>
         </configuration>
       </plugin>
+
+      <!-- JavaDoc -->
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <charset>UTF-8</charset>
+          <encoding>UTF-8</encoding>
+          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+          <reportOutputDirectory>${project.build.directory}/site/docs</reportOutputDirectory>
+          <show>public</show>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <id>attach-javadocs</id>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.2.0</version>
+      </plugin>
+
     </plugins>
   </build>
 
