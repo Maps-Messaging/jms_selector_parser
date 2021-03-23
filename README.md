@@ -10,7 +10,7 @@ Add the repository configuration into the pom.xml
 <repository>
   <id>mapsmessaging.io</id>
   <name>artifactory-releases</name>
-  <url>http://repo.mapsmessaging.io:8081/artifactory/mapsmessaging-mvn-prod</url>
+      <url>https://mapsmessaging.jfrog.io/artifactory/mapsmessaging-mvn-prod</url>
 </repository>
 ```    
 
