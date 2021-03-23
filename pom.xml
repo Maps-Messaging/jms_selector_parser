@@ -137,28 +137,6 @@
         </configuration>
       </plugin>
 
-      <!-- JavaDoc -->
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <charset>UTF-8</charset>
-          <encoding>UTF-8</encoding>
-          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-          <reportOutputDirectory>${project.build.directory}/site/docs</reportOutputDirectory>
-          <show>public</show>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <id>attach-javadocs</id>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.2.0</version>
-      </plugin>
-
     </plugins>
   </build>
 
