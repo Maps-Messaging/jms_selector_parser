@@ -37,7 +37,7 @@ public class ParserProxy extends FunctionOperator {
 
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    return convertResult(parser.parse(resolver));
+    return convertResult(parser.evaluate(resolver));
   }
 
   @Override

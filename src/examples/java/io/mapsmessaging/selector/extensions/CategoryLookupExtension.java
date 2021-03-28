@@ -55,7 +55,7 @@ public class CategoryLookupExtension  implements ParserExtension {
   }
 
   @Override
-  public Object parse(IdentifierResolver resolver) {
+  public Object evaluate(IdentifierResolver resolver) {
     Object result = resolver.get(keyName);
     if(result != null){
       for(String lookup:categories){
