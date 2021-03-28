@@ -39,11 +39,11 @@ The SelectorParser will then compile the selector into a ParserExecutor. Any ari
 The resultant ParserExecutor is a thread safe filter that can be used with any key/value object that implements [IdentifierResolver.java](src/main/java/io/mapsmessaging/selector/IdentifierResolver.java).  
 
 
-
-
 ## Extending the Selector
 
 The selector syntax has an additional verb that is not found in the JMS Selector syntax called <b>extension</b> that can be used to add further filtering logic that you may need.
+
+The library comes with a built-in JSON extension that can be used to filter JSON objects that are supplied as byte[].
 
 To extend the selector simply 
 
