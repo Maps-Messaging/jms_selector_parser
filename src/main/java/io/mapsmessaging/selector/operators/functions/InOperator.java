@@ -18,6 +18,8 @@
 
 package io.mapsmessaging.selector.operators.functions;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.FunctionOperator;
@@ -26,11 +28,14 @@ import io.mapsmessaging.selector.IdentifierResolver;
 public class InOperator extends FunctionOperator {
 
   private final Object lhs;
-  private final Set<String> set;
+  private final Map<String, String> set;
 
-  public InOperator(Object lhs, Set<String> set){
+  public InOperator(Object lhs, Set<String> entries){
     this.lhs = lhs;
-    this.set = set;
+    this.set = new LinkedHashMap<>();
+    for(String val:entries){
+      set.put(val, val);
+    }
   }
 
   public Object compile(){
@@ -51,17 +56,13 @@ public class InOperator extends FunctionOperator {
 
   private Object evaluate(String lookup){
     if(lookup != null) {
-      for (String test : set) {
-        if (lookup.equals(test)){
-          return true;
-        }
-      }
+      return set.containsKey(lookup);
     }
     return false;
   }
   public String toString(){
     StringBuilder tmp = new StringBuilder("(" + lhs.toString() + ") IN (");
-    for(String check:set){
+    for(String check:set.keySet()){
       tmp.append(check).append(",");
     }
 
