@@ -24,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import io.mapsmessaging.selector.operators.ParserExecutor;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
