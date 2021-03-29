@@ -32,7 +32,7 @@ public class CounterExtension implements ParserExtension {
   }
 
   @Override
-  public Object parse(IdentifierResolver resolver) {
+  public Object evaluate(IdentifierResolver resolver) {
     return counter.getAndIncrement();
   }
 

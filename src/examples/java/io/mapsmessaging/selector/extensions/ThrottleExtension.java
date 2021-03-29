@@ -55,7 +55,7 @@ public class ThrottleExtension implements ParserExtension {
   }
 
   @Override
-  public Object parse(IdentifierResolver resolver) {
+  public Object evaluate(IdentifierResolver resolver) {
     if(System.currentTimeMillis() > nextEpoch){
       count.set(0);
       nextEpoch = System.currentTimeMillis() + epoch;

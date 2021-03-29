@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mapsmessaging</groupId>
   <artifactId>Extensible_JMS_Selector_Parser</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>Extensible JMS Selector Parser</name>
@@ -28,19 +28,6 @@
   <scm>
     <url>https://github.com/Maps-Messaging/jms-selector</url>
   </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>mapsmessaging.io</id>
-      <name>MapsMessaging Repository-releases</name>
-      <url>http://repo.mapsmessaging.io:8081/artifactory/mapsmessaging-mvn-prod</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <name>MapsMessaging Repository-snapshots</name>
-      <url>http://repo.mapsmessaging.io:8081/artifactory/mapsmessaging-mvn-prod</url>
-    </snapshotRepository>
-  </distributionManagement>
 
   <properties>
     <maven.compiler.source>13</maven.compiler.source>
@@ -71,7 +58,6 @@
     <github.global.server>github</github.global.server>
     <project.scm.id>github</project.scm.id>
   </properties>
-
 
   <build>
     <plugins>
@@ -150,6 +136,7 @@
           </compilerArgs>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 

@@ -68,7 +68,7 @@ public class JsonParserExtension implements ParserExtension {
   }
 
   @Override
-  public Object parse(IdentifierResolver resolver) {
+  public Object evaluate(IdentifierResolver resolver) {
     byte[] payload = resolver.getOpaqueData();
     if (payload != null && payload.length > 0) {
       JSONObject json = new JSONObject(new String(payload));

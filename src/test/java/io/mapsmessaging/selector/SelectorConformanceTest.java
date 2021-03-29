@@ -18,6 +18,7 @@
 
 package io.mapsmessaging.selector;
 
+import io.mapsmessaging.selector.operators.ParserExecutor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -105,7 +106,7 @@ class SelectorConformanceTest {
   void syntaxTest() {
     for (String selector : SELECTOR_TEXT) {
       try {
-        Object parser = SelectorParser.compile(selector);
+        ParserExecutor parser = SelectorParser.compile(selector);
         parser.toString();
       } catch (ParseException e) {
         e.printStackTrace();

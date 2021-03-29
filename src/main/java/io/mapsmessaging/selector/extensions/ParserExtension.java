@@ -26,7 +26,7 @@ public interface ParserExtension {
 
   ParserExtension createInstance(List<String> arguments) throws ParseException;
 
-  Object parse(IdentifierResolver resolver);
+  Object evaluate(IdentifierResolver resolver);
 
   String getName();
 
