@@ -44,6 +44,14 @@ public class AndOperator extends LogicalOperator {
     if(lhs instanceof Boolean && rhs instanceof Boolean){
       return ((Boolean)lhs) && ((Boolean)rhs);
     }
+    if(rhs instanceof Boolean){
+      if((Boolean) rhs) {
+        return lhs;
+      }
+      else{
+        return false;
+      }
+    }
     return this;
   }
 
