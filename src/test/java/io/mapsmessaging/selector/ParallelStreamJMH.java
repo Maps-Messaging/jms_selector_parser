@@ -30,6 +30,7 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
 
 @State(Scope.Benchmark)
 public class ParallelStreamJMH {
@@ -45,17 +46,16 @@ public class ParallelStreamJMH {
       entry.put("even", x%2 == 0);
       data.add(key -> entry.get(key));
     }
-
     executor = SelectorParser.compile("even = true");
   }
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void compilation(){
+  public void compilation(Blackhole blackhole){
     for (String selector : SelectorConformanceTest.SELECTOR_TEXT) {
       try {
         Object parser = SelectorParser.compile(selector);
-        parser.toString();
+        blackhole.consume(parser.toString());
       } catch (ParseException e) {
         Assertions.fail("Selector text:" + selector + " failed with exception " + e.getMessage());
       }
@@ -64,32 +64,31 @@ public class ParallelStreamJMH {
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void calculateParallelFilteredCount(){
-    long count = data.parallelStream()
+  public void calculateParallelFilteredCount(Blackhole blackhole){
+    blackhole.consume(data.parallelStream()
         .filter(executor::evaluate)
-        .count();
+        .count());
   }
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void calculateFilteredCount(){
-    long count = data.stream()
+  public void calculateFilteredCount(Blackhole blackhole){
+    blackhole.consume(data.stream()
         .filter(executor::evaluate)
-        .count();
+        .count());
   }
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void calculateFilteredAny(){
-    data.stream()
-        .anyMatch(executor::evaluate);
+  public void calculateFilteredAny(Blackhole blackhole){
+    blackhole.consume(data.stream().anyMatch(executor::evaluate));
   }
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void timedTest() throws ParseException {
+  public void timedTest(Blackhole blackhole) throws ParseException {
     for (String selector : SelectorConformanceTest.SELECTOR_TEXT) {
-      SelectorParser.compile(selector);
+      blackhole.consume(SelectorParser.compile(selector));
     }
   }
 }
