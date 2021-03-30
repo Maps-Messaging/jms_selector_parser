@@ -45,7 +45,7 @@ public class AndOperator extends LogicalOperator {
       return ((Boolean)lhs) && ((Boolean)rhs);
     }
     if(rhs instanceof Boolean){
-      if((Boolean) rhs) {
+      if(Boolean.TRUE.equals(rhs)) {
         return lhs;
       }
       else{
