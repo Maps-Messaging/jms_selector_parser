@@ -19,6 +19,7 @@
 package io.mapsmessaging.selector.operators;
 
 import io.mapsmessaging.selector.IdentifierResolver;
+import java.util.Map;
 
 public class ParserBooleanOperation implements ParserExecutor {
 
@@ -30,6 +31,11 @@ public class ParserBooleanOperation implements ParserExecutor {
 
   @Override
   public boolean evaluate(IdentifierResolver resolver) {
+    return Boolean.TRUE.equals(result);
+  }
+
+  @Override
+  public boolean evaluate(Map<String, Object> map) {
     return Boolean.TRUE.equals(result);
   }
 

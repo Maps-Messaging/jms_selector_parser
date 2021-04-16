@@ -35,8 +35,7 @@ class SelectorValidationTest {
   void checkEmptyMessage() throws ParseException {
     ParserExecutor parser = SelectorParser.compile("key = 'found'");
     Assertions.assertTrue(parser instanceof ParserOperationExecutor);
-    MessageBuilder messageBuilder = new MessageBuilder();
-    Assertions.assertFalse(parser.evaluate(messageBuilder.build()));
+    Assertions.assertFalse(parser.evaluate(new LinkedHashMap<>()));
   }
 
   @Test
@@ -49,19 +48,16 @@ class SelectorValidationTest {
   void checkEmptyDataMapMessage() throws ParseException {
     ParserExecutor parser = SelectorParser.compile("key = 'found'");
     Assertions.assertTrue(parser instanceof ParserOperationExecutor);
-    MessageBuilder messageBuilder = new MessageBuilder();
-    Assertions.assertFalse(parser.evaluate(messageBuilder.build()), "Should not have returned true since there was no match");
+    Assertions.assertFalse(parser.evaluate(new LinkedHashMap<>()), "Should not have returned true since there was no match");
   }
 
   @Test
   void checkTrueBooleanResults() throws ParseException {
     ParserExecutor parser1 = SelectorParser.compile("20 = 5 * 4");
     Assertions.assertTrue(parser1 instanceof ParserBooleanOperation);
-
-    MessageBuilder messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 10L));
-    messageBuilder.getDataMap().put("key2", 5);
-    Assertions.assertTrue(parser1.evaluate(messageBuilder.build()), "Should have evaluated to true, 10 = 5 * 4 == TRUE");
+    Map<String, Object> map = createMap("key1", 10L);
+    map.put("key2", 5);
+    Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, 10 = 5 * 4 == TRUE");
 
   }
 
@@ -69,11 +65,9 @@ class SelectorValidationTest {
   void checkFalseBooleanResults() throws ParseException {
     ParserExecutor parser1 = SelectorParser.compile("10 = 50 * 4");
     Assertions.assertTrue(parser1 instanceof ParserBooleanOperation);
-
-    MessageBuilder messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 10L));
-    messageBuilder.getDataMap().put("key2", 5);
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have evaluated to true, 10 = 50 * 4 == FALSE");
+    Map<String, Object> map = createMap("key1", 10L);
+    map.put("key2", 5);
+    Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to true, 10 = 50 * 4 == FALSE");
   }
 
 
@@ -83,22 +77,14 @@ class SelectorValidationTest {
     ParserExecutor parser2 = SelectorParser.compile("key1 = 5 + key2");
     Assertions.assertTrue(parser1 instanceof ParserOperationExecutor);
     Assertions.assertTrue(parser2 instanceof ParserOperationExecutor);
-
-    MessageBuilder messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 10L));
-    messageBuilder.getDataMap().put("key2",5);
-    Assertions.assertTrue(parser1.evaluate(messageBuilder.build()), "Should have evaluated to true, key1 = key2 + 5");
-    Assertions.assertTrue(parser2.evaluate(messageBuilder.build()), "Should have evaluated to true, key1 = key2 + 5");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 10L));
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have failed evaluated to true, key1 = null + 5, since key2 == null");
-    Assertions.assertFalse(parser2.evaluate(messageBuilder.build()), "Should have failed evaluated to true, key1 = null + 5, since key2 == null");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key2", 10L));
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have failed evaluated to true =5 + 5, since key1 == null");
-    Assertions.assertFalse(parser2.evaluate(messageBuilder.build()), "Should have failed evaluated to true =5 + 5, since key1 == null");
+    Map<String, Object> map = createMap("key1", 10L);
+    map.put("key2",5);
+    Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, key1 = key2 + 5");
+    Assertions.assertTrue(parser2.evaluate(map), "Should have evaluated to true, key1 = key2 + 5");
+    Assertions.assertFalse(parser1.evaluate(createMap("key1", 10L)), "Should have failed evaluated to true, key1 = null + 5, since key2 == null");
+    Assertions.assertFalse(parser2.evaluate(createMap("key1", 10L)), "Should have failed evaluated to true, key1 = null + 5, since key2 == null");
+    Assertions.assertFalse(parser1.evaluate(createMap("key2", 10L)), "Should have failed evaluated to true =5 + 5, since key1 == null");
+    Assertions.assertFalse(parser2.evaluate(createMap("key2", 10L)), "Should have failed evaluated to true =5 + 5, since key1 == null");
   }
 
   @Test
@@ -108,21 +94,14 @@ class SelectorValidationTest {
     Assertions.assertTrue(parser1 instanceof ParserOperationExecutor);
     Assertions.assertTrue(parser2 instanceof ParserOperationExecutor);
 
-    MessageBuilder messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 0L));
-    messageBuilder.getDataMap().put("key2", 5);
-    Assertions.assertTrue(parser1.evaluate(messageBuilder.build()), "Should have evaluated to true, key1 = key2 - 5");
-    Assertions.assertTrue(parser2.evaluate(messageBuilder.build()), "Should have evaluated to true, key1 = key2 - 5");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 5));
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
-    Assertions.assertFalse(parser2.evaluate(messageBuilder.build()), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key2", 5));
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have failed evaluated to true =5 + 5, since key1 == null");
-    Assertions.assertFalse(parser2.evaluate(messageBuilder.build()), "Should have failed evaluated to true =5 + 5, since key1 == null");
+    Map<String, Object> map =createMap("key1", 0L);
+    map.put("key2", 5);
+    Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, key1 = key2 - 5");
+    Assertions.assertTrue(parser2.evaluate(map), "Should have evaluated to true, key1 = key2 - 5");
+    Assertions.assertFalse(parser1.evaluate(createMap("key1", 5)), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
+    Assertions.assertFalse(parser2.evaluate(createMap("key1", 5)), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
+    Assertions.assertFalse(parser1.evaluate(createMap("key2", 5)), "Should have failed evaluated to true =5 + 5, since key1 == null");
+    Assertions.assertFalse(parser2.evaluate(createMap("key2", 5)), "Should have failed evaluated to true =5 + 5, since key1 == null");
   }
 
   @Test
@@ -132,21 +111,14 @@ class SelectorValidationTest {
     Assertions.assertTrue(parser1 instanceof ParserOperationExecutor);
     Assertions.assertTrue(parser2 instanceof ParserOperationExecutor);
 
-    MessageBuilder messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 1L));
-    messageBuilder.getDataMap().put("key2",5);
-    Assertions.assertTrue(parser1.evaluate(messageBuilder.build()), "Should have evaluated to true, key1 = key2 / 5");
-    Assertions.assertTrue(parser2.evaluate(messageBuilder.build()), "Should have evaluated to true, key1 = 5 / key2 ");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 5));
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
-    Assertions.assertFalse(parser2.evaluate(messageBuilder.build()), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key2", 5));
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have failed evaluated to true =5 + 5, since key1 == null");
-    Assertions.assertFalse(parser2.evaluate(messageBuilder.build()), "Should have failed evaluated to true =5 + 5, since key1 == null");
+    Map<String, Object> map =  createMap("key1", 1L);
+    map.put("key2",5);
+    Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, key1 = key2 / 5");
+    Assertions.assertTrue(parser2.evaluate(map), "Should have evaluated to true, key1 = 5 / key2 ");
+    Assertions.assertFalse(parser1.evaluate(createMap("key1", 5)), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
+    Assertions.assertFalse(parser2.evaluate(createMap("key1", 5)), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
+    Assertions.assertFalse(parser1.evaluate(createMap("key2", 5)), "Should have failed evaluated to true =5 + 5, since key1 == null");
+    Assertions.assertFalse(parser2.evaluate(createMap("key2", 5)), "Should have failed evaluated to true =5 + 5, since key1 == null");
   }
 
   @Test
@@ -155,80 +127,38 @@ class SelectorValidationTest {
     ParserExecutor parser2 = SelectorParser.compile("key1 = 5 * key2");
     Assertions.assertTrue(parser1 instanceof ParserOperationExecutor);
     Assertions.assertTrue(parser2 instanceof ParserOperationExecutor);
-
-    MessageBuilder messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 25L));
-    messageBuilder.getDataMap().put("key2", 5);
-    Assertions.assertTrue(parser1.evaluate(messageBuilder.build()), "Should have evaluated to true, key1 = key2 / 5");
-    Assertions.assertTrue(parser2.evaluate(messageBuilder.build()), "Should have evaluated to true, key1 = 5 / key2 ");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key1", 25));
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
-    Assertions.assertFalse(parser2.evaluate(messageBuilder.build()), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key2", 5));
-    Assertions.assertFalse(parser1.evaluate(messageBuilder.build()), "Should have failed evaluated to true =5 + 5, since key1 == null");
-    Assertions.assertFalse(parser2.evaluate(messageBuilder.build()), "Should have failed evaluated to true =5 + 5, since key1 == null");
+    Map<String, Object> map = createMap("key1", 25L);
+    map.put("key2", 5);
+    Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, key1 = key2 / 5");
+    Assertions.assertTrue(parser2.evaluate(map), "Should have evaluated to true, key1 = 5 / key2 ");
+    Assertions.assertFalse(parser1.evaluate(createMap("key1", 25)), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
+    Assertions.assertFalse(parser2.evaluate(createMap("key1", 25)), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
+    Assertions.assertFalse(parser1.evaluate(createMap("key2", 5)), "Should have failed evaluated to true =5 + 5, since key1 == null");
+    Assertions.assertFalse(parser2.evaluate(createMap("key2", 5)), "Should have failed evaluated to true =5 + 5, since key1 == null");
   }
 
   @Test
   void checkNumericEvaluations() throws ParseException {
     ParserExecutor parser = SelectorParser.compile("key = 1");
     Assertions.assertTrue(parser instanceof ParserOperationExecutor);
-    MessageBuilder messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", 1L));
-    Assertions.assertTrue(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", 1));
-    Assertions.assertTrue(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", (short)1));
-    Assertions.assertTrue(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", (byte)1));
-    Assertions.assertTrue(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", 1.0f));
-    Assertions.assertTrue(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", 1.0));
-    Assertions.assertTrue(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
+    Assertions.assertTrue(parser.evaluate(createMap("key", 1L)), "Should have evaluated to true, key=1");
+    Assertions.assertTrue(parser.evaluate(createMap("key", 1)), "Should have evaluated to true, key=1");
+    Assertions.assertTrue(parser.evaluate(createMap("key", (short)1)), "Should have evaluated to true, key=1");
+    Assertions.assertTrue(parser.evaluate(createMap("key", (byte)1)), "Should have evaluated to true, key=1");
+    Assertions.assertTrue(parser.evaluate(createMap("key", 1.0f)), "Should have evaluated to true, key=1");
+    Assertions.assertTrue(parser.evaluate(createMap("key", 1.0)), "Should have evaluated to true, key=1");
   }
 
   @Test
   void checkNumericMissedEvaluations() throws ParseException {
     ParserExecutor parser = SelectorParser.compile("key = 2");
     Assertions.assertTrue(parser instanceof ParserOperationExecutor);
-    MessageBuilder messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", 1L));
-    Assertions.assertFalse(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", 1));
-    Assertions.assertFalse(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", (short)1));
-    Assertions.assertFalse(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", (byte)1));
-    Assertions.assertFalse(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", 1.0f));
-    Assertions.assertFalse(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
-
-    messageBuilder = new MessageBuilder();
-    messageBuilder.setDataMap(createMap("key", 1.0));
-    Assertions.assertFalse(parser.evaluate(messageBuilder.build()), "Should have evaluated to true, key=1");
+    Assertions.assertFalse(parser.evaluate(createMap("key", 1L)), "Should have evaluated to true, key=1");
+    Assertions.assertFalse(parser.evaluate(createMap("key", 1)), "Should have evaluated to true, key=1");
+    Assertions.assertFalse(parser.evaluate(createMap("key", (short)1)), "Should have evaluated to true, key=1");
+    Assertions.assertFalse(parser.evaluate(createMap("key", (byte)1)), "Should have evaluated to true, key=1");
+    Assertions.assertFalse(parser.evaluate(createMap("key", 1.0f)), "Should have evaluated to true, key=1");
+    Assertions.assertFalse(parser.evaluate(createMap("key", 1.0)), "Should have evaluated to true, key=1");
   }
 
 

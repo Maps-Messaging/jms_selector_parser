@@ -20,6 +20,7 @@ package io.mapsmessaging.selector.operators;
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
+import java.util.Map;
 
 public class ParserOperationExecutor implements ParserExecutor {
 
@@ -42,6 +43,11 @@ public class ParserOperationExecutor implements ParserExecutor {
   }
 
   @Override
+  public boolean evaluate(Map<String, Object> map) {
+    return evaluate(new MapResolver(map));
+  }
+
+  @Override
   public String toString(){
     return parser.toString();
   }
@@ -59,4 +65,17 @@ public class ParserOperationExecutor implements ParserExecutor {
     return parser.hashCode();
   }
 
+  class MapResolver implements  IdentifierResolver{
+
+    private final Map<String, Object> map;
+
+    public MapResolver(Map<String, Object> map){
+      this.map= map;
+    }
+
+    @Override
+    public Object get(String key) {
+      return map.get(key);
+    }
+  }
 }
