@@ -18,7 +18,6 @@
 
 package io.mapsmessaging.selector.operators;
 
-import io.mapsmessaging.selector.BeanEvaluator;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import java.util.Map;
@@ -27,25 +26,25 @@ public class ParserOperationExecutor implements ParserExecutor {
 
   private final Operation parser;
 
-  public ParserOperationExecutor(Operation parser)  {
+  public ParserOperationExecutor(Operation parser) {
     this.parser = parser;
   }
 
-  public boolean evaluate(Object obj){
-    if(obj instanceof IdentifierResolver){
+  public boolean evaluate(Object obj) {
+    if (obj instanceof IdentifierResolver) {
       return innerEvaluate((IdentifierResolver) obj);
     }
-    if(obj instanceof Map){
-      return innerEvaluate(new MapResolver((Map<String, Object>) obj));
+    if (obj instanceof Map) {
+      return innerEvaluate(new MapEvaluator((Map<String, Object>) obj));
     }
     return innerEvaluate(new BeanEvaluator(obj));
   }
 
-  boolean innerEvaluate(IdentifierResolver resolver){
+  boolean innerEvaluate(IdentifierResolver resolver) {
     try {
       Object result = parser.evaluate(resolver);
-      if(result instanceof Boolean){
-        return (Boolean)result;
+      if (result instanceof Boolean) {
+        return (Boolean) result;
       }
     } catch (ParseException e) {
       // Log this exception
@@ -54,34 +53,21 @@ public class ParserOperationExecutor implements ParserExecutor {
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return parser.toString();
   }
 
   @Override
-  public boolean equals(Object rhs){
-    if(rhs instanceof ParserOperationExecutor){
+  public boolean equals(Object rhs) {
+    if (rhs instanceof ParserOperationExecutor) {
       return parser.equals(((ParserOperationExecutor) rhs).parser);
     }
     return false;
   }
 
   @Override
-  public int hashCode(){
+  public int hashCode() {
     return parser.hashCode();
   }
 
-  class MapResolver implements  IdentifierResolver{
-
-    private final Map<String, Object> map;
-
-    public MapResolver(Map<String, Object> map){
-      this.map= map;
-    }
-
-    @Override
-    public Object get(String key) {
-      return map.get(key);
-    }
-  }
 }

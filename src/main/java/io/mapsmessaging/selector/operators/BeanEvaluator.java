@@ -1,4 +1,6 @@
-package io.mapsmessaging.selector;
+package io.mapsmessaging.selector.operators;
+
+import io.mapsmessaging.selector.IdentifierResolver;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -10,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BeanEvaluator implements IdentifierResolver {
+class BeanEvaluator implements IdentifierResolver {
 
   public static final Map<String, Map<String, Method>> LOADED_MAPPINGS = new ConcurrentHashMap<>();
 
