@@ -18,6 +18,7 @@
 
 package io.mapsmessaging.selector.operators;
 
+import io.mapsmessaging.selector.BeanEvaluator;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import java.util.Map;
@@ -30,7 +31,17 @@ public class ParserOperationExecutor implements ParserExecutor {
     this.parser = parser;
   }
 
-  public boolean evaluate(IdentifierResolver resolver){
+  public boolean evaluate(Object obj){
+    if(obj instanceof IdentifierResolver){
+      return innerEvaluate((IdentifierResolver) obj);
+    }
+    if(obj instanceof Map){
+      return innerEvaluate(new MapResolver((Map<String, Object>) obj));
+    }
+    return innerEvaluate(new BeanEvaluator(obj));
+  }
+
+  boolean innerEvaluate(IdentifierResolver resolver){
     try {
       Object result = parser.evaluate(resolver);
       if(result instanceof Boolean){
@@ -40,11 +51,6 @@ public class ParserOperationExecutor implements ParserExecutor {
       // Log this exception
     }
     return false;
-  }
-
-  @Override
-  public boolean evaluate(Map<String, Object> map) {
-    return evaluate(new MapResolver(map));
   }
 
   @Override

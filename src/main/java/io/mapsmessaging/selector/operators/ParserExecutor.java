@@ -18,13 +18,8 @@
 
 package io.mapsmessaging.selector.operators;
 
-import io.mapsmessaging.selector.IdentifierResolver;
-import java.util.Map;
-
 public interface ParserExecutor {
 
-  boolean evaluate(IdentifierResolver resolver);
-
-  boolean evaluate(Map<String, Object> map);
+  boolean evaluate(Object object);
 
 }
