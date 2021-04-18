@@ -32,4 +32,6 @@ public class EvaluatorFactory {
     }
     return new BeanEvaluator(obj);
   }
+
+  private EvaluatorFactory(){}
 }
