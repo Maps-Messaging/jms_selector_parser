@@ -11,32 +11,38 @@ class BeanTest {
     Bean bean = new Bean(2, 4.0f);
     ParserExecutor parser = SelectorParser.compile("intVal = 2");
     Assertions.assertTrue(parser.evaluate(bean));
+
+    parser = SelectorParser.compile("floatVal = 4.0");
+    Assertions.assertTrue(parser.evaluate(bean));
+
+    parser = SelectorParser.compile("longtVal = 40");
+    Assertions.assertFalse(parser.evaluate(bean));
   }
 
 
   public static final class Bean {
-    private int intVal;
-    private float floatVal;
+    private int iVal;
+    private float fVal;
 
     public Bean(int i, float f){
-      intVal = i;
-      floatVal = f;
+      iVal = i;
+      fVal = f;
     }
 
     public int getIntVal() {
-      return intVal;
+      return iVal;
     }
 
-    public void setIntVal(int intVal) {
-      this.intVal = intVal;
+    public void setIntVal(int iVal) {
+      this.iVal = iVal;
     }
 
     public float getFloatVal() {
-      return floatVal;
+      return fVal;
     }
 
-    public void setFloatVal(float floatVal) {
-      this.floatVal = floatVal;
+    public void setFloatVal(float fVal) {
+      this.fVal = fVal;
     }
   }
 }
