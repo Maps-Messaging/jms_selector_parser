@@ -14,7 +14,7 @@ class BeanTest {
   }
 
 
-  public final class Bean {
+  public static final class Bean {
     private int intVal;
     private float floatVal;
 
