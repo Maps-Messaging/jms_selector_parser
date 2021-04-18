@@ -56,7 +56,7 @@ class BeanEvaluator implements IdentifierResolver {
         }
       }
     } catch (IntrospectionException e) {
-      e.printStackTrace();
+      // seems we can not access the beans functions here
     }
     LOADED_MAPPINGS.put(bean.getClass().getName(), map);
     return map;
@@ -69,10 +69,8 @@ class BeanEvaluator implements IdentifierResolver {
       if(method != null) {
         return method.invoke(bean);
       }
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      // Seems we can not access the beans method here
     }
     return null;
   }
