@@ -150,7 +150,7 @@ public class JsonParserExtension implements ParserExtension {
     if(test instanceof JsonParserExtension){
       var rhs = (JsonParserExtension)test;
       if(keyPath.length == rhs.keyPath.length){
-        for(int x=0;x<keyPath.length;x++){
+        for(var x=0;x<keyPath.length;x++){
           if(!keyPath[x].equals(rhs.keyPath[x])){
             return false;
           }
