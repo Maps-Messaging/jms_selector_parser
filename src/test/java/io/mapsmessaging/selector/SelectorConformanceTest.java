@@ -26,6 +26,8 @@ class SelectorConformanceTest {
 
   public static final String[] SELECTOR_TEXT =
       {
+          "(3+3)*2 = 12",
+          "(3+3)*2 <> 9",
           "not dummy",
           "1.0 <> false",
           "17 between 4 * 4 and 10 + 8 ",
