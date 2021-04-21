@@ -19,7 +19,6 @@ package io.mapsmessaging.selector.resolvers;
 
 import io.mapsmessaging.selector.IdentifierResolver;
 
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -47,10 +46,10 @@ class BeanEvaluator implements IdentifierResolver {
     }
     Map<String, Method> map = new LinkedHashMap<>();
     try {
-      BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass(), Object.class);
+      var beanInfo = Introspector.getBeanInfo(bean.getClass(), Object.class);
       PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
       for (PropertyDescriptor propertyDescriptor : list) {
-        Method readMethod = propertyDescriptor.getReadMethod();
+        var readMethod = propertyDescriptor.getReadMethod();
         if (readMethod != null) {
           map.put(propertyDescriptor.getName(), readMethod);
         }
@@ -64,7 +63,7 @@ class BeanEvaluator implements IdentifierResolver {
 
   @Override
   public Object get(String key) {
-    Method method = mapping.get(key);
+    var method = mapping.get(key);
     try {
       if(method != null) {
         return method.invoke(bean);
