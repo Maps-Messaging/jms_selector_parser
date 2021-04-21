@@ -52,7 +52,7 @@ public class IdentityLoadParser extends FunctionOperator {
 
   @Override
   public String toString(){
-    StringBuilder tmp = new StringBuilder("Parse (" + parserIdentifier + ", ");
+    var tmp = new StringBuilder("Parse (" + parserIdentifier + ", ");
     for(String check:arguments)
       tmp.append(check).append(",");
 

@@ -52,8 +52,8 @@ public abstract class ArithmeticOperator extends ComputableOperator {
   }
 
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    Number lhsNumber = evaluateToNumber(lhs, resolver);
-    Number rhsNumber = evaluateToNumber(rhs, resolver);
+    var lhsNumber = evaluateToNumber(lhs, resolver);
+    var rhsNumber = evaluateToNumber(rhs, resolver);
     if(lhsNumber == null || rhsNumber == null){
       return false;
     }

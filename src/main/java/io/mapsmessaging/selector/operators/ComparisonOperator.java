@@ -75,13 +75,13 @@ public abstract class ComparisonOperator extends ComputableOperator {
     }
 
     if(lhsValue instanceof String && rhsValue != null){
-      Number lhsNumber = parseStringToNumber((String)lhsValue);
+      var lhsNumber = parseStringToNumber((String)lhsValue);
       if(lhsNumber != null) {
         return evaluate(lhsNumber, rhsValue);
       }
     }
     else if(rhsValue instanceof String && lhsValue != null){
-      Number rhsNumber = parseStringToNumber((String)rhsValue);
+      var rhsNumber = parseStringToNumber((String)rhsValue);
       if(rhsNumber != null) {
         return evaluate(lhsValue, rhsNumber);
       }

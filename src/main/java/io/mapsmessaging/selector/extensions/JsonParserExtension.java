@@ -39,12 +39,12 @@ public class JsonParserExtension implements ParserExtension {
     if(arguments.isEmpty()) throw new ParseException("Requires at least 1 argument");
     String key = arguments.get(0);
     if(key.contains(".")){
-      StringTokenizer stringTokenizer = new StringTokenizer(key, ".");
+      var stringTokenizer = new StringTokenizer(key, ".");
       List<String> tmp = new ArrayList<>();
       while(stringTokenizer.hasMoreElements()){
         tmp.add(stringTokenizer.nextElement().toString());
       }
-      String[] tmpPath = new String[tmp.size()];
+      var tmpPath = new String[tmp.size()];
       keyPath = tmp.toArray(tmpPath);
     }
     else{
@@ -72,9 +72,9 @@ public class JsonParserExtension implements ParserExtension {
   public Object evaluate(IdentifierResolver resolver) {
     byte[] payload = resolver.getOpaqueData();
     if (payload != null && payload.length > 0) {
-      JSONObject json = new JSONObject(new String(payload));
+      var json = new JSONObject(new String(payload));
       if (!json.isEmpty()) {
-        Object located = locateObject(json, keyPath);
+        var located = locateObject(json, keyPath);
         return parseJSON(located);
       }
     }
@@ -84,11 +84,11 @@ public class JsonParserExtension implements ParserExtension {
   private Object locateObject(JSONObject json, String[] searchPath){
     if(keyPath != null){
       // Walk the JSON path first
-      for(int x=0;x<searchPath.length;x++){
-        String path = searchPath[x];
-        Object jsonObject = json.get(path);
+      for(var x=0;x<searchPath.length;x++){
+        var path = searchPath[x];
+        var jsonObject = json.get(path);
         if(jsonObject instanceof JSONArray){
-          String[] sub = new String[searchPath.length-(x +1)];
+          var sub = new String[searchPath.length-(x +1)];
           System.arraycopy(searchPath, x+1, sub, 0, sub.length);
           return arrayLookup(json.getJSONArray(path), sub);
         }
@@ -105,15 +105,15 @@ public class JsonParserExtension implements ParserExtension {
 
   private Object arrayLookup(JSONArray array, String[] path){
     // We have an array, so the next element in the path must be an index ( ie number)
-    int idx = Integer.parseInt(path[0]);
+    var idx = Integer.parseInt(path[0]);
     Object lookup = array.get(idx);
     if(lookup instanceof JSONObject){
-      String[] sub = new String[path.length-1];
+      var sub = new String[path.length-1];
       System.arraycopy(path, 1, sub, 0, sub.length);
       return locateObject( (JSONObject) lookup, sub);
     }
     else if(lookup instanceof JSONArray){
-      String[] sub = new String[path.length-1];
+      var sub = new String[path.length-1];
       System.arraycopy(path, 1, sub, 0, sub.length);
       return arrayLookup( (JSONArray) lookup, sub);
     }
@@ -138,8 +138,8 @@ public class JsonParserExtension implements ParserExtension {
 
   @Override
   public String toString(){
-    StringBuilder sb = new StringBuilder("JSON, '");
-    for(String path:keyPath){
+    var sb = new StringBuilder("JSON, '");
+    for(var path:keyPath){
       sb.append(path).append("' ,");
     }
     return sb.toString();
@@ -148,7 +148,7 @@ public class JsonParserExtension implements ParserExtension {
   @Override
   public boolean equals(Object test){
     if(test instanceof JsonParserExtension){
-      JsonParserExtension rhs = (JsonParserExtension)test;
+      var rhs = (JsonParserExtension)test;
       if(keyPath.length == rhs.keyPath.length){
         for(int x=0;x<keyPath.length;x++){
           if(!keyPath[x].equals(rhs.keyPath[x])){
@@ -164,7 +164,7 @@ public class JsonParserExtension implements ParserExtension {
   @Override
   public int hashCode(){
     long largeHash = 0;
-    for(String path:keyPath){
+    for(var path:keyPath){
       largeHash += path.hashCode();
     }
     return Math.toIntExact(largeHash);

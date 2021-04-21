@@ -61,7 +61,7 @@ public class InOperator extends FunctionOperator {
   }
 
   public String toString(){
-    StringBuilder tmp = new StringBuilder("(" + lhs.toString() + ") IN (");
+    var tmp = new StringBuilder("(" + lhs.toString() + ") IN (");
     for(String check:set){
       tmp.append(check).append(",");
     }

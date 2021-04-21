@@ -40,7 +40,7 @@ public class LikeOperator  extends FunctionOperator {
 
   public LikeOperator(Object lhs, Object rhs, Object escape) throws ParseException {
     this.lhs = lhs;
-    String workingPattern = rhs.toString();
+    var workingPattern = rhs.toString();
     if(workingPattern.length() > 100*1024){
       throw new ParseException("Wildcard pattern exceeds size limit");
     }
@@ -81,7 +81,7 @@ public class LikeOperator  extends FunctionOperator {
   }
 
   private String removeDuplicatesWithEscape(String source){
-    int position = 0;
+    var position = 0;
     while(position < source.length()-1){
       if(source.charAt(position) == escape){
         position++; // skip the next char, regardless of its type
@@ -90,15 +90,15 @@ public class LikeOperator  extends FunctionOperator {
         //if the current char is a multichar wild card check the next and see if we need to remove it
         if(source.charAt(position) == MULTI_CHARACTER &&
             ( source.charAt(position+1) == MULTI_CHARACTER || source.charAt(position+1) == SINGLE_CHARACTER)){
-          String start = source.substring(0, position+1);
-          String end = source.substring(position+2);
+          var start = source.substring(0, position+1);
+          var end = source.substring(position+2);
           source = start+end;
           position--;
         }
         else if(source.charAt(position) == SINGLE_CHARACTER && source.charAt(position+1) == MULTI_CHARACTER){
           // Remove the single char
-          String start = source.substring(0, position);
-          String end = source.substring(position+1);
+          var start = source.substring(0, position);
+          var end = source.substring(position+1);
           source = start+end;
           position--;
         }
@@ -114,7 +114,7 @@ public class LikeOperator  extends FunctionOperator {
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object lookup = evaluate(lhs, resolver);
     if(lookup != null){
-      String sourceString = lookup.toString();
+      var sourceString = lookup.toString();
       return compare(sourceString, searchPattern);
     }
     return false;
