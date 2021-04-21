@@ -19,6 +19,7 @@
 package io.mapsmessaging.selector.extensions;
 
 import io.mapsmessaging.selector.ParseException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -128,6 +129,9 @@ public class JsonParserExtension implements ParserExtension {
         lookup instanceof Integer ||
         lookup instanceof Long) {
       return lookup;
+    }
+    else if(lookup instanceof BigDecimal){
+      return ((BigDecimal)lookup).doubleValue();
     }
     return null;
   }
