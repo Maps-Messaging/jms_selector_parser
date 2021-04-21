@@ -12,21 +12,21 @@ public class ThrottleExample {
 
     // We should be able to push 15 messages and then fail for the rest of the minute
     for (int x = 0; x < 15; x++) {
-      Assertions.assertTrue(parser.evaluate(key -> "Hi"));
+      Assertions.assertTrue(parser.evaluate((IdentifierResolver)key -> "Hi"));
     }
 
     // Wait just over 10 seconds and we should be free again
     long start = System.currentTimeMillis();
-    while (!parser.evaluate(key -> "Hi")) {
+    while (!parser.evaluate((IdentifierResolver)key -> "Hi")) {
       Thread.sleep(10);
     }
     Assertions.assertTrue((System.currentTimeMillis() - start) >= 10000);
 
     // We take 1 away since that is how it exited the loop above
     for (int x = 0; x < 14; x++) {
-      Assertions.assertTrue(parser.evaluate(key -> "Hi"));
+      Assertions.assertTrue(parser.evaluate((IdentifierResolver)key -> "Hi"));
     }
     // This should fail since we have exceeded the limit
-    Assertions.assertFalse(parser.evaluate(key -> "Hi"));
+    Assertions.assertFalse(parser.evaluate((IdentifierResolver)key -> "Hi"));
   }
 }

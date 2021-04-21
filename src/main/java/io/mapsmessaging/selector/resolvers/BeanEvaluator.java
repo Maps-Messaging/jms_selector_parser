@@ -70,6 +70,7 @@ class BeanEvaluator implements IdentifierResolver {
         return method.invoke(bean);
       }
     } catch (IllegalAccessException | InvocationTargetException e) {
+      e.printStackTrace();
       // Seems we can not access the beans method here
     }
     return null;

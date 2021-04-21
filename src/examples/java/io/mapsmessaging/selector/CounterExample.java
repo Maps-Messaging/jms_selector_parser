@@ -14,9 +14,9 @@ public class CounterExample {
 
     // This should fail the counter is less then 10
     for (int x = 0; x < 10; x++) {
-      Assertions.assertFalse(parser.evaluate(key -> "Hi"));
+      Assertions.assertFalse(parser.evaluate((IdentifierResolver) key -> "Hi"));
     }
     // This should work since the counter is in fact 10
-    Assertions.assertTrue(parser.evaluate(key -> "Hi"));
+    Assertions.assertTrue(parser.evaluate((IdentifierResolver)key -> "Hi"));
   }
 }

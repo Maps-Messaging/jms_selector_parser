@@ -31,6 +31,38 @@ import io.mapsmessaging.selector.operators.extentions.ParserFactory;
 
 class SelectorValidationTest {
 
+
+  @Test
+  void checkBeans() throws ParseException {
+    BeanTest bean = new BeanTest();
+    bean.setCounter(0);
+    ParserExecutor parser = SelectorParser.compile("counter = 10");
+    for(int x=0;x<9;x++){
+      bean.increment();
+      Assertions.assertFalse(parser.evaluate(bean));
+    }
+    bean.increment();
+    Assertions.assertTrue(parser.evaluate(bean));
+
+  }
+
+  public class BeanTest{
+    private int counter;
+
+    public void increment(){
+      counter++;
+    }
+
+    public int getCounter() {
+      return counter;
+    }
+
+    public void setCounter(int counter) {
+      this.counter = counter;
+    }
+  }
+
+
   @Test
   void checkEmptyMessage() throws ParseException {
     ParserExecutor parser = SelectorParser.compile("key = 'found'");

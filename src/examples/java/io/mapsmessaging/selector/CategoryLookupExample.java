@@ -75,7 +75,7 @@ public class CategoryLookupExample {
 
     // This should fail since a "ragamuffin" is a cat NOT a dog
     Assertions.assertFalse(
-    parser.evaluate(key -> {
+    parser.evaluate((IdentifierResolver)key -> {
       if(key.equals("animalName")){
         return "Ragamuffin";
       }
@@ -84,7 +84,7 @@ public class CategoryLookupExample {
 
     // This should work since a German Shepherd Dog is in fact a dog
     Assertions.assertTrue(
-        parser.evaluate(key -> {
+        parser.evaluate((IdentifierResolver)key -> {
           if(key.equals("animalName")){
             return "German Shepherd Dog";
           }
