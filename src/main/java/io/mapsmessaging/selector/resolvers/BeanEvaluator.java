@@ -31,13 +31,10 @@ import java.util.concurrent.ConcurrentHashMap;
 class BeanEvaluator implements IdentifierResolver {
 
   private static final Map<String, Map<String, Method>> LOADED_MAPPINGS = new ConcurrentHashMap<>();
-
-  private final Map<String, Method> mapping;
-  private final Object bean;
+  private final Object parent;
 
   public BeanEvaluator(Object bean){
-    this.bean = bean;
-    mapping = getMapping(bean);
+    this.parent = bean;
   }
 
   private static Map<String, Method> getMapping(Object bean)  {
@@ -63,7 +60,24 @@ class BeanEvaluator implements IdentifierResolver {
 
   @Override
   public Object get(String key) {
-    var method = mapping.get(key);
+    if(key.contains("#")){
+      String[] keyDepth = key.split("#");
+      Object bean = parent;
+      for(String keyWalk:keyDepth){
+        bean = lookup(keyWalk, bean);
+        if(bean == null){
+          return null;
+        }
+      }
+      return bean;
+    }
+    else{
+      return lookup(key, parent);
+    }
+  }
+
+  private Object lookup(String key, Object bean){
+    var method = getMapping(bean).get(key);
     try {
       if(method != null) {
         return method.invoke(bean);
