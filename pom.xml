@@ -176,5 +176,12 @@
       <version>1.33</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <artifactId>javafaker</artifactId>
+      <groupId>com.github.javafaker</groupId>
+      <version>0.12</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
