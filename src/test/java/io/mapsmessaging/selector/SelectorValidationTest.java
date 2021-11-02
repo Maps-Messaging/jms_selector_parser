@@ -97,7 +97,7 @@ class SelectorValidationTest {
     ParserExecutor parser1 = SelectorParser.compile("not dummy");
     Map<String, Object> map = createMap("key1", 10L);
     map.put("key2", 5);
-    Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to false, not dummy");
+    Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to false, not dummy");
   }
 
   @Test
