@@ -32,10 +32,13 @@ public abstract class LogicalOperator extends Operation {
   }
 
   protected boolean test(Object value, IdentifierResolver resolver) throws ParseException {
-    if(value instanceof Boolean){
+    if(value == null){
+      return true;
+    }
+    else if(value instanceof Boolean){
       return (Boolean)value;
     }
-    if(value instanceof Operation){
+    else if(value instanceof Operation){
       Object result = evaluate( ((Operation)value).evaluate(resolver), resolver);
       if(result instanceof Boolean){
         return (Boolean)result;
