@@ -31,7 +31,12 @@ public class AndOperator extends LogicalOperator {
 
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    return(test(lhs, resolver) && test(rhs, resolver));
+    Boolean lhsResult = test(lhs, resolver);
+    Boolean rhsResult = test(rhs, resolver);
+    if(lhsResult == null || rhsResult == null){
+      return false;
+    }
+    return(lhsResult && rhsResult);
   }
 
   public Object compile(){

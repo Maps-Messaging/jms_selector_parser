@@ -31,7 +31,11 @@ public class NotOperator extends LogicalOperator {
 
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    return !test(lhs, resolver);
+    Boolean result = test(lhs, resolver);
+    if(result == null){
+      return false;
+    }
+    return !result;
   }
 
   public Object compile(){

@@ -31,7 +31,18 @@ public class OrOperator extends LogicalOperator {
 
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    return(test(lhs, resolver) || test(rhs, resolver));
+    Boolean lhsResult = test(lhs, resolver);
+    Boolean rhsResult = test(rhs, resolver);
+    if(lhsResult == null && rhsResult == null){
+      return false;
+    }
+    else if(lhsResult == null){
+      return rhsResult;
+    }
+    else if(rhsResult == null){
+      return lhsResult;
+    }
+    return(lhsResult || rhsResult);
   }
 
   public Object compile(){

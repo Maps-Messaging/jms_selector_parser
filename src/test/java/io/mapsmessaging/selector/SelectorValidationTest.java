@@ -99,6 +99,39 @@ class SelectorValidationTest {
     map.put("key2", 5);
     Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to false, not dummy");
   }
+  @Test
+  void checkNotNullDummy() throws ParseException {
+    ParserExecutor parser1 = SelectorParser.compile("dummy IS NULL");
+    Map<String, Object> map = createMap("key1", 10L);
+    map.put("key2", 5);
+    Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, is null dummy");
+  }
+
+  @Test
+  void checkTrueAndDummy() throws ParseException {
+    ParserExecutor parser1 = SelectorParser.compile("true and dummy");
+    Map<String, Object> map = createMap("key1", 10L);
+    map.put("key2", 5);
+    Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to true, true AND dummy");
+  }
+
+  @Test
+  void checkFalseAndDummy() throws ParseException {
+    ParserExecutor parser1 = SelectorParser.compile("false and dummy");
+    Map<String, Object> map = createMap("key1", 10L);
+    map.put("key2", 5);
+    Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to false, false AND dummy");
+    parser1 = SelectorParser.compile("dummy or false");
+    Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to false, dummy AND false");
+
+  }
+  @Test
+  void checkDummyAndDummy() throws ParseException {
+    ParserExecutor parser1 = SelectorParser.compile("dummy and dummy");
+    Map<String, Object> map = createMap("key1", 10L);
+    map.put("key2", 5);
+    Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to false, dummy AND dummy");
+  }
 
   @Test
   void checkFalseBooleanResults() throws ParseException {
