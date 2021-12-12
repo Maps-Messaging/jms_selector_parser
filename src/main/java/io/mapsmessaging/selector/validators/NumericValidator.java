@@ -29,7 +29,7 @@ public class NumericValidator implements Validator {
   public static boolean isValid(Object parameter) {
     return
         (parameter instanceof Identifier) ||  // This could return a number value from the resolver
-        ( parameter instanceof ArithmeticOperator) ||
+        (parameter instanceof ArithmeticOperator) ||
         (parameter instanceof Number ) ||
         (parameter instanceof NegateOperator);
   }

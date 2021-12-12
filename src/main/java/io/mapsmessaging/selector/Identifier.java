@@ -19,10 +19,12 @@
 package io.mapsmessaging.selector;
 
 import io.mapsmessaging.selector.operators.Operation;
+import lombok.Getter;
 
 public class Identifier extends Operation {
 
-  private final String key;
+  private @Getter
+  final String key;
 
   public Identifier(String key){
     this.key = key;

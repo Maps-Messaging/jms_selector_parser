@@ -26,6 +26,8 @@ class SelectorConformanceTest {
 
   public static final String[] SELECTOR_TEXT =
       {
+          "JMSDeliveryMode=1",
+          "JMSDeliveryMode='PERSISTENT'",
           "(3+3)*2 = 12",
           "(3+3)*2 <> 9",
           "not dummy",
