@@ -17,6 +17,7 @@
  */
 package io.mapsmessaging.selector.resolvers;
 
+import io.mapsmessaging.selector.IdentifierMutator;
 import io.mapsmessaging.selector.IdentifierResolver;
 
 import java.beans.IntrospectionException;
@@ -28,9 +29,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-class BeanEvaluator implements IdentifierResolver {
+class BeanEvaluator implements IdentifierMutator {
 
-  private static final Map<String, Map<String, Method>> LOADED_MAPPINGS = new ConcurrentHashMap<>();
+  private static final Map<String, Map<String, Method>> LOADED_GET_MAPPINGS = new ConcurrentHashMap<>();
+  private static final Map<String, Map<String, Method>> LOADED_SET_MAPPINGS = new ConcurrentHashMap<>();
   private final Object parent;
 
   public BeanEvaluator(Object bean){
@@ -38,25 +40,46 @@ class BeanEvaluator implements IdentifierResolver {
   }
 
   private static Map<String, Method> getMapping(Object bean)  {
-    if (LOADED_MAPPINGS.containsKey(bean.getClass().getName())) {
-      return LOADED_MAPPINGS.get(bean.getClass().getName());
+    if (LOADED_GET_MAPPINGS.containsKey(bean.getClass().getName())) {
+      return LOADED_GET_MAPPINGS.get(bean.getClass().getName());
     }
-    Map<String, Method> map = new LinkedHashMap<>();
+    loadMaps(bean);
+    return LOADED_GET_MAPPINGS.get(bean.getClass().getName());
+  }
+
+  private static Map<String, Method> setMapping(Object bean)  {
+    if (LOADED_SET_MAPPINGS.containsKey(bean.getClass().getName())) {
+      return LOADED_SET_MAPPINGS.get(bean.getClass().getName());
+    }
+    loadMaps(bean);
+    return LOADED_SET_MAPPINGS.get(bean.getClass().getName());
+  }
+
+
+  private static void loadMaps(Object bean){
+    Map<String, Method> get = new LinkedHashMap<>();
+    Map<String, Method> set = new LinkedHashMap<>();
     try {
       var beanInfo = Introspector.getBeanInfo(bean.getClass(), Object.class);
       PropertyDescriptor[] list = beanInfo.getPropertyDescriptors();
       for (PropertyDescriptor propertyDescriptor : list) {
         var readMethod = propertyDescriptor.getReadMethod();
         if (readMethod != null) {
-          map.put(propertyDescriptor.getName(), readMethod);
+          get.put(propertyDescriptor.getName(), readMethod);
+        }
+        var writeMethod = propertyDescriptor.getWriteMethod();
+        if (writeMethod != null) {
+          set.put(propertyDescriptor.getName(), writeMethod);
         }
       }
     } catch (IntrospectionException e) {
       // seems we can not access the beans functions here
     }
-    LOADED_MAPPINGS.put(bean.getClass().getName(), map);
-    return map;
+    LOADED_GET_MAPPINGS.put(bean.getClass().getName(), get);
+    LOADED_SET_MAPPINGS.put(bean.getClass().getName(), set);
+
   }
+
 
   @Override
   public Object get(String key) {
@@ -76,11 +99,51 @@ class BeanEvaluator implements IdentifierResolver {
     }
   }
 
+  @Override
+  public Object remove(String key) {
+    return null; // This is a bean
+  }
+
+  @Override
+  public Object set(String key, Object value) {
+    if(key.contains("#")){
+      String[] keyDepth = key.split("#");
+      Object bean = parent;
+      for(String keyWalk:keyDepth){
+        bean = lookupAndSet(keyWalk, bean, value);
+        if(bean == null){
+          return null;
+        }
+      }
+      return bean;
+    }
+    else{
+      return lookupAndSet(key, parent, value);
+    }
+  }
+
   private Object lookup(String key, Object bean){
     var method = getMapping(bean).get(key);
     try {
       if(method != null) {
         return method.invoke(bean);
+      }
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      // Seems we can not access the beans method here
+    }
+    return null;
+  }
+
+  private Object lookupAndSet(String key, Object bean, Object value){
+    var method = setMapping(bean).get(key);
+    try {
+
+      if(method.getParameterTypes()[0] != value.getClass()){
+        // We need to do a type cast
+
+      }
+      if(method != null) {
+        return method.invoke(bean, value);
       }
     } catch (IllegalAccessException | InvocationTargetException e) {
       // Seems we can not access the beans method here

@@ -2,7 +2,7 @@ package io.mapsmessaging.selector;
 
 import java.util.Map;
 
-public class Message implements IdentifierResolver {
+public class Message implements IdentifierMutator {
 
   private Map<String, Object> map;
   private byte[] opaqueData;
@@ -18,6 +18,21 @@ public class Message implements IdentifierResolver {
     }
     return null;
   }
+
+  @Override
+  public Object remove(String key) {
+    if (map != null) {
+      return map.remove(key);
+    }
+    return null;
+  }
+
+  @Override
+  public Object set(String key, Object value) {
+    if (map != null) {
+      return map.put(key, value);
+    }
+    return null;  }
 
   @Override
   public byte[] getOpaqueData() {

@@ -18,6 +18,7 @@
 
 package io.mapsmessaging.selector.operators.comparison;
 
+import io.mapsmessaging.selector.IdentifierMutator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,11 +43,21 @@ public class ComparisonOperatorTest {
   }
 
   public IdentifierResolver getResolver(){
-    return new IdentifierResolver(){
+    return new IdentifierMutator(){
 
       @Override
       public Object get(String key) {
         return dataSet.get(key);
+      }
+
+      @Override
+      public Object remove(String key) {
+        return dataSet.remove(key);
+      }
+
+      @Override
+      public Object set(String key, Object value) {
+        return dataSet.put(key, value);
       }
     };
   }

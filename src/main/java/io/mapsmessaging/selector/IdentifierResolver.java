@@ -19,6 +19,7 @@
 package io.mapsmessaging.selector;
 
 public interface IdentifierResolver {
+
   Object get(String key);
 
   default byte[] getOpaqueData(){

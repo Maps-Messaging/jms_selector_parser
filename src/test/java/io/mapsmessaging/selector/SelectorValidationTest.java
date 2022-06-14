@@ -233,7 +233,6 @@ class SelectorValidationTest {
     Assertions.assertFalse(parser.evaluate(createMap("key", 1.0)), "Should have evaluated to true, key=1");
   }
 
-
   @Test
   void checkParserExtensions(){
     Iterator<ParserExtension> iterator = ParserFactory.getInstance().getServices();

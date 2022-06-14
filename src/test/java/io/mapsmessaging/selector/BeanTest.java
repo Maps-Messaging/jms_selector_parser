@@ -38,7 +38,7 @@ class BeanTest {
 
 
   public static final class Bean {
-    @Getter @Setter private int intVal;
+    @Getter @Setter private long intVal;
     @Getter @Setter private float floatVal;
 
     public Bean(int i, float f) {

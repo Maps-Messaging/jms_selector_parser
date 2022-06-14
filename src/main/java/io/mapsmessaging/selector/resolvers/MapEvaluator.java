@@ -17,11 +17,11 @@
  */
 package io.mapsmessaging.selector.resolvers;
 
-import io.mapsmessaging.selector.IdentifierResolver;
+import io.mapsmessaging.selector.IdentifierMutator;
 
 import java.util.Map;
 
-class MapEvaluator implements IdentifierResolver {
+class MapEvaluator implements IdentifierMutator {
 
   private final Map<String, Object> map;
 
@@ -32,5 +32,16 @@ class MapEvaluator implements IdentifierResolver {
   @Override
   public Object get(String key) {
     return map.get(key);
+  }
+
+  @Override
+  public Object remove(String key) {
+    return map.remove(key) != null;
+  }
+
+  @Override
+  public Object set(String key, Object value) {
+    map.put(key, value);
+    return true;
   }
 }

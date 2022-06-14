@@ -31,7 +31,7 @@ options {
   DEBUG_TOKEN_MANAGER = false;
 }
 
-PARSER_BEGIN(SelectorParser)
+PARSER_BEGIN(ActionParser)
 
 package io.mapsmessaging.selector;
 
@@ -39,6 +39,7 @@ import io.mapsmessaging.selector.operators.ParserBooleanOperation;
 import io.mapsmessaging.selector.operators.ParserExecutor;
 import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.ParserOperationExecutor;
+import io.mapsmessaging.selector.actions.*;
 import io.mapsmessaging.selector.operators.arithmetic.*;
 import io.mapsmessaging.selector.operators.comparison.*;
 import io.mapsmessaging.selector.operators.logical.*;
@@ -53,11 +54,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SelectorParser {
+public class ActionParser {
 
   private Map<String, Identifier> identifierMap = new LinkedHashMap();
 
-  public SelectorParser(){
+  public ActionParser(){
   }
 
  public Object parse(String selector, boolean trace)
@@ -103,12 +104,12 @@ public class SelectorParser {
    private static Object compile(String selector,  boolean trace)
       throws ParseException
    {
-      SelectorParser parser = new SelectorParser(new ByteArrayInputStream(selector.getBytes()), "UTF-8");
+      ActionParser parser = new ActionParser(new ByteArrayInputStream(selector.getBytes()), "UTF-8");
       return parser.parse(selector, trace);
    }
 }
 
-PARSER_END(SelectorParser)
+PARSER_END(ActionParser)
 
 // ----------------------------------------------------------------------------
 // Tokens
@@ -140,6 +141,8 @@ TOKEN [IGNORE_CASE]:
   | < IN:        "IN" >
   | < IS:        "IS" >
   | < EXTENSION: "EXTENSION">
+  | < REMOVE:    "REMOVE" >
+  | < SET:       "SET" >
   | < ESCAPE:    "ESCAPE" >
   | < LPAREN:    "(" >
   | < RPAREN:    ")" >
@@ -408,6 +411,7 @@ Object unaryExpressionNotPlusMinus() :
 {
    Token t = null;
    Object exp = null;
+   Object exp2 = null;
    List<String> list = null;
 }
 {
@@ -431,6 +435,17 @@ Object unaryExpressionNotPlusMinus() :
        {
          return ParserFactory.getInstance().loadParser(exp, list);
        }
+   |
+     <REMOVE> <LPAREN> exp=additiveExpression()  <RPAREN>
+          {
+             return new RemoveAction(exp);
+          }
+      |
+      <SET> <LPAREN> exp=additiveExpression() <COMMA> exp2=additiveExpression() <RPAREN>
+          {
+             return new SetAction(exp, exp2);
+          }
+
    | <TIME>   {  return System.currentTimeMillis();}
 }
 

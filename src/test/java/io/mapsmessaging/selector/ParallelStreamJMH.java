@@ -44,7 +44,7 @@ public class ParallelStreamJMH {
     for(int x=0;x<10000000;x++){
       HashMap<String, Object> entry = new LinkedHashMap<>();
       entry.put("even", x%2 == 0);
-      data.add(key -> entry.get(key));
+//      data.add(key -> entry.get(key));
     }
     executor = SelectorParser.compile("even = true");
   }
