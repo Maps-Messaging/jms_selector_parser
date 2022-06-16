@@ -187,9 +187,9 @@ TOKEN :
 
 TOKEN :
 {
-  < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>)* >
+  < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>|<ARRAY>)* >
 |
-  < #LETTER: [ "_","$","#",
+  < #LETTER: [ "_",".","$","#",
      "\u0024",
      "\u0041"-"\u005a",
      "\u005f",
@@ -206,6 +206,8 @@ TOKEN :
   ]>
 |
   < #DIGIT: ["0" - "9"] >
+ |
+   <#ARRAY: "[" (<DIGIT>)* "]">
 }
 
 /** Start of the grammar */

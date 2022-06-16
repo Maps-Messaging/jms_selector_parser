@@ -26,6 +26,7 @@ class SelectorConformanceTest {
 
   public static final String[] SELECTOR_TEXT =
       {
+          "level1.level2.array[0].name = 'test'",
           "JMSDeliveryMode=1",
           "JMSDeliveryMode='PERSISTENT'",
           "(3+3)*2 = 12",
@@ -111,7 +112,7 @@ class SelectorConformanceTest {
     for (String selector : SELECTOR_TEXT) {
       try {
         ParserExecutor parser = SelectorParser.compile(selector);
-        parser.toString();
+       parser.toString();
       } catch (ParseException e) {
         e.printStackTrace();
         Assertions.fail("Selector text:" + selector + " failed with exception " + e.getMessage());
