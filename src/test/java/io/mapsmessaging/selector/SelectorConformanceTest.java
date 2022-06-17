@@ -26,6 +26,8 @@ class SelectorConformanceTest {
 
   public static final String[] SELECTOR_TEXT =
       {
+          "true OR dummy",
+          "false or dummy",
           "level1.level2.array[0].name = 'test'",
           "JMSDeliveryMode=1",
           "JMSDeliveryMode='PERSISTENT'",
