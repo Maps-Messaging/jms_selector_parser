@@ -58,10 +58,14 @@ public class OrOperator extends LogicalOperator {
       return bLhs || bRhs;
     }
     if(lhs instanceof Boolean){
-      return lhs;
+      if((Boolean)lhs) {
+        return lhs;
+      }
     }
     if(rhs instanceof Boolean){
-      return rhs;
+      if((Boolean)rhs) {
+        return rhs;
+      }
     }
     return this;
   }
