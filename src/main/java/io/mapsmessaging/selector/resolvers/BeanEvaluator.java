@@ -18,7 +18,6 @@
 package io.mapsmessaging.selector.resolvers;
 
 import io.mapsmessaging.selector.IdentifierMutator;
-import io.mapsmessaging.selector.IdentifierResolver;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -138,10 +137,6 @@ class BeanEvaluator implements IdentifierMutator {
     var method = setMapping(bean).get(key);
     try {
 
-      if(method.getParameterTypes()[0] != value.getClass()){
-        // We need to do a type cast
-
-      }
       if(method != null) {
         return method.invoke(bean, value);
       }
