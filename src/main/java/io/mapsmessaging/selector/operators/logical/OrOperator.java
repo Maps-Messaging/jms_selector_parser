@@ -57,15 +57,11 @@ public class OrOperator extends LogicalOperator {
       boolean bRhs = (Boolean)rhs;
       return bLhs || bRhs;
     }
-    if(lhs instanceof Boolean){
-      if((Boolean)lhs) {
-        return lhs;
-      }
+    if(lhs instanceof Boolean && Boolean.TRUE.equals(lhs)) {
+      return lhs;
     }
-    if(rhs instanceof Boolean){
-      if((Boolean)rhs) {
-        return rhs;
-      }
+    if(rhs instanceof Boolean && Boolean.TRUE.equals(rhs)) {
+      return rhs;
     }
     return this;
   }
