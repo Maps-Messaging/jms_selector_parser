@@ -29,7 +29,7 @@ class BeanTest {
     ParserExecutor parser = SelectorParser.compile("value#intVal = 2");
     Assertions.assertTrue(parser.evaluate(innerBean));
 
-    parser = SelectorParser.compile("value#floatVal = 4.0");
+    parser = SelectorParser.compile("value#floatVal = 4.0f");
     Assertions.assertTrue(parser.evaluate(innerBean));
 
     parser = SelectorParser.compile("value#longtVal = 40");
