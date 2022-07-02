@@ -23,8 +23,8 @@ import lombok.Getter;
 
 public class Identifier extends Operation {
 
-  private @Getter
-  final String key;
+  @Getter
+  private final String key;
 
   public Identifier(String key){
     this.key = key;
