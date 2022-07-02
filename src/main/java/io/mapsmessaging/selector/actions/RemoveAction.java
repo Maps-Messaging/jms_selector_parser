@@ -19,14 +19,11 @@ public class RemoveAction extends Action {
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object lookup = evaluate(lhs, resolver);
-    if(resolver instanceof IdentifierMutator){
-
-      if(lookup != null) {
-        if(lookup instanceof String){
-          return ((IdentifierMutator)resolver).remove( (String) lookup);
-        }
-        return ((IdentifierMutator)resolver).remove(lookup.toString());
+    if(resolver instanceof IdentifierMutator && lookup != null) {
+      if (lookup instanceof String) {
+        return ((IdentifierMutator) resolver).remove((String) lookup);
       }
+      return ((IdentifierMutator) resolver).remove(lookup.toString());
     }
     return false;
   }
