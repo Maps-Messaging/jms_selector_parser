@@ -91,7 +91,11 @@ public abstract class ComparisonOperator extends ComputableOperator {
 
   private Object processNumber(Number lhsNumber, Number rhsNumber){
     if (lhsNumber instanceof Double) {
-      return processDouble((Double)lhsNumber, rhsNumber);
+      return processDouble((Double) lhsNumber, rhsNumber);
+    }
+    else if(lhsNumber instanceof Float){
+      return processFloat((Float) lhsNumber, rhsNumber);
+
     } else {
       return processInteger((Long)lhsNumber, rhsNumber);
     }

@@ -29,6 +29,15 @@ public abstract class ComputableOperator extends Operation {
     }
   }
 
+  protected Object processFloat(Float arg0, Number arg1) {
+    if (arg1 instanceof Double || arg1 instanceof Float) {
+      return compute(arg0, arg1.doubleValue());
+    } else {
+      return compute(arg0, arg1.longValue());
+    }
+  }
+
+
   protected Object processInteger(Long arg0, Number arg1) {
     if (arg1 instanceof Double) {
       return compute(arg0, arg1.doubleValue());

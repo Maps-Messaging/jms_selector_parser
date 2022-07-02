@@ -14,7 +14,7 @@ class BeanTest {
     ParserExecutor parser = SelectorParser.compile("intVal = 2");
     Assertions.assertTrue(parser.evaluate(bean));
 
-    parser = SelectorParser.compile("floatVal = 4.0");
+    parser = SelectorParser.compile("floatVal = 4.0f");
     Assertions.assertTrue(parser.evaluate(bean));
 
     parser = SelectorParser.compile("longtVal = 40");

@@ -37,8 +37,11 @@ public class Identifier extends Operation {
     Object response = resolver.get(key);
     if (response != null) {
       if(response instanceof Number){
-        if(response instanceof Double || response instanceof Float){
+        if(response instanceof Double){
           return ((Number)response).doubleValue();
+        }
+        if(response instanceof Float){
+          return ((Number)response).floatValue();
         }
         return ((Number)response).longValue();
       }
