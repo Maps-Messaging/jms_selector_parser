@@ -198,4 +198,4 @@ do some complex lookups or whatever is required to resolve the value.
 Here are the links on how to [extend the selector](https://www.mapsmessaging.io/selector/extensions.html)
 
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Maps-Messaging_jms_selector&metric=alert_status)](https://sonarcloud.io/dashboard?id=Maps-Messaging_jms_selector)
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=Maps-Messaging_jms_selector)
