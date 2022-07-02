@@ -40,7 +40,7 @@ public abstract class LogicalOperator extends Operation {
       if(result instanceof Boolean){
         return (Boolean)result;
       }
-      return null;
+      return null; // Yes this is valid
     }
     return false;
   }
