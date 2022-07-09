@@ -18,8 +18,7 @@
 
 package io.mapsmessaging.selector.operators.comparison;
 
-import static io.mapsmessaging.selector.Constants.THRESHOLD;
-
+import io.mapsmessaging.selector.Constants;
 import io.mapsmessaging.selector.operators.ComparisonOperator;
 
 public class EqualOperator extends ComparisonOperator {
@@ -30,7 +29,7 @@ public class EqualOperator extends ComparisonOperator {
 
   @Override
   protected Boolean compute(double lhs, double rhs) {
-    return (Math.abs(lhs - rhs) < THRESHOLD) || (Double.isNaN(lhs) && Double.isNaN(rhs));
+    return (Math.abs(lhs - rhs) < Constants.getThreshold()) || (Double.isNaN(lhs) && Double.isNaN(rhs));
   }
 
   @Override

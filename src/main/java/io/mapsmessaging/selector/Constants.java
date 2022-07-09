@@ -1,7 +1,14 @@
 package io.mapsmessaging.selector;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Constants {
 
-  public static double THRESHOLD = 0.0000001;
+  @Getter
+  @Setter
+  private static double threshold = 0.0000001;
+
+  private Constants(){}
 
 }
