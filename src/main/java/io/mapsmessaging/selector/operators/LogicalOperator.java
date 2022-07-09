@@ -31,6 +31,8 @@ public abstract class LogicalOperator extends Operation {
     this.rhs = rhs;
   }
 
+  // The JMS specification does understand that at times the result maybe unknown or null
+  @SuppressWarnings("java:S2447")
   protected Boolean test(Object value, IdentifierResolver resolver) throws ParseException {
     if(value instanceof Boolean){
       return (Boolean)value;
