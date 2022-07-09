@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 class EqualComparatorTest extends ComparisonOperatorTest {
 
-  Object[][] SUCCESS_VALUES = {{2l, 2l}, {3l, 3.0}, {4.0, 4l}, {5.0, 5.0}, {"20", "20"}, {true, true}, {false, false}};
+  Object[][] SUCCESS_VALUES = {{2l, 2l}, {3l, 3.0}, {4.0, 4l}, {5.0, 5.0}, {"20", "20"}, {true, true}, {false, false}, {Double.NaN, Double.NaN}};
   Object[][] FAILURE_VALUES = {{1l, 2l}, {1l, 2.0}, {1.0, 2l}, {1.0, 2.0}, {"1", "2"}, {false, true}, {true, false}};
 
   @Test
