@@ -32,9 +32,9 @@ class StringValidatorTest {
     Assertions.assertTrue(StringValidator.isValid(1.0f));
     Assertions.assertTrue(StringValidator.isValid(1.0));
     Assertions.assertTrue(StringValidator.isValid(1L));
-    Assertions.assertTrue(StringValidator.isValid((byte)1));
-    Assertions.assertTrue(StringValidator.isValid((short)1));
-    Assertions.assertTrue(StringValidator.isValid((short)1));
+    Assertions.assertTrue(StringValidator.isValid((byte) 1));
+    Assertions.assertTrue(StringValidator.isValid((short) 1));
+    Assertions.assertTrue(StringValidator.isValid((short) 1));
     Assertions.assertTrue(StringValidator.isValid("1"));
     Assertions.assertTrue(StringValidator.isValid(true));
     Assertions.assertTrue(StringValidator.isValid(this));

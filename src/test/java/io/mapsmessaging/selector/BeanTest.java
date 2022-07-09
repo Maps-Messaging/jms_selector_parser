@@ -38,8 +38,13 @@ class BeanTest {
 
 
   public static final class Bean {
-    @Getter @Setter private long intVal;
-    @Getter @Setter private float floatVal;
+
+    @Getter
+    @Setter
+    private long intVal;
+    @Getter
+    @Setter
+    private float floatVal;
 
     public Bean(int i, float f) {
       intVal = i;
@@ -47,7 +52,10 @@ class BeanTest {
     }
   }
 
-  public static final class InnerBean{
-    @Getter @Setter Bean value;
+  public static final class InnerBean {
+
+    @Getter
+    @Setter
+    Bean value;
   }
 }

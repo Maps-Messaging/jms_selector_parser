@@ -7,7 +7,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SetTest {
+class SetTest {
 
   @Test
   void simpleSetTest() throws ParseException {

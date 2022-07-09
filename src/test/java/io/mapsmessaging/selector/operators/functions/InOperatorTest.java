@@ -18,24 +18,24 @@
 
 package io.mapsmessaging.selector.operators.functions;
 
+import io.mapsmessaging.selector.ParseException;
 import java.util.Arrays;
 import java.util.HashSet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class InOperatorTest {
+class InOperatorTest {
 
 
   @Test
-  public void simpleInValidation() throws ParseException {
+  void simpleInValidation() throws ParseException {
 
     String[] list = {"not this", "nor this", "maybe this HI", "HI"};
     InOperator inOperator = new InOperator("HI", new HashSet<>(Arrays.asList(list)));
-    Assertions.assertTrue((Boolean)inOperator.evaluate(null));
+    Assertions.assertTrue((Boolean) inOperator.evaluate(null));
 
     inOperator = new InOperator("fail", new HashSet<>(Arrays.asList(list)));
-    Assertions.assertFalse((Boolean)inOperator.evaluate(null));
+    Assertions.assertFalse((Boolean) inOperator.evaluate(null));
     Assertions.assertNotEquals(inOperator, this);
   }
 

@@ -18,40 +18,41 @@
 
 package io.mapsmessaging.selector.operators.logical;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
 class AndLogicTest {
+
   @Test
   void simpleValidation() throws ParseException {
     AndOperator andOperator = new AndOperator(true, true);
-    Assertions.assertTrue( (Boolean) andOperator.evaluate(null), "Failed on simple tests tests");
+    Assertions.assertTrue((Boolean) andOperator.evaluate(null), "Failed on simple tests tests");
 
     andOperator = new AndOperator(true, false);
-    Assertions.assertFalse( (Boolean) andOperator.evaluate(null), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) andOperator.evaluate(null), "Failed on simple tests tests");
 
     andOperator = new AndOperator(false, true);
-    Assertions.assertFalse( (Boolean) andOperator.evaluate(null), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) andOperator.evaluate(null), "Failed on simple tests tests");
 
     andOperator = new AndOperator(false, false);
-    Assertions.assertFalse( (Boolean) andOperator.evaluate(null), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) andOperator.evaluate(null), "Failed on simple tests tests");
 
     andOperator = new AndOperator(true, true);
-    Assertions.assertTrue( (Boolean) andOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertTrue((Boolean) andOperator.compile(), "Failed on simple tests tests");
 
     andOperator = new AndOperator(true, false);
-    Assertions.assertFalse( (Boolean) andOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) andOperator.compile(), "Failed on simple tests tests");
 
     andOperator = new AndOperator(false, true);
-    Assertions.assertFalse( (Boolean) andOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) andOperator.compile(), "Failed on simple tests tests");
 
     andOperator = new AndOperator(false, false);
-    Assertions.assertFalse( (Boolean) andOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) andOperator.compile(), "Failed on simple tests tests");
   }
 
   @Test
-  void checkEquivalence(){
+  void checkEquivalence() {
     AndOperator andOperator1 = new AndOperator(true, true);
     AndOperator andOperator2 = new AndOperator(true, true);
     Assertions.assertEquals(andOperator2, andOperator1);
@@ -63,7 +64,6 @@ class AndLogicTest {
     andOperator1 = new AndOperator(true, true);
     andOperator2 = new AndOperator(false, false);
     Assertions.assertNotEquals(andOperator2, andOperator1);
-
 
     andOperator1 = new AndOperator(false, true);
     andOperator2 = new AndOperator(true, false);

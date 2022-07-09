@@ -18,41 +18,41 @@
 
 package io.mapsmessaging.selector.operators.comparison;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class DifferentComparatorTest {
+class DifferentComparatorTest {
 
-  Object[][] FAILURE_VALUES = {{2l,2l},{2l,2.0},{2.0,2l}, {2.0,2.0}, {"2", "2"}, {true, true}, {false, false} };
-  Object[][] SUCCESS_VALUES = {{1l,2l},{1l,2.0},{1.0,2l}, {1.0,2.0}, {"1", "2"}, {false, true}, {true, false} };
+  Object[][] FAILURE_VALUES = {{2l, 2l}, {2l, 2.0}, {2.0, 2l}, {2.0, 2.0}, {"2", "2"}, {true, true}, {false, false}};
+  Object[][] SUCCESS_VALUES = {{1l, 2l}, {1l, 2.0}, {1.0, 2l}, {1.0, 2.0}, {"1", "2"}, {false, true}, {true, false}};
 
   @Test
-  public void simpleValidationTest() throws ParseException {
-    for(Object[] values:SUCCESS_VALUES){
+  void simpleValidationTest() throws ParseException {
+    for (Object[] values : SUCCESS_VALUES) {
       DifferentOperator differentOperator = new DifferentOperator(values[0], values[1]);
-      Assertions.assertTrue((Boolean) differentOperator.evaluate(null), "Failed on {"+values[0]+","+values[1]+"}");
+      Assertions.assertTrue((Boolean) differentOperator.evaluate(null), "Failed on {" + values[0] + "," + values[1] + "}");
     }
-    for(Object[] values:FAILURE_VALUES){
+    for (Object[] values : FAILURE_VALUES) {
       DifferentOperator differentOperator = new DifferentOperator(values[0], values[1]);
-      Assertions.assertFalse((Boolean) differentOperator.evaluate(null), "Failed on {"+values[0]+","+values[1]+"}");
+      Assertions.assertFalse((Boolean) differentOperator.evaluate(null), "Failed on {" + values[0] + "," + values[1] + "}");
     }
 
   }
 
   @Test
-  void simpleEquality(){
+  void simpleEquality() {
     DifferentOperator differentOperator = new DifferentOperator(10.0, 20);
     Assertions.assertEquals("(10.0) != (20)", differentOperator.toString());
 
     DifferentOperator differentOperator2 = new DifferentOperator(10.0, 20);
-    Assertions.assertEquals( differentOperator, differentOperator2);
-    Assertions.assertEquals( differentOperator.hashCode(), differentOperator2.hashCode());
+    Assertions.assertEquals(differentOperator, differentOperator2);
+    Assertions.assertEquals(differentOperator.hashCode(), differentOperator2.hashCode());
 
     differentOperator2 = new DifferentOperator(10.0, 20.2);
-    Assertions.assertNotEquals( differentOperator, differentOperator2);
-    Assertions.assertNotEquals( differentOperator.hashCode(), differentOperator2.hashCode());
-    Assertions.assertNotEquals( differentOperator, this);
+    Assertions.assertNotEquals(differentOperator, differentOperator2);
+    Assertions.assertNotEquals(differentOperator.hashCode(), differentOperator2.hashCode());
+    Assertions.assertNotEquals(differentOperator, this);
 
   }
 }

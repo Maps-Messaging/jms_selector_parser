@@ -7,7 +7,7 @@ public class MessageBuilder {
 
   private final Message message;
 
-  public MessageBuilder(){
+  public MessageBuilder() {
     message = new Message();
   }
 
@@ -19,16 +19,16 @@ public class MessageBuilder {
     message.setOpaqueData(bytes);
   }
 
-  public void setDataMap(Map<String, Object> map) {
-    message.setMap(map);
-  }
-
   public Map<String, Object> getDataMap() {
     Map<String, Object> map = message.getMap();
-    if(map == null){
+    if (map == null) {
       map = new LinkedHashMap<>();
       message.setMap(map);
     }
     return map;
+  }
+
+  public void setDataMap(Map<String, Object> map) {
+    message.setMap(map);
   }
 }

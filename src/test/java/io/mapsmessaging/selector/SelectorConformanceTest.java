@@ -114,7 +114,7 @@ class SelectorConformanceTest {
     for (String selector : SELECTOR_TEXT) {
       try {
         ParserExecutor parser = SelectorParser.compile(selector);
-       parser.toString();
+        parser.toString();
       } catch (ParseException e) {
         e.printStackTrace();
         Assertions.fail("Selector text:" + selector + " failed with exception " + e.getMessage());

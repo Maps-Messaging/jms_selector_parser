@@ -18,26 +18,27 @@
 
 package io.mapsmessaging.selector.operators.arithmetic;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class SubtractionTest {
+class SubtractionTest {
+
   // test the different paths (Long + Long, Double+Long, Long+Double and Double + Double)
   @Test
-  public void simpleMathTests() throws ParseException {
+  void simpleMathTests() throws ParseException {
     SubtractOperator subtractOperator = new SubtractOperator(8l, 2l);
     Assertions.assertEquals(6l, subtractOperator.evaluate(null));
 
     subtractOperator = new SubtractOperator(2.4, 2l);
-    double check = 0.4 - ((Double)subtractOperator.evaluate(null));
+    double check = 0.4 - ((Double) subtractOperator.evaluate(null));
     Assertions.assertTrue(check < 0.01);
 
     subtractOperator = new SubtractOperator(2.4, 2.4);
     Assertions.assertEquals(0.0, subtractOperator.evaluate(null));
 
     subtractOperator = new SubtractOperator(2l, 2.4);
-    check = -0.4 - ((Double)subtractOperator.evaluate(null));
+    check = -0.4 - ((Double) subtractOperator.evaluate(null));
     Assertions.assertTrue(check < 0.01);
 
     Assertions.assertEquals("(2) - (2.4)", subtractOperator.toString());
@@ -55,9 +56,13 @@ public class SubtractionTest {
   }
 
   @Test
-  void simpleErrorTests()  {
-    Assertions.assertThrows(ParseException.class, ()->{ new SubtractOperator(2L, "fred");});
-    Assertions.assertThrows(ParseException.class, ()->{ new SubtractOperator("fred", 2L);});
+  void simpleErrorTests() {
+    Assertions.assertThrows(ParseException.class, () -> {
+      new SubtractOperator(2L, "fred");
+    });
+    Assertions.assertThrows(ParseException.class, () -> {
+      new SubtractOperator("fred", 2L);
+    });
   }
 
 }

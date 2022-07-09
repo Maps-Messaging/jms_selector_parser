@@ -18,39 +18,40 @@
 
 package io.mapsmessaging.selector.operators.logical;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class NotLogicTest {
+class NotLogicTest {
+
   @Test
-  public void simpleValidation() throws ParseException {
+  void simpleValidation() throws ParseException {
     NotOperator notOperator = new NotOperator(false);
-    Assertions.assertTrue( (Boolean) notOperator.evaluate(null), "Failed on simple tests tests");
+    Assertions.assertTrue((Boolean) notOperator.evaluate(null), "Failed on simple tests tests");
 
     notOperator = new NotOperator(true);
-    Assertions.assertFalse( (Boolean) notOperator.evaluate(null), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) notOperator.evaluate(null), "Failed on simple tests tests");
 
     notOperator = new NotOperator(false);
-    Assertions.assertTrue( (Boolean) notOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertTrue((Boolean) notOperator.compile(), "Failed on simple tests tests");
 
     notOperator = new NotOperator(true);
-    Assertions.assertFalse( (Boolean) notOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) notOperator.compile(), "Failed on simple tests tests");
 
   }
 
   @Test
-  void checkEquivalence(){
+  void checkEquivalence() {
     NotOperator notOperator1 = new NotOperator(true);
-    NotOperator notOperator2 = new NotOperator(true );
+    NotOperator notOperator2 = new NotOperator(true);
     Assertions.assertEquals(notOperator1, notOperator2);
 
     notOperator1 = new NotOperator(false);
-    notOperator2 = new NotOperator(false );
+    notOperator2 = new NotOperator(false);
     Assertions.assertEquals(notOperator1, notOperator2);
 
     notOperator1 = new NotOperator(true);
-    notOperator2 = new NotOperator(false );
+    notOperator2 = new NotOperator(false);
     Assertions.assertNotEquals(notOperator1, notOperator2);
 
     notOperator1 = new NotOperator(true);

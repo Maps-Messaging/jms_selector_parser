@@ -18,24 +18,24 @@
 
 package io.mapsmessaging.selector.operators.functions;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class BetweenOperatorTest {
+class BetweenOperatorTest {
 
 
   @Test
-  public void simpleValidation() throws ParseException {
+  void simpleValidation() throws ParseException {
     BetweenOperator betweenOperator = new BetweenOperator(12L, 10L, 20L);
-    Assertions.assertTrue( (Boolean) betweenOperator.evaluate(null), "Failed on numeric tests");
+    Assertions.assertTrue((Boolean) betweenOperator.evaluate(null), "Failed on numeric tests");
 
     betweenOperator = new BetweenOperator(12L, 15L, 20L);
-    Assertions.assertFalse( (Boolean) betweenOperator.evaluate(null), "Failed on numeric tests");
+    Assertions.assertFalse((Boolean) betweenOperator.evaluate(null), "Failed on numeric tests");
 
     // This can not be evaluated since strings can not be compared besides = and !=
     betweenOperator = new BetweenOperator("12", "10", "20");
-    Assertions.assertFalse( (Boolean) betweenOperator.evaluate(null), "Failed on numeric tests");
+    Assertions.assertFalse((Boolean) betweenOperator.evaluate(null), "Failed on numeric tests");
 
     Assertions.assertNotEquals(betweenOperator, this);
   }

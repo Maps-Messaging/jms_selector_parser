@@ -18,44 +18,42 @@
 
 package io.mapsmessaging.selector.operators.logical;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class OrLogicTest {
+class OrLogicTest {
+
   @Test
-  public void simpleValidation() throws ParseException {
+  void simpleValidation() throws ParseException {
     OrOperator orOperator = new OrOperator(true, true);
-    Assertions.assertTrue( (Boolean) orOperator.evaluate(null), "Failed on simple tests tests");
+    Assertions.assertTrue((Boolean) orOperator.evaluate(null), "Failed on simple tests tests");
 
     orOperator = new OrOperator(true, false);
-    Assertions.assertTrue( (Boolean) orOperator.evaluate(null), "Failed on simple tests tests");
-
+    Assertions.assertTrue((Boolean) orOperator.evaluate(null), "Failed on simple tests tests");
 
     orOperator = new OrOperator(false, true);
-    Assertions.assertTrue( (Boolean) orOperator.evaluate(null), "Failed on simple tests tests");
+    Assertions.assertTrue((Boolean) orOperator.evaluate(null), "Failed on simple tests tests");
 
     orOperator = new OrOperator(false, false);
-    Assertions.assertFalse( (Boolean) orOperator.evaluate(null), "Failed on simple tests tests");
-
+    Assertions.assertFalse((Boolean) orOperator.evaluate(null), "Failed on simple tests tests");
 
     orOperator = new OrOperator(true, true);
-    Assertions.assertTrue( (Boolean) orOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertTrue((Boolean) orOperator.compile(), "Failed on simple tests tests");
 
     orOperator = new OrOperator(true, false);
-    Assertions.assertTrue( (Boolean) orOperator.compile(), "Failed on simple tests tests");
-
+    Assertions.assertTrue((Boolean) orOperator.compile(), "Failed on simple tests tests");
 
     orOperator = new OrOperator(false, true);
-    Assertions.assertTrue( (Boolean) orOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertTrue((Boolean) orOperator.compile(), "Failed on simple tests tests");
 
     orOperator = new OrOperator(false, false);
-    Assertions.assertFalse( (Boolean) orOperator.compile(), "Failed on simple tests tests");
+    Assertions.assertFalse((Boolean) orOperator.compile(), "Failed on simple tests tests");
 
   }
 
   @Test
-  void checkEquivalence(){
+  void checkEquivalence() {
     OrOperator orOperator1 = new OrOperator(true, true);
     OrOperator orOperator2 = new OrOperator(true, true);
     Assertions.assertEquals(orOperator1, orOperator2);
@@ -67,7 +65,6 @@ public class OrLogicTest {
     orOperator1 = new OrOperator(true, true);
     orOperator2 = new OrOperator(false, false);
     Assertions.assertNotEquals(orOperator1, orOperator2);
-
 
     orOperator1 = new OrOperator(true, false);
     orOperator2 = new OrOperator(false, true);

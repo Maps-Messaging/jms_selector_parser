@@ -19,35 +19,35 @@
 package io.mapsmessaging.selector.operators.parser;
 
 import io.mapsmessaging.selector.Identifier;
+import io.mapsmessaging.selector.IdentifierResolver;
+import io.mapsmessaging.selector.MessageBuilder;
+import io.mapsmessaging.selector.ParseException;
+import io.mapsmessaging.selector.operators.FunctionOperator;
+import io.mapsmessaging.selector.operators.extentions.ParserFactory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.MessageBuilder;
-import io.mapsmessaging.selector.ParseException;
-import io.mapsmessaging.selector.operators.FunctionOperator;
-import io.mapsmessaging.selector.IdentifierResolver;
-import io.mapsmessaging.selector.operators.extentions.ParserFactory;
 
-public class ParserTest {
+class ParserTest {
 
   @Test
-  public void parserLoadToStringTest() throws ParseException {
+  void parserLoadToStringTest() throws ParseException {
     String[] arguments = {"value"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
     FunctionOperator operation2 = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
     Assertions.assertEquals("Parse (JSON, 'value' ,)", operation.toString());
-    Assertions.assertEquals(operation,operation2);
-    Assertions.assertEquals(operation.hashCode(),operation2.hashCode());
+    Assertions.assertEquals(operation, operation2);
+    Assertions.assertEquals(operation.hashCode(), operation2.hashCode());
     Assertions.assertNotEquals(operation, this);
   }
 
   @Test
-  public void exceptions() throws ParseException {
+  void exceptions() throws ParseException {
     String[] empty = {};
-    Assertions.assertThrows(ParseException.class, ()-> ParserFactory.getInstance().loadParser("json", Arrays.asList(empty)));
-    String[]  arguments = {"secondLevel.data"};
+    Assertions.assertThrows(ParseException.class, () -> ParserFactory.getInstance().loadParser("json", Arrays.asList(empty)));
+    String[] arguments = {"secondLevel.data"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
 
     String jsonString = "";
@@ -57,9 +57,9 @@ public class ParserTest {
   }
 
   @Test
-  public void jsonWalking() throws ParseException {
+  void jsonWalking() throws ParseException {
     String jsonString = "{\"test\": 10, \"value\": 20, \"secondLevel\": { \"test\": 30, \"data\": 40 },\"array\": [ 10, 20],\"arrayData\": [{ \"fred\": 50}, {\"bill\": 60 }]}";
-    String[]  arguments = {"secondLevel.data"};
+    String[] arguments = {"secondLevel.data"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
     MessageBuilder messageBuilder = new MessageBuilder();
     messageBuilder.setOpaqueData(jsonString.getBytes());
@@ -85,7 +85,7 @@ public class ParserTest {
   }
 
   @Test
-  public void parserLoadTest() throws ParseException {
+  void parserLoadTest() throws ParseException {
     String[] arguments = {"value"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
     String jsonString = "{test:10; value:20}";
@@ -96,7 +96,7 @@ public class ParserTest {
   }
 
   @Test
-  public void parserLoadDoubleTest() throws ParseException {
+  void parserLoadDoubleTest() throws ParseException {
     String[] arguments = {"value"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
     String jsonString = "{test:10.0; value:20.0}";
@@ -107,7 +107,7 @@ public class ParserTest {
   }
 
   @Test
-  public void parserLoadStringTest() throws ParseException {
+  void parserLoadStringTest() throws ParseException {
     String[] arguments = {"value"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
     String jsonString = "{test:10.0; value:'hello'}";
@@ -119,7 +119,7 @@ public class ParserTest {
 
 
   @Test
-  public void parserPathLoadTest() throws ParseException {
+  void parserPathLoadTest() throws ParseException {
     String[] arguments = {"second.value"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
     String jsonString = "{test:10; value:20; second:{value:430; test:20 } }";
@@ -129,7 +129,7 @@ public class ParserTest {
   }
 
   @Test
-  public void parseFromIdentifier() throws ParseException{
+  void parseFromIdentifier() throws ParseException {
     String[] arguments = {"value"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser(new Identifier("protocol"), Arrays.asList(arguments));
     String jsonString = "{test:10; value:20}";
@@ -142,7 +142,7 @@ public class ParserTest {
   }
 
   @Test
-  public void unknownParseFromIdentifier() throws ParseException{
+  void unknownParseFromIdentifier() throws ParseException {
     String[] arguments = {"value"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser(new Identifier("protocol"), Arrays.asList(arguments));
     String jsonString = "{test:10; value:20}";

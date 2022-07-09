@@ -18,9 +18,9 @@
 
 package io.mapsmessaging.selector.operators.functions;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
 public class LikeOperatorTest {
 
@@ -117,20 +117,20 @@ public class LikeOperatorTest {
     LikeOperator likeOperator = new LikeOperator(SOURCE_STRING, SOURCE_STRING);
     Assertions.assertEquals(true, likeOperator.evaluate(null));
 
-    likeOperator = new LikeOperator(SOURCE_STRING, "_"+SOURCE_STRING.substring(1));
+    likeOperator = new LikeOperator(SOURCE_STRING, "_" + SOURCE_STRING.substring(1));
     Assertions.assertEquals(true, likeOperator.evaluate(null));
 
-    likeOperator = new LikeOperator(SOURCE_STRING, SOURCE_STRING.substring(0, SOURCE_STRING.length()-1)+"_");
+    likeOperator = new LikeOperator(SOURCE_STRING, SOURCE_STRING.substring(0, SOURCE_STRING.length() - 1) + "_");
     Assertions.assertEquals(true, likeOperator.evaluate(null));
 
-    String test = SOURCE_STRING.substring(0, 4)+"_"+SOURCE_STRING.substring(5);
-    test = test.substring(0, 7)+"_"+test.substring(8);
+    String test = SOURCE_STRING.substring(0, 4) + "_" + SOURCE_STRING.substring(5);
+    test = test.substring(0, 7) + "_" + test.substring(8);
     likeOperator = new LikeOperator(SOURCE_STRING, test);
-    Assertions.assertEquals(true, likeOperator.evaluate(null),"Failed on "+test);
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + test);
 
-    test = "_"+ SOURCE_STRING.substring(1, SOURCE_STRING.length()-1)+"_";
+    test = "_" + SOURCE_STRING.substring(1, SOURCE_STRING.length() - 1) + "_";
     likeOperator = new LikeOperator(SOURCE_STRING, test);
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+test);
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + test);
 
     Assertions.assertNotEquals(likeOperator, this);
   }
@@ -139,83 +139,82 @@ public class LikeOperatorTest {
   @Test
   public void simpleWildcardMatchAtStartTests() throws ParseException {
     String test = SOURCE_STRING;
-    for(int x=0;x<test.length();x++){
-      String wildcard = "%"+test.substring(x);
+    for (int x = 0; x < test.length(); x++) {
+      String wildcard = "%" + test.substring(x);
       LikeOperator likeOperator = new LikeOperator(SOURCE_STRING, wildcard);
-      Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+      Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
     }
   }
 
   @Test
   public void simpleWildcardMatchAtEndTests() throws ParseException {
     String test = SOURCE_STRING;
-    for(int x=1;x<test.length();x++){
-      String wildcard = test.substring(0, test.length()-x)+"%";
+    for (int x = 1; x < test.length(); x++) {
+      String wildcard = test.substring(0, test.length() - x) + "%";
       LikeOperator likeOperator = new LikeOperator(SOURCE_STRING, wildcard);
-      Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+      Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
     }
   }
 
   @Test
   public void simpleWildcardMatchInMiddleTests() throws ParseException {
     String test = SOURCE_STRING;
-    int length = test.length()/2;
-    String start = test.substring(0, length-1);
+    int length = test.length() / 2;
+    String start = test.substring(0, length - 1);
     String end = test.substring(length);
-    
-    for(int x=0;x<length;x++){
-      String wildcard = start.substring(0,x)+"%"+end.substring(length-x);
+
+    for (int x = 0; x < length; x++) {
+      String wildcard = start.substring(0, x) + "%" + end.substring(length - x);
       LikeOperator likeOperator = new LikeOperator(SOURCE_STRING, wildcard);
-      Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+      Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
     }
   }
 
   @Test
   public void simpleWildcardMatchEscapeAtStartTests() throws ParseException {
-    String wildcard = "\\_"+SOURCE_STRING;
-    LikeOperator likeOperator = new LikeOperator("_"+SOURCE_STRING, wildcard, "\\");
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    String wildcard = "\\_" + SOURCE_STRING;
+    LikeOperator likeOperator = new LikeOperator("_" + SOURCE_STRING, wildcard, "\\");
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
 
-    wildcard = "\\__"+SOURCE_STRING;
-    likeOperator = new LikeOperator("_T"+SOURCE_STRING, wildcard, "\\"); // Second char should be anything
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    wildcard = "\\__" + SOURCE_STRING;
+    likeOperator = new LikeOperator("_T" + SOURCE_STRING, wildcard, "\\"); // Second char should be anything
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
 
-
-    wildcard = "\\%%"+SOURCE_STRING;
-    likeOperator = new LikeOperator("%THIS SHOULD MATCH "+SOURCE_STRING, wildcard, "\\"); // Second char should be anything
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    wildcard = "\\%%" + SOURCE_STRING;
+    likeOperator = new LikeOperator("%THIS SHOULD MATCH " + SOURCE_STRING, wildcard, "\\"); // Second char should be anything
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
   }
 
 
   @Test
   public void simpleWildcardMatchEscapeAtEndTests() throws ParseException {
-    String wildcard = SOURCE_STRING+"\\_";
-    LikeOperator likeOperator = new LikeOperator(SOURCE_STRING+"_", wildcard, "\\");
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    String wildcard = SOURCE_STRING + "\\_";
+    LikeOperator likeOperator = new LikeOperator(SOURCE_STRING + "_", wildcard, "\\");
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
 
-    wildcard = SOURCE_STRING+"\\__";
-    likeOperator = new LikeOperator(SOURCE_STRING+"_T", wildcard, "\\"); // Second char should be anything
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    wildcard = SOURCE_STRING + "\\__";
+    likeOperator = new LikeOperator(SOURCE_STRING + "_T", wildcard, "\\"); // Second char should be anything
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
 
-
-    wildcard = SOURCE_STRING+"\\%%";
-    likeOperator = new LikeOperator(SOURCE_STRING+"%THIS SHOULD MATCH ", wildcard, "\\"); // Second char should be anything
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    wildcard = SOURCE_STRING + "\\%%";
+    likeOperator = new LikeOperator(SOURCE_STRING + "%THIS SHOULD MATCH ", wildcard, "\\"); // Second char should be anything
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
   }
 
   @Test
   public void simpleWildcardMatchEscapeInMiddleTests() throws ParseException {
-    String wildcard = SOURCE_STRING.substring(0, SOURCE_STRING.length()/2)+"\\_"+SOURCE_STRING.substring(SOURCE_STRING.length()/2);
-    LikeOperator likeOperator = new LikeOperator(SOURCE_STRING.substring(0, SOURCE_STRING.length()/2)+"_"+SOURCE_STRING.substring(SOURCE_STRING.length()/2), wildcard, "\\");
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    String wildcard = SOURCE_STRING.substring(0, SOURCE_STRING.length() / 2) + "\\_" + SOURCE_STRING.substring(SOURCE_STRING.length() / 2);
+    LikeOperator likeOperator = new LikeOperator(SOURCE_STRING.substring(0, SOURCE_STRING.length() / 2) + "_" + SOURCE_STRING.substring(SOURCE_STRING.length() / 2), wildcard,
+        "\\");
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
 
-    wildcard = SOURCE_STRING.substring(0, SOURCE_STRING.length()/2)+"\\__"+SOURCE_STRING.substring(SOURCE_STRING.length()/2);
-    likeOperator = new LikeOperator(SOURCE_STRING.substring(0, SOURCE_STRING.length()/2)+"_T"+SOURCE_STRING.substring(SOURCE_STRING.length()/2), wildcard, "\\");
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    wildcard = SOURCE_STRING.substring(0, SOURCE_STRING.length() / 2) + "\\__" + SOURCE_STRING.substring(SOURCE_STRING.length() / 2);
+    likeOperator = new LikeOperator(SOURCE_STRING.substring(0, SOURCE_STRING.length() / 2) + "_T" + SOURCE_STRING.substring(SOURCE_STRING.length() / 2), wildcard, "\\");
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
 
-
-    wildcard = SOURCE_STRING.substring(0, SOURCE_STRING.length()/2)+"\\%%"+SOURCE_STRING.substring(SOURCE_STRING.length()/2);
-    likeOperator = new LikeOperator(SOURCE_STRING.substring(0, SOURCE_STRING.length()/2)+"%THIS SHOULD MATCH "+SOURCE_STRING.substring(SOURCE_STRING.length()/2), wildcard, "\\");
-    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on "+wildcard);
+    wildcard = SOURCE_STRING.substring(0, SOURCE_STRING.length() / 2) + "\\%%" + SOURCE_STRING.substring(SOURCE_STRING.length() / 2);
+    likeOperator = new LikeOperator(SOURCE_STRING.substring(0, SOURCE_STRING.length() / 2) + "%THIS SHOULD MATCH " + SOURCE_STRING.substring(SOURCE_STRING.length() / 2), wildcard,
+        "\\");
+    Assertions.assertEquals(true, likeOperator.evaluate(null), "Failed on " + wildcard);
   }
 }

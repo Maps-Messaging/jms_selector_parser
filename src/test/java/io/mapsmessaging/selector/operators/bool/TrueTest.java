@@ -21,9 +21,10 @@ package io.mapsmessaging.selector.operators.bool;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TrueTest {
+class TrueTest {
+
   @Test
-  void simpleValidation()  {
+  void simpleValidation() {
     TrueOperator trueOperator = new TrueOperator();
     Assertions.assertTrue(Boolean.TRUE.equals(trueOperator.evaluate(null)));
     Assertions.assertEquals(trueOperator, trueOperator.compile());

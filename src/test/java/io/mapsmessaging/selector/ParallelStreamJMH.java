@@ -18,12 +18,12 @@
 
 package io.mapsmessaging.selector;
 
+import io.mapsmessaging.selector.operators.ParserExecutor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
-import io.mapsmessaging.selector.operators.ParserExecutor;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -35,23 +35,23 @@ import org.openjdk.jmh.infra.Blackhole;
 @State(Scope.Benchmark)
 public class ParallelStreamJMH {
 
-  private List<IdentifierResolver> data;
   ParserExecutor executor;
+  private List<IdentifierResolver> data;
 
   @Setup
   public void parallelStreams() throws ParseException {
     data = new ArrayList<>();
-    for(int x=0;x<10000000;x++){
+    for (int x = 0; x < 10000000; x++) {
       HashMap<String, Object> entry = new LinkedHashMap<>();
-      entry.put("even", x%2 == 0);
-//      data.add(key -> entry.get(key));
+      entry.put("even", x % 2 == 0);
+      data.add(entry::get);
     }
     executor = SelectorParser.compile("even = true");
   }
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void compilation(Blackhole blackhole){
+  public void compilation(Blackhole blackhole) {
     for (String selector : SelectorConformanceTest.SELECTOR_TEXT) {
       try {
         Object parser = SelectorParser.compile(selector);
@@ -64,7 +64,7 @@ public class ParallelStreamJMH {
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void calculateParallelFilteredCount(Blackhole blackhole){
+  public void calculateParallelFilteredCount(Blackhole blackhole) {
     blackhole.consume(data.parallelStream()
         .filter(executor::evaluate)
         .count());
@@ -72,7 +72,7 @@ public class ParallelStreamJMH {
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void calculateFilteredCount(Blackhole blackhole){
+  public void calculateFilteredCount(Blackhole blackhole) {
     blackhole.consume(data.stream()
         .filter(executor::evaluate)
         .count());
@@ -80,7 +80,7 @@ public class ParallelStreamJMH {
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
-  public void calculateFilteredAny(Blackhole blackhole){
+  public void calculateFilteredAny(Blackhole blackhole) {
     blackhole.consume(data.stream().anyMatch(executor::evaluate));
   }
 

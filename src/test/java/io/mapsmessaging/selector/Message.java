@@ -7,7 +7,7 @@ public class Message implements IdentifierMutator {
   private Map<String, Object> map;
   private byte[] opaqueData;
 
-  public Message(){
+  public Message() {
 
   }
 
@@ -32,15 +32,12 @@ public class Message implements IdentifierMutator {
     if (map != null) {
       return map.put(key, value);
     }
-    return null;  }
+    return null;
+  }
 
   @Override
   public byte[] getOpaqueData() {
     return opaqueData;
-  }
-
-  public void setMap(Map<String, Object> map) {
-    this.map = map;
   }
 
   public void setOpaqueData(byte[] opaqueData) {
@@ -49,5 +46,9 @@ public class Message implements IdentifierMutator {
 
   public Map<String, Object> getMap() {
     return map;
+  }
+
+  public void setMap(Map<String, Object> map) {
+    this.map = map;
   }
 }

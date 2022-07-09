@@ -19,9 +19,9 @@
 package io.mapsmessaging.selector.operators.functions;
 
 import io.mapsmessaging.selector.Identifier;
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
 public class IsOperatorTest {
 
@@ -36,14 +36,12 @@ public class IsOperatorTest {
     isOperator = new IsOperator("llhs", true);
     Assertions.assertTrue((Boolean) isOperator.evaluate(null));
 
-
     isOperator = new IsOperator(new Identifier("lhs"), false);
     Assertions.assertTrue((Boolean) isOperator.evaluate(null));
 
     isOperator = new IsOperator(new Identifier("lhs"), true);
     Assertions.assertFalse((Boolean) isOperator.evaluate(null));
     Assertions.assertNotEquals(isOperator, this);
-
 
     isOperator = new IsOperator(new Identifier("lhs"), false);
     Assertions.assertEquals("(<IDENTIFIER>[lhs]) IS NULL", isOperator.toString());

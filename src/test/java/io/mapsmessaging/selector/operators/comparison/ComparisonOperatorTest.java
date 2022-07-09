@@ -19,31 +19,31 @@
 package io.mapsmessaging.selector.operators.comparison;
 
 import io.mapsmessaging.selector.IdentifierMutator;
+import io.mapsmessaging.selector.IdentifierResolver;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.BeforeEach;
-import io.mapsmessaging.selector.IdentifierResolver;
 
 public class ComparisonOperatorTest {
 
   private HashMap<String, Object> dataSet;
 
   @BeforeEach
-  void buildDataSet(){
+  void buildDataSet() {
     dataSet = new LinkedHashMap<>();
     dataSet.put("textKey", "text data");
     dataSet.put("textNumericLongKey", "102");
     dataSet.put("textNumericRealKey", "102.11");
     dataSet.put("longKey", 1002L);
     dataSet.put("intKey", 1002);
-    dataSet.put("shortKey", (short)1002);
-    dataSet.put("byteKey", (byte)0x1f);
+    dataSet.put("shortKey", (short) 1002);
+    dataSet.put("byteKey", (byte) 0x1f);
     dataSet.put("doubleKey", 1002.12);
     dataSet.put("floatKey", 1002.12f);
   }
 
-  public IdentifierResolver getResolver(){
-    return new IdentifierMutator(){
+  public IdentifierResolver getResolver() {
+    return new IdentifierMutator() {
 
       @Override
       public Object get(String key) {

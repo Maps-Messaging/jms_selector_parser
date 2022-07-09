@@ -18,37 +18,37 @@
 
 package io.mapsmessaging.selector.operators.arithmetic;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class NegateTest {
+class NegateTest {
+
   @Test
-  public void simpleMathTests() throws ParseException {
+  void simpleMathTests() throws ParseException {
     NegateOperator negateOperator = new NegateOperator(8L);
     Assertions.assertEquals(-8L, negateOperator.evaluate(null));
 
     negateOperator = new NegateOperator(8);
     Assertions.assertEquals(-8L, negateOperator.evaluate(null));
 
-    negateOperator = new NegateOperator((short)8);
+    negateOperator = new NegateOperator((short) 8);
     Assertions.assertEquals(-8L, negateOperator.evaluate(null));
 
-    negateOperator = new NegateOperator((byte)8);
+    negateOperator = new NegateOperator((byte) 8);
     Assertions.assertEquals(-8L, negateOperator.evaluate(null));
 
     negateOperator = new NegateOperator(4.8);
     Assertions.assertEquals(-4.8, negateOperator.evaluate(null));
 
     negateOperator = new NegateOperator(4.8f);
-    Assertions.assertEquals(-4.8, (Math.round((Double)negateOperator.evaluate(null) *10.0) /10.0));
+    Assertions.assertEquals(-4.8, (Math.round((Double) negateOperator.evaluate(null) * 10.0) / 10.0));
 
-    negateOperator = new NegateOperator( 0L);
+    negateOperator = new NegateOperator(0L);
     Assertions.assertEquals(0L, negateOperator.evaluate(null));
 
     negateOperator = new NegateOperator(4.8);
     Assertions.assertEquals(-4.8, negateOperator.compile());
-
 
     negateOperator = new NegateOperator(4.8);
     NegateOperator negateOperator2 = new NegateOperator(4.8);
@@ -58,13 +58,15 @@ public class NegateTest {
     negateOperator2 = new NegateOperator(10.8);
     Assertions.assertNotEquals(negateOperator, negateOperator2);
     Assertions.assertNotEquals(negateOperator.hashCode(), negateOperator2.hashCode());
-    Assertions.assertNotEquals(negateOperator,this);
+    Assertions.assertNotEquals(negateOperator, this);
 
   }
 
   @Test
-  void simpleErrorTests()  {
-    Assertions.assertThrows(ParseException.class, ()->{ new NegateOperator(null);});
+  void simpleErrorTests() {
+    Assertions.assertThrows(ParseException.class, () -> {
+      new NegateOperator(null);
+    });
   }
 
 }

@@ -18,16 +18,16 @@
 
 package io.mapsmessaging.selector;
 
+import io.mapsmessaging.selector.extensions.ParserExtension;
+import io.mapsmessaging.selector.operators.ParserBooleanOperation;
+import io.mapsmessaging.selector.operators.ParserExecutor;
+import io.mapsmessaging.selector.operators.ParserOperationExecutor;
+import io.mapsmessaging.selector.operators.extentions.ParserFactory;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.operators.ParserBooleanOperation;
-import io.mapsmessaging.selector.operators.ParserExecutor;
-import io.mapsmessaging.selector.operators.ParserOperationExecutor;
-import io.mapsmessaging.selector.extensions.ParserExtension;
-import io.mapsmessaging.selector.operators.extentions.ParserFactory;
 
 class SelectorValidationTest {
 
@@ -37,7 +37,7 @@ class SelectorValidationTest {
     BeanTest bean = new BeanTest();
     bean.setCounter(0);
     ParserExecutor parser = SelectorParser.compile("counter = 10");
-    for(int x=0;x<9;x++){
+    for (int x = 0; x < 9; x++) {
       bean.increment();
       Assertions.assertFalse(parser.evaluate(bean));
     }
@@ -45,23 +45,6 @@ class SelectorValidationTest {
     Assertions.assertTrue(parser.evaluate(bean));
 
   }
-
-  public class BeanTest{
-    private int counter;
-
-    public void increment(){
-      counter++;
-    }
-
-    public int getCounter() {
-      return counter;
-    }
-
-    public void setCounter(int counter) {
-      this.counter = counter;
-    }
-  }
-
 
   @Test
   void checkEmptyMessage() throws ParseException {
@@ -72,9 +55,8 @@ class SelectorValidationTest {
 
   @Test
   void checkSyntaxExceptions() {
-    Assertions.assertThrows(ParseException.class, ()-> SelectorParser.compile("key 'found'"));
+    Assertions.assertThrows(ParseException.class, () -> SelectorParser.compile("key 'found'"));
   }
-
 
   @Test
   void checkEmptyDataMapMessage() throws ParseException {
@@ -99,6 +81,7 @@ class SelectorValidationTest {
     map.put("key2", 5);
     Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to false, not dummy");
   }
+
   @Test
   void checkNotNullDummy() throws ParseException {
     ParserExecutor parser1 = SelectorParser.compile("dummy IS NULL");
@@ -125,6 +108,7 @@ class SelectorValidationTest {
     Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to false, dummy AND false");
 
   }
+
   @Test
   void checkDummyAndDummy() throws ParseException {
     ParserExecutor parser1 = SelectorParser.compile("dummy and dummy");
@@ -142,7 +126,6 @@ class SelectorValidationTest {
     Assertions.assertFalse(parser1.evaluate(map), "Should have evaluated to true, 10 = 50 * 4 == FALSE");
   }
 
-
   @Test
   void checkArithmeticAdditionKeys() throws ParseException {
     ParserExecutor parser1 = SelectorParser.compile("key1 = key2 + 5");
@@ -150,7 +133,7 @@ class SelectorValidationTest {
     Assertions.assertTrue(parser1 instanceof ParserOperationExecutor);
     Assertions.assertTrue(parser2 instanceof ParserOperationExecutor);
     Map<String, Object> map = createMap("key1", 10L);
-    map.put("key2",5);
+    map.put("key2", 5);
     Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, key1 = key2 + 5");
     Assertions.assertTrue(parser2.evaluate(map), "Should have evaluated to true, key1 = key2 + 5");
     Assertions.assertFalse(parser1.evaluate(createMap("key1", 10L)), "Should have failed evaluated to true, key1 = null + 5, since key2 == null");
@@ -166,7 +149,7 @@ class SelectorValidationTest {
     Assertions.assertTrue(parser1 instanceof ParserOperationExecutor);
     Assertions.assertTrue(parser2 instanceof ParserOperationExecutor);
 
-    Map<String, Object> map =createMap("key1", 0L);
+    Map<String, Object> map = createMap("key1", 0L);
     map.put("key2", 5);
     Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, key1 = key2 - 5");
     Assertions.assertTrue(parser2.evaluate(map), "Should have evaluated to true, key1 = key2 - 5");
@@ -183,8 +166,8 @@ class SelectorValidationTest {
     Assertions.assertTrue(parser1 instanceof ParserOperationExecutor);
     Assertions.assertTrue(parser2 instanceof ParserOperationExecutor);
 
-    Map<String, Object> map =  createMap("key1", 1L);
-    map.put("key2",5);
+    Map<String, Object> map = createMap("key1", 1L);
+    map.put("key2", 5);
     Assertions.assertTrue(parser1.evaluate(map), "Should have evaluated to true, key1 = key2 / 5");
     Assertions.assertTrue(parser2.evaluate(map), "Should have evaluated to true, key1 = 5 / key2 ");
     Assertions.assertFalse(parser1.evaluate(createMap("key1", 5)), "Should have failed evaluated to true, key1 = null - 5, since key2 == null");
@@ -215,8 +198,8 @@ class SelectorValidationTest {
     Assertions.assertTrue(parser instanceof ParserOperationExecutor);
     Assertions.assertTrue(parser.evaluate(createMap("key", 1L)), "Should have evaluated to true, key=1");
     Assertions.assertTrue(parser.evaluate(createMap("key", 1)), "Should have evaluated to true, key=1");
-    Assertions.assertTrue(parser.evaluate(createMap("key", (short)1)), "Should have evaluated to true, key=1");
-    Assertions.assertTrue(parser.evaluate(createMap("key", (byte)1)), "Should have evaluated to true, key=1");
+    Assertions.assertTrue(parser.evaluate(createMap("key", (short) 1)), "Should have evaluated to true, key=1");
+    Assertions.assertTrue(parser.evaluate(createMap("key", (byte) 1)), "Should have evaluated to true, key=1");
     Assertions.assertTrue(parser.evaluate(createMap("key", 1.0f)), "Should have evaluated to true, key=1");
     Assertions.assertTrue(parser.evaluate(createMap("key", 1.0)), "Should have evaluated to true, key=1");
   }
@@ -227,25 +210,42 @@ class SelectorValidationTest {
     Assertions.assertTrue(parser instanceof ParserOperationExecutor);
     Assertions.assertFalse(parser.evaluate(createMap("key", 1L)), "Should have evaluated to true, key=1");
     Assertions.assertFalse(parser.evaluate(createMap("key", 1)), "Should have evaluated to true, key=1");
-    Assertions.assertFalse(parser.evaluate(createMap("key", (short)1)), "Should have evaluated to true, key=1");
-    Assertions.assertFalse(parser.evaluate(createMap("key", (byte)1)), "Should have evaluated to true, key=1");
+    Assertions.assertFalse(parser.evaluate(createMap("key", (short) 1)), "Should have evaluated to true, key=1");
+    Assertions.assertFalse(parser.evaluate(createMap("key", (byte) 1)), "Should have evaluated to true, key=1");
     Assertions.assertFalse(parser.evaluate(createMap("key", 1.0f)), "Should have evaluated to true, key=1");
     Assertions.assertFalse(parser.evaluate(createMap("key", 1.0)), "Should have evaluated to true, key=1");
   }
 
   @Test
-  void checkParserExtensions(){
+  void checkParserExtensions() {
     Iterator<ParserExtension> iterator = ParserFactory.getInstance().getServices();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       ParserExtension service = iterator.next();
       Assertions.assertTrue(service instanceof ParserExtension);
 
     }
   }
 
-  private Map<String, Object> createMap(String key, Object val){
+  private Map<String, Object> createMap(String key, Object val) {
     Map<String, Object> map = new LinkedHashMap<>();
     map.put(key, val);
     return map;
+  }
+
+  public class BeanTest {
+
+    private int counter;
+
+    public void increment() {
+      counter++;
+    }
+
+    public int getCounter() {
+      return counter;
+    }
+
+    public void setCounter(int counter) {
+      this.counter = counter;
+    }
   }
 }

@@ -18,15 +18,15 @@
 
 package io.mapsmessaging.selector.operators.arithmetic;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class DivisionTest {
+class DivisionTest {
 
   // test the different paths (Long + Long, Double+Long, Long+Double and Double + Double)
   @Test
-  public void simpleMathTests() throws ParseException {
+  void simpleMathTests() throws ParseException {
     DivideOperator divideOperator = new DivideOperator(8l, 2l);
     Assertions.assertEquals(4l, divideOperator.evaluate(null));
 
@@ -71,9 +71,13 @@ public class DivisionTest {
   }
 
   @Test
-  void simpleErrorTests()  {
-    Assertions.assertThrows(ParseException.class, ()->{ new DivideOperator(2L, "fred");});
-    Assertions.assertThrows(ParseException.class, ()->{ new DivideOperator("fred", 2L);});
+  void simpleErrorTests() {
+    Assertions.assertThrows(ParseException.class, () -> {
+      new DivideOperator(2L, "fred");
+    });
+    Assertions.assertThrows(ParseException.class, () -> {
+      new DivideOperator("fred", 2L);
+    });
   }
 
 }

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class NumericValidatorTest {
+
   @Test
   @DisplayName("Check valid numbers")
   void checkValid() {
@@ -30,8 +31,8 @@ class NumericValidatorTest {
     Assertions.assertTrue(NumericValidator.isValid(1.0f));
     Assertions.assertTrue(NumericValidator.isValid(1.0));
     Assertions.assertTrue(NumericValidator.isValid(1L));
-    Assertions.assertTrue(NumericValidator.isValid((byte)1));
-    Assertions.assertTrue(NumericValidator.isValid((short)1));
+    Assertions.assertTrue(NumericValidator.isValid((byte) 1));
+    Assertions.assertTrue(NumericValidator.isValid((short) 1));
   }
 
   @Test

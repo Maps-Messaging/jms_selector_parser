@@ -18,9 +18,9 @@
 
 package io.mapsmessaging.selector.operators.arithmetic;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
 class AdditionTest {
 
@@ -54,8 +54,12 @@ class AdditionTest {
   }
 
   @Test
-  void simpleErrorTests()  {
-    Assertions.assertThrows(ParseException.class, ()->{ new AddOperator(2L, "fred");});
-    Assertions.assertThrows(ParseException.class, ()->{ new AddOperator("fred", 2L);});
+  void simpleErrorTests() {
+    Assertions.assertThrows(ParseException.class, () -> {
+      new AddOperator(2L, "fred");
+    });
+    Assertions.assertThrows(ParseException.class, () -> {
+      new AddOperator("fred", 2L);
+    });
   }
 }

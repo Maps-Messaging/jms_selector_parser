@@ -18,14 +18,15 @@
 
 package io.mapsmessaging.selector.operators.arithmetic;
 
+import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.mapsmessaging.selector.ParseException;
 
-public class MultiplicationTest {
+class MultiplicationTest {
+
   // test the different paths (Long + Long, Double+Long, Long+Double and Double + Double)
   @Test
-  public void simpleMathTests() throws ParseException {
+  void simpleMathTests() throws ParseException {
     MultiplyOperator multiplyOperator = new MultiplyOperator(8l, 2l);
     Assertions.assertEquals(16l, multiplyOperator.evaluate(null));
 
@@ -55,9 +56,13 @@ public class MultiplicationTest {
   }
 
   @Test
-  void simpleErrorTests()  {
-    Assertions.assertThrows(ParseException.class, ()->{ new MultiplyOperator(2L, "fred");});
-    Assertions.assertThrows(ParseException.class, ()->{ new MultiplyOperator("fred", 2L);});
+  void simpleErrorTests() {
+    Assertions.assertThrows(ParseException.class, () -> {
+      new MultiplyOperator(2L, "fred");
+    });
+    Assertions.assertThrows(ParseException.class, () -> {
+      new MultiplyOperator("fred", 2L);
+    });
   }
 
 }
