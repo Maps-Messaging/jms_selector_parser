@@ -113,6 +113,7 @@ class SelectorConformanceTest {
   void syntaxTest() {
     for (String selector : SELECTOR_TEXT) {
       try {
+        Constants.setThreshold(0.000000001);
         ParserExecutor parser = SelectorParser.compile(selector);
         parser.toString();
       } catch (ParseException e) {

@@ -71,6 +71,7 @@
           </argLine>
           <includes>
             <include>**/*Test.java</include>
+            <include>**/Test**.java</include>
           </includes>
         </configuration>
       </plugin>
@@ -152,7 +153,6 @@
           </compilerArgs>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
@@ -162,14 +162,6 @@
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>20220320</version>
-    </dependency>
-
-    <!-- Junit5 -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.8.2</version>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -190,6 +182,14 @@
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-generator-annprocess</artifactId>
       <version>1.35</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Junit5 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.8.2</version>
       <scope>test</scope>
     </dependency>
 
