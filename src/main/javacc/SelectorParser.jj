@@ -6,7 +6,7 @@
  */
 
  /**
-  * A JavaCC 2.0 grammar for the JMS 1.0.2 message selectors.
+  * A JavaCC 2.0 grammar for the JMS message selectors.
   *
   * @see http://www.webgain.com/products/metamata/java_doc.html
   *
