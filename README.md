@@ -19,7 +19,7 @@ Then include the dependency
         <dependency>
           <groupId>io.mapsmessaging</groupId>
           <artifactId>Extensible_JMS_Selector_Parser</artifactId>
-          <version>1.0.0</version>
+          <version>1.1.8</version>
         </dependency>
      </dependencies>    
 ```    
