@@ -2,7 +2,7 @@
 
 ## pom.xml setup
 
-All MapsMessaging libraries are hosted on the [maven central server.](https://central.sonatype.com/artifact/io.mapsmessaging/Extensible_JMS_Selector_Parser/1.1.9/overview) 
+All MapsMessaging libraries are hosted on the [maven central server.](https://central.sonatype.com/search?smo=true&q=mapsmessaging) 
 
 Include the dependency
 ``` xml
