@@ -2,26 +2,16 @@
 
 ## pom.xml setup
 
-Add the repository configuration into the pom.xml
-``` xml
-    <!-- MapsMessaging jfrog server -->
-    <repository>
-      <id>mapsmessaging.io</id>
-      <name>artifactory-releases</name>
-      <url>https://mapsmessaging.jfrog.io/artifactory/mapsmessaging-mvn-prod</url>
-    </repository>
-```    
+All MapsMessaging libraries are hosted on the [maven central server.](https://central.sonatype.com/artifact/io.mapsmessaging/Extensible_JMS_Selector_Parser/1.1.9/overview) 
 
-Then include the dependency
+Include the dependency
 ``` xml
     <!-- JMS Selector logic module -->
-     <dependencies>    
-        <dependency>
-          <groupId>io.mapsmessaging</groupId>
-          <artifactId>Extensible_JMS_Selector_Parser</artifactId>
-          <version>1.1.8</version>
-        </dependency>
-     </dependencies>    
+    <dependency>
+      <groupId>io.mapsmessaging</groupId>
+      <artifactId>Extensible_JMS_Selector_Parser</artifactId>
+      <version>1.1.9</version>
+    </dependency>
 ```    
 
 ## Filtering java collections using Streams
