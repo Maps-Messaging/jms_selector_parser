@@ -108,7 +108,7 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.8</version>
+        <version>1.6.13</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>mapsmessaging.io</serverId>
@@ -169,7 +169,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.8</version>
+        <version>0.8.10</version>
         <configuration>
           <excludes>
             <!-- test code, lets not track the testing -->
@@ -231,7 +231,7 @@
           </execution>
         </executions>
         <groupId>org.apache.maven.plugins</groupId>
-        <version>3.4.1</version>
+        <version>3.5.0</version>
       </plugin>
     </plugins>
   </build>
@@ -269,7 +269,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.9.2</version>
+      <version>5.9.3</version>
       <scope>test</scope>
     </dependency>
 
