@@ -35,7 +35,7 @@ public class JsonParserExtension implements ParserExtension {
     keyPath = null;
   }
 
-  protected JsonParserExtension(List<String> arguments) throws ParseException {
+  public JsonParserExtension(List<String> arguments) throws ParseException {
     if(arguments.isEmpty()) throw new ParseException("Requires at least 1 argument");
     String key = arguments.get(0);
     if(key.contains(".")){
@@ -81,7 +81,15 @@ public class JsonParserExtension implements ParserExtension {
     return null;
   }
 
-  private Object locateObject(JSONObject json, String[] searchPath){
+  public Object locateObject(JSONObject json){
+    Object t = locateObject(json, keyPath);
+    if(t != null){
+      t = parseJSON(t);
+    }
+    return t;
+  }
+
+  public Object locateObject(JSONObject json, String[] searchPath){
     if(keyPath != null){
       // Walk the JSON path first
       for(var x=0;x<searchPath.length;x++){
