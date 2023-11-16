@@ -28,7 +28,39 @@ class JsonFilteringTest {
       }
     }
     Assertions.assertEquals(alaskaCount, filtered);
+  }
 
+
+  @Test
+  void nestedJsonFiltering() throws ParseException {
+    Faker faker = new Faker();
+    JSONArray addressList = buildList();
+    JSONArray people = new JSONArray();
+    for(int x=0;x<addressList.length();x++){
+      JSONObject address = addressList.getJSONObject(x);
+      JSONObject person = new JSONObject();
+      person.put("address", address);
+      person.put("first", faker.name().firstName());
+      person.put("last", faker.name().lastName());
+      person.put("phone", faker.phoneNumber().phoneNumber());
+      person.put("email", faker.internet().emailAddress());
+      people.put(person);
+    }
+
+
+    int alaskaCount = 0;
+    int filtered = 0;
+    ParserExecutor executor = SelectorParser.compile("address.state = 'Alaska'");
+    for(int x=0;x<people.length();x++){
+      JSONObject person = people.getJSONObject(x);
+      if(person.getJSONObject("address").get("state").equals("Alaska")){
+        alaskaCount++;
+      }
+      if(executor.evaluate(person)){
+        filtered++;
+      }
+    }
+    Assertions.assertEquals(alaskaCount, filtered);
   }
 
 
