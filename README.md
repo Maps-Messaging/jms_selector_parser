@@ -226,3 +226,7 @@ For support and queries, please reach out through our [support channel](https://
 
 ---
 For further details about the MapsMessaging ecosystem, visit [our main project page](https://www.mapsmessaging.io/).
+
+
+
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=Maps-Messaging_jms_selector)
