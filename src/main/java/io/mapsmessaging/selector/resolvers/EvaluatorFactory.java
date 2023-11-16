@@ -18,17 +18,22 @@
 package io.mapsmessaging.selector.resolvers;
 
 import io.mapsmessaging.selector.IdentifierResolver;
+import org.json.JSONObject;
 
 import java.util.Map;
 
 public class EvaluatorFactory {
 
+  @SuppressWarnings("unchecked")
   public static IdentifierResolver create(Object obj){
     if (obj instanceof IdentifierResolver) {
       return (IdentifierResolver) obj;
     }
     if (obj instanceof Map) {
       return new MapEvaluator((Map<String, Object>) obj);
+    }
+    if(obj instanceof JSONObject){
+      return new JsonEvaluator((JSONObject) obj);
     }
     return new BeanEvaluator(obj);
   }

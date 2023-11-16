@@ -1,38 +1,47 @@
-package io.mapsmessaging.selector.extensions;
+package io.mapsmessaging.selector;
 
 import com.github.javafaker.Faker;
-import io.mapsmessaging.selector.ParseException;
-import io.mapsmessaging.selector.SelectorParser;
 import io.mapsmessaging.selector.operators.ParserExecutor;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class StreamExample {
+class JavaStreamTest {
 
   private static final int LIST_SIZE = 10000;
   private final static List<Address> addressList =buildList();
 
   @Test
-  public void simpleStream1() throws ParseException {
+  void simpleStream1() throws ParseException {
     ParserExecutor executor = SelectorParser.compile("state = 'Alaska'");
     long alaskanAddresses = addressList.stream().filter(executor::evaluate).count();
-    System.err.println("Alaskan : "+alaskanAddresses);
+    long lookup = addressList.stream()
+        .filter(address -> "Alaska".equals(address.state))
+        .count();
+    Assertions.assertEquals(lookup, alaskanAddresses);
   }
 
   @Test
-  public void simpleStream2() throws ParseException {
+  void simpleStream2() throws ParseException {
     ParserExecutor executor = SelectorParser.compile("state IN ('Alaska', 'Hawaii')");
     long alaskanAddresses = addressList.stream().filter(executor::evaluate).count();
-    System.err.println("Alaskan OR Hawaii : "+alaskanAddresses);
+    long lookup = addressList.stream()
+        .filter(address -> "Alaska".equals(address.state) || "Hawaii".equals(address.state))
+        .count();
+Assertions.assertEquals(lookup, alaskanAddresses);
   }
 
   @Test
-  public void simpleParallel() throws ParseException {
+  void simpleParallel() throws ParseException {
     ParserExecutor executor = SelectorParser.compile("state IN ('Alaska', 'Hawaii')");
     long alaskanAddresses = addressList.parallelStream().filter(executor::evaluate).count();
-    System.err.println("Alaskan OR Hawaii : "+alaskanAddresses);
+
+    long lookup = addressList.stream()
+        .filter(address -> "Alaska".equals(address.state) || "Hawaii".equals(address.state))
+        .count();
+    Assertions.assertEquals(lookup, alaskanAddresses);
   }
 
   private static List<Address> buildList(){
