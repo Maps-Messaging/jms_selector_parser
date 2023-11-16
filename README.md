@@ -1,22 +1,54 @@
-# Usage
 
-## pom.xml setup
+# JMS Selector Module
 
-All MapsMessaging libraries are hosted on the [maven central server.](https://central.sonatype.com/search?smo=true&q=mapsmessaging) 
+The JMS Selector Module, an integral part of the MapsMessaging ecosystem, is a versatile tool designed for filtering objects using JMS Selector strings. Its functionality extends beyond the MapsMessaging server, making it a valuable asset for any application requiring advanced filtering capabilities.
 
-Include the dependency
+## Introduction
+This module is not just for MapsMessaging; it's a universal solution for implementing JMS Selector based filtering in various contexts. It's particularly useful for developers in IoT and beyond, looking for a robust method to filter complex data structures.
+
+## Standalone Use and Extensibility
+While originally developed for the MapsMessaging server, this module stands on its own as a powerful tool. It's easily extendable for filtering complex objects, providing a flexible solution adaptable to various requirements.
+Any object can be filtered using the module, if it can be converted to one of the currently supported types:
+- Map<String, Object>
+- JSONObject
+- Java Bean
+- Any object that implements the IdentifierMutator interface
+
+For more advanced or complex object than by implementing a IdentifierMutator that has knowledge of the object can be filtered.
+
+## Installation and Setup
+Integrate the JMS Selector Module into your project by adding this dependency to your `pom.xml`:
+
 ``` xml
-    <!-- JMS Selector logic module -->
-    <dependency>
-      <groupId>io.mapsmessaging</groupId>
-      <artifactId>Extensible_JMS_Selector_Parser</artifactId>
-      <version>1.1.9</version>
-    </dependency>
-```    
+<!-- JMS Selector logic module -->
+<dependency>
+  <groupId>io.mapsmessaging</groupId>
+  <artifactId>Extensible_JMS_Selector_Parser</artifactId>
+  <version>1.1.12</version>
+</dependency>
+```
+
+## Performance
+
+### High-Performance Design
+The JMS Selector Module is engineered for high performance, ensuring efficient parsing and filtering operations even in demanding environments. Performance is a key consideration in our design and implementation.
+
+### Benchmarking
+To objectively measure performance, we have employed Java Microbenchmark Harness (JMH) tests. These tests demonstrate the module's efficiency and speed under various scenarios.
+
+#### Reference to Test Code
+For transparency and to enable users to verify performance in their own environments, we have made our JMH test code available.
+You can find the tests [ParallelStreamJMH](https://github.com/Maps-Messaging/jms_selector_parser/blob/main/src/test/java/io/mapsmessaging/selector/ParallelStreamJMH.java) and run them to see how the module performs in your specific setup.
+
+
+## Usage and Examples
+### General Filtering
+Here's how you can use the module in a general context:
+
 
 ## Filtering java collections using Streams
 
-With the addition of Streams in the Java collection API, filtering objects within these become trivial. 
+With the addition of Streams in the Java collection API, filtering objects within these become trivial.
 The example below creates a list of address and then filters this list using the stream() functions.
 
 ```java
@@ -74,10 +106,9 @@ public class StreamExample {
 
 ```
 
-## Extensible JMS Selector Parser
-JMS Selector parser, this is a 2 pass parser that compiles the selector to the simplest form for faster execution.
+### Advanced Filtering of Complex Objects
+Extend the module's capabilities to filter more complex objects:
 
-Anything that has a key:value configuration can be filtered, for example a java bean object such as the following trivial example.
 
 ### Filtering Beans
 Here we have an object, BeanTest, that has an integer counter. We create a filter that will return true only if the counter == 10.
@@ -118,74 +149,80 @@ class SelectorValidationTest {
 ```
 Please note that for Java beans the name of the key is case-sensitive, so notice that the syntax uses "counter" and not "Counter" as the key.
 
-### Filtering Maps
-It can also be used to filter a Map<String, Object> such as
+### Filtering JSON Objects
+
+The parser will also detect if the object is of JSON type and will parse it accordingly.
+In this example we have a JSON object that has a key "counter" and we want to filter it if the value of the state is "Alaska".
+
+Currently, it supports org.json and org.json.simple JSON objects. If you are using other JSON obejcts then as long as they can be converted into a Map<String, Object> then they will be supported.
+Otherwise, you can extend the parser to support your JSON object by adding a new Evaluator to the code base.
+
 ```java
-class Examples {
+class JsonFilteringTest {
 
-  public void example() {
-    String selector = "currency IN ('aud', 'usd', 'jpy')";
-    ParserExecutor filter = SelectorParser.compile(selector);
+  private final static int LIST_SIZE = 1000;
 
-    // Build up simple map to be evaluated
-    Map<String, Object> map = new LinkedHashMap<>();
-    map.put("currency", "aud");
+  @Test
+  void simpleJsonFiltering() throws ParseException {
+    JSONArray addressList = buildList();
+    int alaskaCount = 0;
+    int filtered = 0;
+    ParserExecutor executor = SelectorParser.compile("state = 'Alaska'");
+    for(int x=0;x<addressList.length();x++){
+      JSONObject jsonObject = addressList.getJSONObject(x);
+      if(jsonObject.get("state").equals("Alaska")){
+        alaskaCount++;
+      }
+      if(executor.evaluate(jsonObject)){
+        filtered++;
+      }
+    }
+    Assertions.assertEquals(alaskaCount, filtered);
 
-    // Now evaluate the map against the supplied Selector syntax
-    if (parserExecutor.evaluate(map)) {
-      System.err.println("Currency is either AUD, USD or JPY");
+  }
+
+
+  private static JSONArray buildList(){
+    JSONArray addressList = new JSONArray();
+    Faker faker = new Faker();
+    for (int x = 0; x < LIST_SIZE; x++) {
+      JSONObject jsonObject = new JSONObject();
+      Address address = new Address(faker.address());
+      jsonObject.put("street", address.getStreet());
+      jsonObject.put("suburb", address.getSuburb());
+      jsonObject.put("zipCode", address.getZipCode());
+      jsonObject.put("state", address.getState());
+      addressList.put(jsonObject);
+    }
+    return addressList;
+  }
+
+  @Data
+  public static class Address{
+    final String street;
+    final String suburb;
+    final String zipCode;
+    final String state;
+
+    public Address(com.github.javafaker.Address address) {
+      this.state = address.state();
+      this.street = address.streetAddress();
+      this.suburb = address.city();
+      this.zipCode = address.zipCode();
+
     }
   }
 }
 ```
-### Complex Objects
 
-If your application has complex objects or data contained within an object that requires a more complex method of access, then simply write a class that extends [IdentifierResolver.java](https://github.com/Maps-Messaging/jms_selector_parser/blob/main/src/main/java/io/mapsmessaging/selector/IdentifierResolver.java). Here your code will implement the get(key) function, and you can return the calculated value.
+## Compatibility
+The module is designed for broad compatibility and can be seamlessly integrated into various systems, not limited to IoT messaging.
 
-Suppose we have a message object such as below. While it is a very simplistic message object it will illustrate the point.
+## Contributing
+Contributions are welcome to enhance the module's functionality and applicability.
 
-```java
-public class Message implements IdentifierResolver {
+## Support
+For support and queries, please reach out through our [support channel](https://www.mapsmessaging.io/support).
 
-  private Map<String, Object> map;
-  private byte[] opaqueData;
-
-  public Message(){
-
-  }
-
-  @Override
-  public Object get(String key) {
-    if (map != null) {
-      return map.get(key);
-    }
-    return null;
-  }
-
-  @Override
-  public byte[] getOpaqueData() {
-    return opaqueData;
-  }
-
-  public void setMap(Map<String, Object> map) {
-    this.map = map;
-  }
-
-  public void setOpaqueData(byte[] opaqueData) {
-    this.opaqueData = opaqueData;
-  }
-
-  public Map<String, Object> getMap() {
-    return map;
-  }
-}
-```
-
-Since it implements IdentifierResolver, the parser will call the get(String key) function to resolve the value. This is where your application can either calculate the value,
-do some complex lookups or whatever is required to resolve the value.
-
-
-Here are the links on how to [extend the selector](https://www.mapsmessaging.io/selector/extensions.html)
-
-
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=Maps-Messaging_jms_selector)
+---
+For further details about the MapsMessaging ecosystem, visit [our main project page](https://www.mapsmessaging.io/).

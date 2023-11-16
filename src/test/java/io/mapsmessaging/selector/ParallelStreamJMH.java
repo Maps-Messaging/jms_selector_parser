@@ -41,7 +41,7 @@ public class ParallelStreamJMH {
   @Setup
   public void parallelStreams() throws ParseException {
     data = new ArrayList<>();
-    for (int x = 0; x < 10000000; x++) {
+    for (int x = 0; x < 1000000; x++) {
       HashMap<String, Object> entry = new LinkedHashMap<>();
       entry.put("even", x % 2 == 0);
       data.add(entry::get);
@@ -72,11 +72,28 @@ public class ParallelStreamJMH {
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
+  public void calculateNativeParallelFilteredCount(Blackhole blackhole) {
+    blackhole.consume(data.parallelStream()
+        .filter(resolver -> (Boolean) resolver.get("even"))
+        .count());
+  }
+
+  @Benchmark
+  @BenchmarkMode(Mode.Throughput)
   public void calculateFilteredCount(Blackhole blackhole) {
     blackhole.consume(data.stream()
         .filter(executor::evaluate)
         .count());
   }
+
+  @Benchmark
+  @BenchmarkMode(Mode.Throughput)
+  public void calculateNativeFilteredCount(Blackhole blackhole) {
+    blackhole.consume(data.stream()
+        .filter(resolver -> (Boolean) resolver.get("even"))
+        .count());
+  }
+
 
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
