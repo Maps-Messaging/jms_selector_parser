@@ -27,12 +27,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
+@SuppressWarnings("java:S6548") // yes it is a singleton
 public class ParserFactory {
 
-  private static final ParserFactory instance = new ParserFactory();
-
-  public static ParserFactory getInstance(){
-    return instance;
+  private static class Holder {
+    static final ParserFactory INSTANCE = new ParserFactory();
+  }
+  public static ParserFactory getInstance() {
+    return ParserFactory.Holder.INSTANCE;
   }
 
   private final ServiceLoader<ParserExtension> knownParsers;
