@@ -129,7 +129,8 @@ SKIP :
 
 TOKEN [IGNORE_CASE]:
 {
-    < TRUE:      "TRUE" >
+    < ML_FUNCTION: "K-means_clustering" | "linear_regression" | "decision_tree" | "naive_bayes" |"hierarchical_clustering" | "pca" >
+  | < TRUE:      "TRUE" >
   | < FALSE:     "FALSE" >
   | < NULL:      "NULL" >
   | < AND:       "AND" >
@@ -411,6 +412,7 @@ Object unaryExpressionNotPlusMinus() :
    Token t = null;
    Object exp = null;
    List<String> list = null;
+   Token model = null;
 }
 {
    t=<IDENTIFIER>
@@ -422,6 +424,10 @@ Object unaryExpressionNotPlusMinus() :
          }
          return id;
       }
+    | t=<ML_FUNCTION> <LPAREN> {list=new ArrayList<>();} tokenList(list)  <RPAREN>
+       {
+          return new MLFunction(t.image, list);
+       }
    | t=<STRING>  { return stripQuotes(t.image); }
    | t=<DOUBLE>  { return Double.valueOf(t.image); }
    | t=<LONG>    { return Long.valueOf(t.image); }
@@ -513,4 +519,19 @@ void stringToken(List<String> list) :
 {
    [ t=<STRING> ]
       { if( t != null ) list.add(stripQuotes(t.image)); }
+}
+
+void tokenList(List<String> list) :
+{}
+{
+    token(list) ( <COMMA> token(list))*
+}
+
+void token(List<String> list) :
+{
+   Token t = null;
+}
+{
+   t=<IDENTIFIER>
+      { list.add(t.image); }
 }
