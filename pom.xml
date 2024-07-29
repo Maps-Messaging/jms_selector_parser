@@ -278,7 +278,7 @@
     <dependency>
       <groupId>nz.ac.waikato.cms.weka</groupId>
       <artifactId>weka-stable</artifactId>
-      <version>3.8.5</version> <!-- Use the latest stable version -->
+      <version>3.8.6</version> <!-- Use the latest stable version -->
     </dependency>
 
     <!-- Micro Benchmarking -->
