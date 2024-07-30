@@ -9,6 +9,7 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MLFunction extends Operation {
@@ -26,15 +27,17 @@ public class MLFunction extends Operation {
   public MLFunction(String functionName, List<String> list) {
     this.functionName = functionName;
     this.modelName = list.get(0);
-    identifiers = list.subList(1, list.size());
-
+    identifiers = new ArrayList<>();
+    for(int i = 1; i < list.size(); i++){
+      identifiers.add(list.get(i).trim());
+    }
     sampleSize = 10;
     sampleTime = 0;
   }
 
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    return this;
+    return true;
   }
 
   @Override
@@ -52,6 +55,8 @@ public class MLFunction extends Operation {
         return new HierarchicalClusterOperation(modelName,identifiers, sampleTime, sampleSize);
       case "pca":
         return new PCAOperation(modelName, identifiers, sampleTime, sampleSize);
+      case "model_exists":
+        return new ModelExistFunction(modelName);
       default:
         throw new UnsupportedOperationException("Unknown ML function: " + functionName);
     }

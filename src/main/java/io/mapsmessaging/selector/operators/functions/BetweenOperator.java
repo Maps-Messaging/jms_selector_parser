@@ -67,6 +67,7 @@ public class BetweenOperator extends FunctionOperator {
     return false;
   }
 
+  @Override
   public String toString(){
     return "("+lhs.toString() +") BETWEEN ("+ bottomOperator.getRHS()+" AND "+topOperator.getRHS()+")";
   }

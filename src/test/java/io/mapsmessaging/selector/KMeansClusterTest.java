@@ -1,5 +1,6 @@
 package io.mapsmessaging.selector;
 
+import io.mapsmessaging.selector.operators.ParserExecutor;
 import io.mapsmessaging.selector.operators.functions.MLFunction;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.KMeansClusterOperation;
 import org.junit.jupiter.api.Assertions;
@@ -23,58 +24,50 @@ class KMeansClusterTest {
       {6.0, 6.0}, {14.0, 14.0}, {26.0, 26.0}, {260.0, 260.0}
   };
 
-  private static double[] results = {0.057, 0.085, 0.057, 16.603};
+  private static String[] results = {
+      "K-means_clustering (modelName1, a0, a1) between 0.047 and 0.050",
+      "K-means_clustering (modelName1, a0, a1) between 0.162 and 0.164",
+      "K-means_clustering (modelName1, a0, a1) between 1.472 and 1.474",
+      "K-means_clustering (modelName1, a0, a1) > 16"
+  };
 
-  public static double round(double value, int places) {
-    if (places < 0) throw new IllegalArgumentException();
-
-    BigDecimal bd = BigDecimal.valueOf(value);
-    bd = bd.setScale(places, RoundingMode.HALF_UP);
-    return bd.doubleValue();
-  }
 
   @Test
   void testModel() throws ParseException {
-    List<String> dataList = new ArrayList<>();
-    dataList.add("0");
-    dataList.add("1");
-    KMeansClusterOperation kMeansOperation = new KMeansClusterOperation("value",dataList , 10000, trainingData.length);
+    ParserExecutor executor = SelectorParser.compile("K-means_clustering ( modelName1 , a0 , a1) > 0 OR NOT model_exists(modelName1)");
     ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
     // Train the model with the training data
     while(resolver.index< trainingData.length){
-      kMeansOperation.evaluate(resolver);
+      Assertions.assertTrue(executor.evaluate(resolver));
       resolver.index++;
     }
 
     // Apply the model to new test data
     resolver = new ArrayIdentifierResolver(testData);
     while(resolver.index< testData.length){
-      double distance = (double)  kMeansOperation.evaluate(resolver);
-      Assertions.assertEquals( round(results[resolver.index], 3), round(distance, 3));
+      executor = SelectorParser.compile(results[resolver.index]);
+      boolean result = executor.evaluate(resolver);
+      Assertions.assertTrue(result);
       resolver.index++;
     }
   }
 
   @Test
   void testReloadModel() throws Exception {
-    List<String> dataList = new ArrayList<>();
-    dataList.add("0");
-    dataList.add("1");
-    KMeansClusterOperation kMeansOperation = new KMeansClusterOperation("model",dataList , 0, trainingData.length);
+    ParserExecutor executor = SelectorParser.compile("K-means_clustering ( model , a0 , a1) > 0");
     ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
     // Train the model with the training data
     while(resolver.index< trainingData.length){
-      kMeansOperation.evaluate(resolver);
+      executor.evaluate(resolver);
       resolver.index++;
     }
 
+
     Assertions.assertTrue(MLFunction.getModelStore().modelExists("model"));
-    kMeansOperation = new KMeansClusterOperation("model",dataList , 0, trainingData.length);
-    // Apply the model to new test data
     resolver = new ArrayIdentifierResolver(testData);
     while(resolver.index< testData.length){
-      double distance = (double)  kMeansOperation.evaluate(resolver);
-      Assertions.assertEquals( round(results[resolver.index], 3), round(distance, 3));
+      executor = SelectorParser.compile(results[resolver.index]);
+      Assertions.assertTrue(executor.evaluate(resolver));
       resolver.index++;
     }
   }
@@ -83,7 +76,7 @@ class KMeansClusterTest {
 
   class ArrayIdentifierResolver implements IdentifierResolver {
 
-    private double[][] data;
+    private final double[][] data;
     protected int index =0;
 
     public ArrayIdentifierResolver(double[][] data) {
@@ -92,6 +85,7 @@ class KMeansClusterTest {
 
     @Override
     public Object get(String key) {
+      key = key.substring(1);
       int idx = Integer.parseInt(key);
       return data[index][idx];
     }

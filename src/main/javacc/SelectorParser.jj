@@ -129,7 +129,7 @@ SKIP :
 
 TOKEN [IGNORE_CASE]:
 {
-    < ML_FUNCTION: "K-means_clustering" | "linear_regression" | "decision_tree" | "naive_bayes" |"hierarchical_clustering" | "pca" >
+    < ML_FUNCTION: "K-means_clustering" | "linear_regression" | "decision_tree" | "naive_bayes" |"hierarchical_clustering" | "pca" | "model_exists" >
   | < TRUE:      "TRUE" >
   | < FALSE:     "FALSE" >
   | < NULL:      "NULL" >
@@ -426,7 +426,8 @@ Object unaryExpressionNotPlusMinus() :
       }
     | t=<ML_FUNCTION> <LPAREN> {list=new ArrayList<>();} tokenList(list)  <RPAREN>
        {
-          return new MLFunction(t.image, list);
+          MLFunction func = new MLFunction(t.image, list);
+          return func.compile();
        }
    | t=<STRING>  { return stripQuotes(t.image); }
    | t=<DOUBLE>  { return Double.valueOf(t.image); }

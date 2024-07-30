@@ -36,6 +36,7 @@ public class ParserOperationExecutor implements ParserExecutor {
         return (Boolean) result;
       }
     } catch (ParseException e) {
+      e.printStackTrace();
       // Log this exception
     }
     return false;

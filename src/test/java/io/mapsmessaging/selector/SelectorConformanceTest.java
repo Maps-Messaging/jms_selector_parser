@@ -27,6 +27,7 @@ class SelectorConformanceTest {
   public static final String[] SELECTOR_TEXT =
       {
           "K-means_clustering ( home_temp_K_means_model, temperature, humidity ) > 1.9",
+          "model_exists(home_temp_K_means_model) = true",
           "decision_tree (home_temp_decision_model, temperature, humidity, pressure) = 1",
           "linear_regression (home_temp_regression_model, temperature, humidity, pressure) < 50.0",
           "K-means_clustering (home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
@@ -136,7 +137,10 @@ class SelectorConformanceTest {
         Object parser1 = SelectorParser.compile(selector);
         Object parser2 = SelectorParser.compile(selector);
         Assertions.assertEquals(parser1.toString(), parser2.toString());
-        if(!(selector.contains("K-means_clustering") || selector.contains("decision_tree") || selector.contains("linear_regression"))) {
+        if(!(selector.contains("K-means_clustering") ||
+            selector.contains("decision_tree") ||
+            selector.contains("model_exists") ||
+            selector.contains("linear_regression"))) {
           Assertions.assertEquals(parser1.hashCode(), parser2.hashCode());
         }
       } catch (ParseException e) {
