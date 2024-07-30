@@ -2,7 +2,6 @@ package io.mapsmessaging.selector.operators.functions.ml;
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
-import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.MLFunction;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import weka.core.Attribute;
@@ -13,18 +12,14 @@ import weka.core.Instances;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractMLModelOperation extends Operation {
-  protected final List<String> identity;
+public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected final List<Instance> dataBuffer = new ArrayList<>();
-  protected final String modelName;
   protected final long sampleSize;
   protected final long sampleTime;
   protected Instances structure;
-  protected boolean isModelTrained = false;
 
   protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples) {
-    this.identity = identity;
-    this.modelName = modelName;
+    super(modelName, identity);
     this.sampleSize = samples;
     this.sampleTime = (time > 0) ?System.currentTimeMillis() + time:0;
     try {
@@ -49,20 +44,6 @@ public abstract class AbstractMLModelOperation extends Operation {
       }
       structure = new Instances(modelName, attributes, 0);
     }
-  }
-
-
-  protected double[] evaluateList(IdentifierResolver resolver) throws ParseException {
-    double[] dataset = new double[identity.size()];
-    for (int x = 0; x < identity.size(); x++) {
-      Number val = evaluateToNumber(resolver.get(identity.get(x)), resolver);
-      if (val != null) {
-        dataset[x] = val.doubleValue();
-      } else {
-        dataset[x] = Double.NaN;
-      }
-    }
-    return dataset;
   }
 
   @Override
@@ -106,18 +87,5 @@ public abstract class AbstractMLModelOperation extends Operation {
 
   protected abstract void buildModel(Instances trainingData) throws Exception;
 
-  @Override
-  public Object compile() {
-    return this;
-  }
-
-  @Override
-  public String toString(){
-    StringBuilder sb = new StringBuilder(modelName);
-    for(String s : identity) {
-      sb.append(", ").append(s);
-    }
-    return sb.toString();
-  }
 }
 

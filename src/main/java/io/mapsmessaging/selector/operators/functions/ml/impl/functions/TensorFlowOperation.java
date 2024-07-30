@@ -1,46 +1,42 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 
+import io.mapsmessaging.selector.IdentifierResolver;
+import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.functions.MLFunction;
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import weka.core.Instance;
-import weka.core.Instances;
 
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.DoubleBuffer;
 import java.util.List;
 
-public class TensorFlowOperation extends AbstractMLModelOperation {
+public class TensorFlowOperation extends AbstractModelOperations {
   private SavedModelBundle model;
 
-  public TensorFlowOperation(String modelName, List<String> identity, long time, long samples) {
-    super(modelName, identity, time, samples);
-  }
-
-  @Override
-  protected void initializeSpecificModel() throws Exception {
-    // Initialize TensorFlow model
-  }
-
-  protected void buildModel(Instances trainingData) throws Exception{}
-
-
-
-
-  @Override
-  protected double applyModel(Instance instance) throws Exception {
-    // Extract feature values from the instance
-    float[] features = new float[instance.numAttributes()];
-    for (int i = 0; i < instance.numAttributes(); i++) {
-      features[i] = (float) instance.value(i);
+  public TensorFlowOperation(String modelName, List<String> identity) {
+    super(modelName, identity);
+    try {
+      initializeModel();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
+  }
+
+  protected void initializeModel() throws Exception {
+    loadModel();
+    isModelTrained = true;
+  }
+
+  @Override
+  public Object evaluate(IdentifierResolver resolver) throws ParseException {
+    double[] features = evaluateList(resolver);
 
     // Create a TensorFlow tensor from the extracted feature values
-    try (Tensor<Float> inputTensor =
-             Tensor.create(new long[]{1, features.length}, FloatBuffer.wrap(features));
+    try (Tensor<Double> inputTensor =
+             Tensor.create(new long[]{1, features.length}, DoubleBuffer.wrap(features));
          Session session = model.session()) {
 
       // Run the model and fetch the result
@@ -59,13 +55,12 @@ public class TensorFlowOperation extends AbstractMLModelOperation {
   }
 
   protected void saveModel() throws Exception {
+    throw new IOException("Not implemented");
   }
 
   protected void loadModel() throws Exception {
     byte[] modelData = MLFunction.getModelStore().loadModel(modelName + "_data");
-    structure = ModelUtils.byteArrayToInstances(modelData);
-    byte[] tfModelData = MLFunction.getModelStore().loadModel(modelName + "_tfmodel");
-    model = ModelUtils.byteArrayToModel(tfModelData, "temp");
+    model = ModelUtils.byteArrayToModel(modelData, "");
     isModelTrained = true;
   }
 }

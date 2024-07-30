@@ -32,7 +32,6 @@ public class BetweenOperator extends FunctionOperator {
   private final ComparisonOperator bottomOperator;
   private final ComparisonOperator topOperator;
 
-
   public BetweenOperator(Object lhs, Object lowest, Object highest){
     if(lowest instanceof Operation){
       lowest = ((Operation)lowest).compile();

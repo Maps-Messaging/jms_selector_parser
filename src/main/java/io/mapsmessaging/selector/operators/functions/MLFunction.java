@@ -56,7 +56,7 @@ public class MLFunction extends Operation {
       case "pca":
         return new PCAOperation(modelName, identifiers, sampleTime, sampleSize);
       case "tensorflow":
-        return new ModelExistFunction(modelName);
+        return new TensorFlowOperation(modelName,identifiers);
       case "model_exists":
         return new ModelExistFunction(modelName);
       default:
