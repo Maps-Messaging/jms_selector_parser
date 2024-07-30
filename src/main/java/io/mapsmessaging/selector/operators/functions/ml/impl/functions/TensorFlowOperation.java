@@ -8,9 +8,13 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.types.TFloat64;
 
 import java.io.IOException;
 import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.List;
 
 public class TensorFlowOperation extends AbstractModelOperations {
@@ -30,32 +34,35 @@ public class TensorFlowOperation extends AbstractModelOperations {
     isModelTrained = true;
   }
 
+  protected Object[] evaluateList(IdentifierResolver resolver) throws ParseException {
+    Object[] dataset = new Object[identity.size()];
+    for (int x = 0; x < identity.size(); x++) {
+      dataset[x] = resolver.get(identity.get(x));
+    }
+    return dataset;
+  }
+
+
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    double[] features = evaluateList(resolver);
+    Object[] features = evaluateList(resolver);
 
-    // Create a TensorFlow tensor from the extracted feature values
-    try (Tensor<Double> inputTensor =
-             Tensor.create(new long[]{1, features.length}, DoubleBuffer.wrap(features));
-         Session session = model.session()) {
+    Tensor<TFloat64> inputTensor = createTensor(features);
 
-      // Run the model and fetch the result
+    // Run the model and fetch the result
+    try (Session session = model.session()) {
       List<Tensor<?>> outputs = session.runner()
           .feed("input_tensor_name", inputTensor)
           .fetch("output_tensor_name")
           .run();
 
       // Retrieve the output tensor and extract the result
-      try (Tensor<Float> outputTensor = outputs.get(0).expect(Float.class)) {
-        float[][] result = new float[1][];
+      try (Tensor<Double> outputTensor = outputs.get(0).expect(double.class)) {
+        double[][] result = new double[1][];
         outputTensor.copyTo(result);
-        return result[0][0]; // Adjust this based on your model's output
+        return result[0][0];
       }
     }
-  }
-
-  protected void saveModel() throws Exception {
-    throw new IOException("Not implemented");
   }
 
   protected void loadModel() throws Exception {
@@ -63,6 +70,28 @@ public class TensorFlowOperation extends AbstractModelOperations {
     model = ModelUtils.byteArrayToModel(modelData, "");
     isModelTrained = true;
   }
+
+  private Tensor<TFloat64> createTensor(Object[] features) {
+    double[] doubleFeatures = new double[features.length];
+
+    for (int i = 0; i < features.length; i++) {
+      Object feature = features[i];
+      if (feature instanceof Number) {
+        doubleFeatures[i] = ((Number) feature).doubleValue();
+      } else if (feature instanceof String) {
+        try {
+          doubleFeatures[i] = Double.parseDouble((String) feature);
+        } catch (NumberFormatException e) {
+          throw new IllegalArgumentException("Invalid string input: " + feature, e);
+        }
+      } else {
+        doubleFeatures[i] = Double.NaN;
+      }
+    }
+
+    return TFloat64.tensorOf(NdArrays.vectorOf(doubleFeatures));
+  }
+
 }
 
 

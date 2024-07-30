@@ -17,19 +17,6 @@ public abstract class AbstractModelOperations extends Operation {
     isModelTrained = false;
   }
 
-  protected double[] evaluateList(IdentifierResolver resolver) throws ParseException {
-    double[] dataset = new double[identity.size()];
-    for (int x = 0; x < identity.size(); x++) {
-      Number val = evaluateToNumber(resolver.get(identity.get(x)), resolver);
-      if (val != null) {
-        dataset[x] = val.doubleValue();
-      } else {
-        dataset[x] = Double.NaN;
-      }
-    }
-    return dataset;
-  }
-
   @Override
   public Object compile() {
     return this;

@@ -81,6 +81,20 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     return Double.NaN; // or some other placeholder
   }
 
+
+  protected double[] evaluateList(IdentifierResolver resolver) throws ParseException {
+    double[] dataset = new double[identity.size()];
+    for (int x = 0; x < identity.size(); x++) {
+      Number val = evaluateToNumber(resolver.get(identity.get(x)), resolver);
+      if (val != null) {
+        dataset[x] = val.doubleValue();
+      } else {
+        dataset[x] = Double.NaN;
+      }
+    }
+    return dataset;
+  }
+
   protected abstract void initializeSpecificModel() throws Exception;
 
   protected abstract double applyModel(Instance instance) throws Exception;
