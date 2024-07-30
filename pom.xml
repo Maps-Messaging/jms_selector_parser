@@ -281,6 +281,25 @@
       <version>3.8.6</version> <!-- Use the latest stable version -->
     </dependency>
 
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow</artifactId>
+      <version>1.15.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>proto</artifactId>
+      <version>1.15.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core -->
+    <dependency>
+      <groupId>org.deeplearning4j</groupId>
+      <artifactId>deeplearning4j-core</artifactId>
+      <version>1.0.0-M2.1</version>
+    </dependency>
+
+
     <!-- Micro Benchmarking -->
     <dependency>
       <groupId>org.openjdk.jmh</groupId>

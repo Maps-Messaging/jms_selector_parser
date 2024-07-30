@@ -42,8 +42,8 @@ public class MLFunction extends Operation {
 
   @Override
   public Object compile() {
-    switch (functionName) {
-      case "K-means_clustering":
+    switch (functionName.toLowerCase()) {
+      case "k-means_clustering":
         return new KMeansClusterOperation(modelName, identifiers, sampleTime, sampleSize);
       case "linear_regression":
         return new LinearRegressionOperation(modelName, identifiers, sampleTime, sampleSize);
@@ -55,6 +55,8 @@ public class MLFunction extends Operation {
         return new HierarchicalClusterOperation(modelName,identifiers, sampleTime, sampleSize);
       case "pca":
         return new PCAOperation(modelName, identifiers, sampleTime, sampleSize);
+      case "tensorflow":
+        return new ModelExistFunction(modelName);
       case "model_exists":
         return new ModelExistFunction(modelName);
       default:
