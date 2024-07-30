@@ -26,12 +26,12 @@ class SelectorConformanceTest {
 
   public static final String[] SELECTOR_TEXT =
       {
-          "K-means_clustering ( home_temp_model, temperature, humidity ) > 1.9",
-          "decision_tree (home_temp_model, temperature, humidity, pressure) = 1",
-          "linear_regression (home_temp_model, temperature, humidity, pressure) < 50.0",
-          "K-means_clustering (home_temp_model, temperature, humidity, pressure) > 1.9 and time <> 12",
-          "linear_regression (home_temp_model, temperature, humidity, pressure) < 50.0 OR ( time = 11 )",
-          "decision_tree (home_temp_model, temperature, humidity, pressure) = 1 and phone not like '12%3'",
+          "K-means_clustering ( home_temp_K_means_model, temperature, humidity ) > 1.9",
+          "decision_tree (home_temp_decision_model, temperature, humidity, pressure) = 1",
+          "linear_regression (home_temp_regression_model, temperature, humidity, pressure) < 50.0",
+          "K-means_clustering (home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
+          "linear_regression (home_temp_regression_model, temperature, humidity, pressure) < 50.0 OR ( time = 11 )",
+          "decision_tree (home_temp_decision_model, temperature, humidity, pressure) = 1 and phone not like '12%3'",
           "true OR dummy",
           "false or dummy",
           "level1.level2.array[0].name = 'test'",

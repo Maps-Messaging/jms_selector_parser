@@ -3,11 +3,17 @@ package io.mapsmessaging.selector.operators.functions.ml;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
+import io.mapsmessaging.selector.operators.functions.MLFunction;
+import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +30,7 @@ public abstract class AbstractMLModelOperation extends Operation {
     this.identity = identity;
     this.modelName = modelName;
     this.sampleSize = samples;
-    this.sampleTime = System.currentTimeMillis() + time;
+    this.sampleTime = (time > 0) ?System.currentTimeMillis() + time:0;
     try {
       initializeModel();
     } catch (Exception e) {
@@ -34,13 +40,21 @@ public abstract class AbstractMLModelOperation extends Operation {
   }
 
   protected void initializeModel() throws Exception {
-    ArrayList<Attribute> attributes = new ArrayList<>();
-    for (String s : identity) {
-      attributes.add(new Attribute(s));
-    }
-    structure = new Instances(modelName, attributes, 0);
     initializeSpecificModel();
+    if (MLFunction.getModelStore().modelExists(modelName)) {
+      byte[] loadedModel = MLFunction.getModelStore().loadModel(modelName);
+      structure = ModelUtils.byteArrayToInstances(loadedModel);
+      buildModel(structure);
+      isModelTrained = true;
+    } else {
+      ArrayList<Attribute> attributes = new ArrayList<>();
+      for (String s : identity) {
+        attributes.add(new Attribute(s));
+      }
+      structure = new Instances(modelName, attributes, 0);
+    }
   }
+
 
   protected double[] evaluateList(IdentifierResolver resolver) throws ParseException {
     double[] dataset = new double[identity.size()];
@@ -70,7 +84,13 @@ public abstract class AbstractMLModelOperation extends Operation {
               (sampleTime != 0 && System.currentTimeMillis() > sampleTime)
           )
       ) {
-        trainModel();
+        Instances trainingData = new Instances(structure, dataBuffer.size());
+        trainingData.addAll(dataBuffer);
+        buildModel(trainingData);
+        dataBuffer.clear();
+        if(isModelTrained){
+          MLFunction.getModelStore().saveModel(modelName, ModelUtils.instancesToByteArray(trainingData));
+        }
       }
 
       if (isModelTrained) {
@@ -86,9 +106,9 @@ public abstract class AbstractMLModelOperation extends Operation {
 
   protected abstract void initializeSpecificModel() throws Exception;
 
-  protected abstract void trainModel() throws Exception;
-
   protected abstract double applyModel(Instance instance) throws Exception;
+
+  protected abstract void buildModel(Instances trainingData) throws Exception;
 
   @Override
   public Object compile() {

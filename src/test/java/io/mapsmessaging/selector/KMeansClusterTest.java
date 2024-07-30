@@ -1,6 +1,7 @@
 package io.mapsmessaging.selector;
 
-import io.mapsmessaging.selector.operators.functions.ml.KMeansClusterOperation;
+import io.mapsmessaging.selector.operators.functions.MLFunction;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.KMeansClusterOperation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -53,6 +54,31 @@ class KMeansClusterTest {
       resolver.index++;
     }
   }
+
+  @Test
+  void testReloadModel() throws Exception {
+    List<String> dataList = new ArrayList<>();
+    dataList.add("0");
+    dataList.add("1");
+    KMeansClusterOperation kMeansOperation = new KMeansClusterOperation("model",dataList , 0, trainingData.length);
+    ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
+    // Train the model with the training data
+    while(resolver.index< trainingData.length){
+      kMeansOperation.evaluate(resolver);
+      resolver.index++;
+    }
+
+    Assertions.assertTrue(MLFunction.getModelStore().modelExists("model"));
+    kMeansOperation = new KMeansClusterOperation("model",dataList , 0, trainingData.length);
+    // Apply the model to new test data
+    resolver = new ArrayIdentifierResolver(testData);
+    while(resolver.index< testData.length){
+      double distance = (double)  kMeansOperation.evaluate(resolver);
+      Assertions.assertEquals( round(results[resolver.index], 3), round(distance, 3));
+      resolver.index++;
+    }
+  }
+
 
 
   class ArrayIdentifierResolver implements IdentifierResolver {

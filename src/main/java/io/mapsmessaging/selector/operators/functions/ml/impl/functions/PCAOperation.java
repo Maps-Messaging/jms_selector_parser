@@ -1,5 +1,6 @@
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 
+import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
 import weka.core.Attribute;
@@ -30,11 +31,7 @@ public class PCAOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void trainModel() throws Exception {
-    // PCA does not require traditional training, it transforms the data
-    Instances trainingData = new Instances(structure, dataBuffer.size());
-    trainingData.addAll(dataBuffer);
-
+  protected void buildModel(Instances trainingData) throws Exception {
     // Set up the PrincipalComponents evaluator
     PrincipalComponents pca = new PrincipalComponents();
     pca.setVarianceCovered(0.95); // For example, keep 95% of variance
@@ -51,8 +48,8 @@ public class PCAOperation extends AbstractMLModelOperation {
     // Apply the filter to the training data to initialize it
     Filter.useFilter(trainingData, filter);
     isModelTrained = true;
-    dataBuffer.clear();
   }
+
 
   @Override
   protected double applyModel(Instance instance) throws Exception {

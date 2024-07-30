@@ -1,4 +1,4 @@
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 
 import lombok.Getter;
 import lombok.ToString;

@@ -1,5 +1,6 @@
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 
+import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import weka.clusterers.HierarchicalClusterer;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -27,12 +28,9 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void trainModel() throws Exception {
-    Instances trainingData = new Instances(structure, dataBuffer.size());
-    trainingData.addAll(dataBuffer);
+  protected void buildModel(Instances trainingData) throws Exception {
     hierarchicalClusterer.buildClusterer(trainingData);
     isModelTrained = true;
-    dataBuffer.clear();
   }
 
   @Override

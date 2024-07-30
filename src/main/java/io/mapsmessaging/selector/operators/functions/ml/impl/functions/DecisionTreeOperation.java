@@ -1,5 +1,6 @@
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 
+import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -28,12 +29,9 @@ public class DecisionTreeOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void trainModel() throws Exception {
-    Instances trainingData = new Instances(structure, dataBuffer.size());
-    trainingData.addAll(dataBuffer);
+  protected void buildModel(Instances trainingData) throws Exception {
     decisionTree.buildClassifier(trainingData);
     isModelTrained = true;
-    dataBuffer.clear();
   }
 
   @Override

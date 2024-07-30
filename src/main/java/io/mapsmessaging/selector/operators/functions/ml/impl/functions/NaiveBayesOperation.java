@@ -1,5 +1,6 @@
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 
+import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -28,13 +29,11 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void trainModel() throws Exception {
-    Instances trainingData = new Instances(structure, dataBuffer.size());
-    trainingData.addAll(dataBuffer);
+  protected void buildModel(Instances trainingData) throws Exception {
     naiveBayes.buildClassifier(trainingData);
     isModelTrained = true;
-    dataBuffer.clear();
   }
+
 
   @Override
   protected double applyModel(Instance instance) throws Exception {

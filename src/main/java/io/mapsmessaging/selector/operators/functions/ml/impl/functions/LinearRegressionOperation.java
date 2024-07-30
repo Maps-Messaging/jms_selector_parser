@@ -1,5 +1,6 @@
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 
+import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -30,12 +31,9 @@ public class LinearRegressionOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void trainModel() throws Exception {
-    Instances trainingData = new Instances(structure, dataBuffer.size());
-    trainingData.addAll(dataBuffer);
+  protected void buildModel(Instances trainingData) throws Exception {
     linearRegression.buildClassifier(trainingData);
     isModelTrained = true;
-    dataBuffer.clear();
   }
 
   @Override

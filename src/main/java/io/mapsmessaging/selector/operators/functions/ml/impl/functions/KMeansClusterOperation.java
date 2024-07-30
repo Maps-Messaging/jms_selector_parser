@@ -1,5 +1,6 @@
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 
+import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
 import weka.core.EuclideanDistance;
@@ -27,12 +28,9 @@ public class KMeansClusterOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void trainModel() throws Exception {
-    Instances trainingData = new Instances(structure, dataBuffer.size());
-    trainingData.addAll(dataBuffer);
+  protected void buildModel(Instances trainingData) throws Exception {
     kmeans.buildClusterer(trainingData);
     isModelTrained = true;
-    dataBuffer.clear();
   }
 
   @Override

@@ -3,11 +3,20 @@ package io.mapsmessaging.selector.operators.functions;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
-import io.mapsmessaging.selector.operators.functions.ml.*;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.*;
+import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 public class MLFunction extends Operation {
+
+  @Getter
+  @Setter
+  private static ModelStore modelStore = new MapModelStore();
+
   private final String functionName;
   private final String modelName;
   private final long sampleSize;
@@ -19,7 +28,7 @@ public class MLFunction extends Operation {
     this.modelName = list.get(0);
     identifiers = list.subList(1, list.size());
 
-    sampleSize = 100;
+    sampleSize = 10;
     sampleTime = 0;
   }
 
