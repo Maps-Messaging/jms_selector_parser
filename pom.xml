@@ -281,25 +281,13 @@
       <version>3.8.6</version> <!-- Use the latest stable version -->
     </dependency>
 
-    <dependency>
-      <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow</artifactId>
-      <version>1.15.0</version>
-    </dependency>
-
-
+    <!-- https://mvnrepository.com/artifact/org.tensorflow/tensorflow-core-platform -->
     <dependency>
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-platform</artifactId>
-      <version>0.3.3</version>
+      <version>1.0.0-rc.1</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.tensorflow/proto -->
-    <dependency>
-      <groupId>org.tensorflow</groupId>
-      <artifactId>proto</artifactId>
-      <version>1.15.0</version>
-    </dependency>
 
 
     <!-- Micro Benchmarking -->

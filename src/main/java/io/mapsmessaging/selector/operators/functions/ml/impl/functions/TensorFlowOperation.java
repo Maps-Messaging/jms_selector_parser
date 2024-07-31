@@ -5,11 +5,15 @@ import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.functions.MLFunction;
 import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
+import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.buffer.DataBuffers;
+import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.types.TFloat64;
+
 
 import java.util.List;
 
@@ -42,20 +46,20 @@ public class TensorFlowOperation extends AbstractModelOperations {
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object[] features = evaluateList(resolver);
 
-    Tensor<TFloat64> inputTensor = createTensor(features);
+    Tensor inputTensor = createTensor(features);
 
     // Run the model and fetch the result
     try (Session session = model.session()) {
-      List<Tensor<?>> outputs = session.runner()
+      Result outputs = session.runner()
           .feed("input_tensor_name", inputTensor)
           .fetch("output_tensor_name")
           .run();
 
       // Retrieve the output tensor and extract the result
-      try (Tensor<Double> outputTensor = outputs.get(0).expect(double.class)) {
-        double[][] result = new double[1][];
-        outputTensor.copyTo(result);
-        return result[0][0];
+      try (Tensor outputTensor = outputs.get(0)) {
+        double[] result = new double[(int) outputTensor.shape().size(1)];
+        outputTensor.asRawTensor().data().asDoubles().read(result);
+        return result[0]; // Adjust this based on your model's output
       }
     }
   }
@@ -66,7 +70,8 @@ public class TensorFlowOperation extends AbstractModelOperations {
     isModelTrained = true;
   }
 
-  private Tensor<TFloat64> createTensor(Object[] features) {
+
+  private Tensor createTensor(Object[] features) {
     double[] doubleFeatures = new double[features.length];
 
     for (int i = 0; i < features.length; i++) {
@@ -80,13 +85,16 @@ public class TensorFlowOperation extends AbstractModelOperations {
           throw new IllegalArgumentException("Invalid string input: " + feature, e);
         }
       } else {
-        doubleFeatures[i] = Double.NaN;
+        throw new IllegalArgumentException("Unsupported input type: " + feature.getClass().getName());
       }
     }
 
-    return TFloat64.tensorOf(NdArrays.vectorOf(doubleFeatures));
-  }
+    // Create DoubleDataBuffer
+    DoubleDataBuffer buffer = DataBuffers.of(doubleFeatures);
 
+    // Create the tensor using the buffer
+    return TFloat64.tensorOf(Shape.of(1, doubleFeatures.length), buffer);
+  }
 }
 
 
