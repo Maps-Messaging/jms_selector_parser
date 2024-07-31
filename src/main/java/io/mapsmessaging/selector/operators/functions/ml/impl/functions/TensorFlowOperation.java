@@ -11,10 +11,6 @@ import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.types.TFloat64;
 
-import java.io.IOException;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.util.Arrays;
 import java.util.List;
 
 public class TensorFlowOperation extends AbstractModelOperations {
@@ -41,7 +37,6 @@ public class TensorFlowOperation extends AbstractModelOperations {
     }
     return dataset;
   }
-
 
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
