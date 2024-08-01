@@ -1,18 +1,17 @@
 /*
+ *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
  *
- *   Copyright [ 2020 - 2023 ] [Matthew Buckton]
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
  */
 
@@ -29,7 +28,8 @@ public class EqualOperator extends ComparisonOperator {
 
   @Override
   protected Boolean compute(double lhs, double rhs) {
-    return (Math.abs(lhs - rhs) < Constants.getThreshold()) || (Double.isNaN(lhs) && Double.isNaN(rhs));
+    return (Math.abs(lhs - rhs) < Constants.getThreshold())
+        || (Double.isNaN(lhs) && Double.isNaN(rhs));
   }
 
   @Override
@@ -53,25 +53,25 @@ public class EqualOperator extends ComparisonOperator {
   }
 
   @Override
-  protected Boolean compute(Boolean lhs, Boolean rhs){
+  protected Boolean compute(Boolean lhs, Boolean rhs) {
     return lhs.equals(rhs);
   }
 
   @Override
-  public String toString(){
-    return "("+lhs.toString() +") == ("+rhs.toString()+")";
+  public String toString() {
+    return "(" + lhs.toString() + ") == (" + rhs.toString() + ")";
   }
 
   @Override
-  public boolean equals(Object test){
-    if(test instanceof EqualOperator){
+  public boolean equals(Object test) {
+    if (test instanceof EqualOperator) {
       return (lhs.equals(((EqualOperator) test).lhs) && rhs.equals(((EqualOperator) test).rhs));
     }
     return false;
   }
 
   @Override
-  public int hashCode(){
+  public int hashCode() {
     return lhs.hashCode() ^ rhs.hashCode();
   }
 }

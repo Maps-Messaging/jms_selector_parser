@@ -1,16 +1,32 @@
+/*
+ *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package io.mapsmessaging.selector.operators.functions.ml;
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.functions.MLFunction;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
+import java.util.ArrayList;
+import java.util.List;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected final List<Instance> dataBuffer = new ArrayList<>();
@@ -18,10 +34,11 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected final long sampleTime;
   protected Instances structure;
 
-  protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples) {
+  protected AbstractMLModelOperation(
+      String modelName, List<String> identity, long time, long samples) {
     super(modelName, identity);
     this.sampleSize = samples;
-    this.sampleTime = (time > 0) ?System.currentTimeMillis() + time:0;
+    this.sampleTime = (time > 0) ? System.currentTimeMillis() + time : 0;
     try {
       initializeModel();
     } catch (Exception e) {
@@ -55,18 +72,16 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
       // Buffer the instance
       dataBuffer.add(instance);
 
-      if (!isModelTrained &&
-          (
-              (dataBuffer.size() >= sampleSize ) ||
-              (sampleTime != 0 && System.currentTimeMillis() > sampleTime)
-          )
-      ) {
+      if (!isModelTrained
+          && ((dataBuffer.size() >= sampleSize)
+              || (sampleTime != 0 && System.currentTimeMillis() > sampleTime))) {
         Instances trainingData = new Instances(structure, dataBuffer.size());
         trainingData.addAll(dataBuffer);
         buildModel(trainingData);
         dataBuffer.clear();
-        if(isModelTrained){
-          MLFunction.getModelStore().saveModel(modelName, ModelUtils.instancesToByteArray(trainingData));
+        if (isModelTrained) {
+          MLFunction.getModelStore()
+              .saveModel(modelName, ModelUtils.instancesToByteArray(trainingData));
         }
       }
 
@@ -80,7 +95,6 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     }
     return Double.NaN; // or some other placeholder
   }
-
 
   protected double[] evaluateList(IdentifierResolver resolver) throws ParseException {
     double[] dataset = new double[identity.size()];
@@ -100,6 +114,4 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected abstract double applyModel(Instance instance) throws Exception;
 
   protected abstract void buildModel(Instances trainingData) throws Exception;
-
 }
-

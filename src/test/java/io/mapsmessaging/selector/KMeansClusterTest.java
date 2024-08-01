@@ -1,16 +1,27 @@
+/*
+ *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package io.mapsmessaging.selector;
 
 import io.mapsmessaging.selector.operators.ParserExecutor;
 import io.mapsmessaging.selector.operators.functions.MLFunction;
-import io.mapsmessaging.selector.operators.functions.ml.impl.functions.KMeansClusterOperation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class KMeansClusterTest {
 
@@ -34,6 +45,7 @@ class KMeansClusterTest {
 
   @Test
   void testModel() throws ParseException {
+    MLFunction.setDefaultSampleSize(10);
     ParserExecutor executor = SelectorParser.compile("K-means_clustering ( modelName1 , a0 , a1) > 0 OR NOT model_exists(modelName1)");
     ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
     // Train the model with the training data
@@ -54,6 +66,7 @@ class KMeansClusterTest {
 
   @Test
   void testReloadModel() throws Exception {
+    MLFunction.setDefaultSampleSize(10);
     ParserExecutor executor = SelectorParser.compile("K-means_clustering ( model , a0 , a1) > 0");
     ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
     // Train the model with the training data

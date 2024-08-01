@@ -1,38 +1,37 @@
 /*
+ *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
  *
- *   Copyright [ 2020 - 2023 ] [Matthew Buckton]
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
  */
 
 package io.mapsmessaging.selector.operators.functions;
 
+import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.FunctionOperator;
-import io.mapsmessaging.selector.IdentifierResolver;
 
 public class IsOperator extends FunctionOperator {
 
   private final Object lhs;
   private final boolean not;
 
-  public IsOperator(Object lhs, boolean not){
+  public IsOperator(Object lhs, boolean not) {
     this.lhs = lhs;
     this.not = not;
   }
 
-  public Object compile(){
+  public Object compile() {
     return this;
   }
 
@@ -40,35 +39,33 @@ public class IsOperator extends FunctionOperator {
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object lookup = evaluate(lhs, resolver);
     boolean isNull = lookup == null;
-    if(not){
+    if (not) {
       return !isNull;
     }
     return isNull;
   }
 
-  public String toString(){
-    if(not) {
+  public String toString() {
+    if (not) {
       return "(" + lhs.toString() + ") IS NOT NULL";
-    }
-    else{
+    } else {
       return "(" + lhs.toString() + ") IS NULL";
     }
   }
 
   @Override
-  public boolean equals(Object test){
-    if(test instanceof IsOperator){
+  public boolean equals(Object test) {
+    if (test instanceof IsOperator) {
       return (lhs.equals(((IsOperator) test).lhs) && not == ((IsOperator) test).not);
     }
     return false;
   }
 
   @Override
-  public int hashCode(){
-    if(not) {
+  public int hashCode() {
+    if (not) {
       return ~lhs.hashCode();
     }
     return lhs.hashCode();
   }
-
 }

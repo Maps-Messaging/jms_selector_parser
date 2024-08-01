@@ -1,18 +1,32 @@
-package io.mapsmessaging.selector.operators.functions.ml.impl.store;
+/*
+ *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 
-import org.tensorflow.SavedModelBundle;
-import weka.core.Instances;
-import weka.core.converters.ArffLoader;
-import weka.core.converters.ArffSaver;
+package io.mapsmessaging.selector.operators.functions.ml.impl.store;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import org.tensorflow.SavedModelBundle;
+import weka.core.Instances;
+import weka.core.converters.ArffLoader;
+import weka.core.converters.ArffSaver;
 
 public class ModelUtils {
 
@@ -36,7 +50,7 @@ public class ModelUtils {
   // Load a TensorFlow model from a byte array
   public static SavedModelBundle byteArrayToModel(byte[] data, String modelDir) throws IOException {
     // Create a temporary directory
-    Path tempDir = Files.createTempDirectory(modelDir+File.separator+"tf_model");
+    Path tempDir = Files.createTempDirectory(modelDir + File.separator + "tf_model");
     tempDir.toFile().deleteOnExit();
 
     // Decompress the byte array into the temporary directory
@@ -57,5 +71,5 @@ public class ModelUtils {
     return SavedModelBundle.load(tempDir.toString(), "serve");
   }
 
-  private ModelUtils(){}
+  private ModelUtils() {}
 }

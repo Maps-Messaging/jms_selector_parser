@@ -1,3 +1,20 @@
+/*
+ *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package io.mapsmessaging.selector.operators.functions;
 
 import io.mapsmessaging.selector.IdentifierResolver;
@@ -6,26 +23,18 @@ import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MLFunction extends Operation {
 
-  @Getter
-  @Setter
-  private static int defaultSampleSize = 100;
+  @Getter @Setter private static int defaultSampleSize = 100;
 
-  @Getter
-  @Setter
-  private static int defaultSampleTime = 0;
+  @Getter @Setter private static int defaultSampleTime = 0;
 
-
-  @Getter
-  @Setter
-  private static ModelStore modelStore = new MapModelStore();
+  @Getter @Setter private static ModelStore modelStore = new MapModelStore();
 
   private final String functionName;
   private final String modelName;
@@ -37,7 +46,7 @@ public class MLFunction extends Operation {
     this.functionName = functionName;
     this.modelName = list.get(0);
     identifiers = new ArrayList<>();
-    for(int i = 1; i < list.size(); i++){
+    for (int i = 1; i < list.size(); i++) {
       identifiers.add(list.get(i).trim());
     }
     sampleSize = defaultSampleSize;
@@ -61,11 +70,11 @@ public class MLFunction extends Operation {
       case "naive_bayes":
         return new NaiveBayesOperation(modelName, identifiers, sampleTime, sampleSize);
       case "hierarchical_clustering":
-        return new HierarchicalClusterOperation(modelName,identifiers, sampleTime, sampleSize);
+        return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
       case "pca":
         return new PCAOperation(modelName, identifiers, sampleTime, sampleSize);
       case "tensorflow":
-        return new TensorFlowOperation(modelName,identifiers);
+        return new TensorFlowOperation(modelName, identifiers);
       case "model_exists":
         return new ModelExistFunction(modelName);
       default:
@@ -73,9 +82,7 @@ public class MLFunction extends Operation {
     }
   }
 
-
-  public String toString(){
-    return functionName+"("+modelName+")";
+  public String toString() {
+    return functionName + "(" + modelName + ")";
   }
-
 }
