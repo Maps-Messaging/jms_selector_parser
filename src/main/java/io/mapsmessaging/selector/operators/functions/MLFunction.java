@@ -16,6 +16,15 @@ public class MLFunction extends Operation {
 
   @Getter
   @Setter
+  private static int defaultSampleSize = 100;
+
+  @Getter
+  @Setter
+  private static int defaultSampleTime = 0;
+
+
+  @Getter
+  @Setter
   private static ModelStore modelStore = new MapModelStore();
 
   private final String functionName;
@@ -31,8 +40,8 @@ public class MLFunction extends Operation {
     for(int i = 1; i < list.size(); i++){
       identifiers.add(list.get(i).trim());
     }
-    sampleSize = 10;
-    sampleTime = 0;
+    sampleSize = defaultSampleSize;
+    sampleTime = defaultSampleTime;
   }
 
   @Override
