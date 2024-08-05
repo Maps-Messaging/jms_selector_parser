@@ -15,22 +15,15 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree;
 
-import lombok.Getter;
-import lombok.ToString;
+import weka.classifiers.trees.J48;
 import weka.core.Instance;
 
-@Getter
-@ToString
-public class KMeansResult {
-  private final double distance;
-  private final Instance centroidInstance;
-  private final Instance instance;
+public interface DecisionTreeFunction {
+  double compute(J48 tree, Instance instance) throws Exception;
 
-  public KMeansResult(double distance, Instance centroidInstance, Instance instance) {
-    this.distance = distance;
-    this.centroidInstance = centroidInstance;
-    this.instance = instance;
-  }
+  String getName();
+
 }
+

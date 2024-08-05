@@ -15,17 +15,20 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
-import lombok.Getter;
-import lombok.ToString;
+import weka.clusterers.SimpleKMeans;
+import weka.core.Instance;
 
-@Getter
-@ToString
-public class DecisionTreeResult {
-  private final double prediction;
+public class WCSSFunction implements KMeansFunction {
 
-  public DecisionTreeResult(double prediction) {
-    this.prediction = prediction;
+  @Override
+  public double compute(SimpleKMeans kmeans, Instance instance) throws Exception {
+    return kmeans.getSquaredError();
+  }
+
+  @Override
+  public String getName() {
+    return "wcss";
   }
 }

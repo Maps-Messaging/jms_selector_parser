@@ -15,7 +15,7 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import weka.classifiers.trees.J48;
@@ -28,9 +28,11 @@ import java.util.List;
 
 public class DecisionTreeOperation extends AbstractMLModelOperation {
   private J48 decisionTree;
+  private final DecisionTreeFunction decisionTreeFunction;
 
-  public DecisionTreeOperation(String modelName, List<String> identity, long time, long samples) {
+  public DecisionTreeOperation(String modelName, String operationName, List<String> identity, long time, long samples) {
     super(modelName, identity, time, samples);
+    decisionTreeFunction = computeFunction(operationName);
   }
 
   @Override
@@ -47,17 +49,28 @@ public class DecisionTreeOperation extends AbstractMLModelOperation {
 
   @Override
   protected void buildModel(Instances trainingData) throws Exception {
+    trainingData.setClassIndex(trainingData.numAttributes() - 1);
     decisionTree.buildClassifier(trainingData);
     isModelTrained = true;
   }
 
   @Override
   protected double applyModel(Instance instance) throws Exception {
-    return decisionTree.classifyInstance(instance);
+    return decisionTreeFunction.compute(decisionTree, instance);
   }
 
   @Override
   public String toString() {
     return "DecisionTree(" + super.toString() + ")";
+  }
+
+  private static DecisionTreeFunction computeFunction(String operation){
+    switch (operation.toLowerCase()) {
+      case "classifyprob":
+        return new ClassifyProbFunction();
+      case "classify":
+      default:
+        return new ClassifyInstanceFunction();
+    }
   }
 }

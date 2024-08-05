@@ -15,17 +15,27 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
-import lombok.Getter;
-import lombok.ToString;
+import weka.clusterers.SimpleKMeans;
+import weka.core.Instance;
 
-@Getter
-@ToString
-public class LinearRegressionResult {
-  private final double prediction;
+public class ClusterSizesFunction implements KMeansFunction {
 
-  public LinearRegressionResult(double prediction) {
-    this.prediction = prediction;
+  private final int index;
+
+  public ClusterSizesFunction(int index) {
+    this.index = index;
   }
+
+  @Override
+  public double compute(SimpleKMeans kmeans, Instance instance) throws Exception {
+    return kmeans.getClusterSizes()[index];
+  }
+
+  @Override
+  public String getName() {
+    return "clusterlsize["+index+"]";
+  }
+
 }

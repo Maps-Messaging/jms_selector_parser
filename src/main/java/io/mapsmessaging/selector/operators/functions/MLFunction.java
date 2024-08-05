@@ -22,6 +22,8 @@ import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.*;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans.KMeansClusterOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class MLFunction extends Operation {
   @Getter @Setter private static ModelStore modelStore = new MapModelStore();
 
   private final String functionName;
+  private final String operationName;
   private final String modelName;
   private final long sampleSize;
   private final long sampleTime;
@@ -44,9 +47,18 @@ public class MLFunction extends Operation {
 
   public MLFunction(String functionName, List<String> list) {
     this.functionName = functionName;
-    this.modelName = list.get(0);
     identifiers = new ArrayList<>();
-    for (int i = 1; i < list.size(); i++) {
+    int startIdx = 1;
+    if(list.size() > 1){
+      this.operationName = list.get(0);
+      this.modelName = list.get(1);
+      startIdx = 2;
+    }
+    else{
+      this.modelName = list.get(0);
+      this.operationName = "";
+    }
+    for (int i = startIdx; i < list.size(); i++) {
       identifiers.add(list.get(i).trim());
     }
     sampleSize = defaultSampleSize;
@@ -62,11 +74,11 @@ public class MLFunction extends Operation {
   public Object compile() {
     switch (functionName.toLowerCase()) {
       case "k-means_clustering":
-        return new KMeansClusterOperation(modelName, identifiers, sampleTime, sampleSize);
+        return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
       case "linear_regression":
         return new LinearRegressionOperation(modelName, identifiers, sampleTime, sampleSize);
       case "decision_tree":
-        return new DecisionTreeOperation(modelName, identifiers, sampleTime, sampleSize);
+        return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
       case "naive_bayes":
         return new NaiveBayesOperation(modelName, identifiers, sampleTime, sampleSize);
       case "hierarchical_clustering":

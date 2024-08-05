@@ -15,22 +15,24 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import java.util.ArrayList;
 import java.util.List;
+
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
-import weka.core.EuclideanDistance;
 import weka.core.Instance;
 import weka.core.Instances;
 
 public class KMeansClusterOperation extends AbstractMLModelOperation {
   private SimpleKMeans kmeans;
+  private final KMeansFunction kmeansFunction;
 
-  public KMeansClusterOperation(String modelName, List<String> identity, long time, long samples) {
+  public KMeansClusterOperation(String modelName, String operationName, List<String> identity, long time, long samples) {
     super(modelName, identity, time, samples);
+    kmeansFunction = computeFunction(operationName);
   }
 
   protected void initializeSpecificModel() throws Exception {
@@ -51,14 +53,33 @@ public class KMeansClusterOperation extends AbstractMLModelOperation {
 
   @Override
   protected double applyModel(Instance instance) throws Exception {
-    Instances centroids = kmeans.getClusterCentroids();
-    EuclideanDistance distanceFunction = new EuclideanDistance(centroids);
-    Instance centroid = centroids.instance(kmeans.clusterInstance(instance));
-    return distanceFunction.distance(centroid, instance);
+    return kmeansFunction.compute(kmeans, instance);
   }
 
   @Override
   public String toString() {
-    return "K-means_clustering(" + super.toString() + ")";
+    return "K-means_clustering("+kmeansFunction.getName()+", " + super.toString() + ")";
   }
+
+  private static KMeansFunction computeFunction(String operationName){
+    if (operationName.equalsIgnoreCase("distance")) {
+      return new DistanceFunction();
+    } else if (operationName.equalsIgnoreCase("clusterlabel")) {
+      return new ClusterLabelFunction();
+    } else if (operationName.startsWith("centroid[")) {
+      int index = Integer.parseInt(operationName.substring(9, operationName.length() - 1));
+      return new CentroidFunction(index);
+    } else if (operationName.equalsIgnoreCase("wcss")) {
+      return new WCSSFunction();
+    } else if (operationName.startsWith("clustersizes[")) {
+      int index = Integer.parseInt(operationName.substring(13, operationName.length() - 1));
+      return new ClusterSizesFunction(index);
+    } else if (operationName.equalsIgnoreCase("totalclusters")) {
+      return new TotalClustersFunction();
+    } else if (operationName.equalsIgnoreCase("silhouettescore")) {
+      return new SilhouetteScoreFunction();
+    }
+    return new DistanceFunction();
+  }
+
 }

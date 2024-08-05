@@ -25,8 +25,8 @@ class SelectorConformanceTest {
 
   public static final String[] SELECTOR_TEXT =
       {
-          "K-means_clustering ( scd41, CO₂, temperature, humidity ) > 1.9",
-          "K-means_clustering ( home_temp_K_means_model, temperature, humidity ) > 1.9",
+          "K-means_clustering ( distance, scd41, CO₂, temperature, humidity ) > 1.9",
+          "K-means_clustering ( wcss, home_temp_K_means_model, temperature, humidity ) > 1.9",
           "model_exists(home_temp_K_means_model) = true",
           "decision_tree (home_temp_decision_model, temperature, humidity, pressure) = 1",
           "linear_regression (home_temp_regression_model, temperature, humidity, pressure) < 50.0",
