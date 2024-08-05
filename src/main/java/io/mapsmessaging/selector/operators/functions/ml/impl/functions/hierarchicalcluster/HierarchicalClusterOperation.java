@@ -15,23 +15,22 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
-import java.util.ArrayList;
-import java.util.List;
-import weka.attributeSelection.PrincipalComponents;
-import weka.attributeSelection.Ranker;
+import weka.clusterers.HierarchicalClusterer;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.filters.Filter;
-import weka.filters.supervised.attribute.AttributeSelection;
 
-public class PCAOperation extends AbstractMLModelOperation {
-  private AttributeSelection filter;
+import java.util.ArrayList;
+import java.util.List;
 
-  public PCAOperation(String modelName, List<String> identity, long time, long samples) {
+public class HierarchicalClusterOperation extends AbstractMLModelOperation {
+  private HierarchicalClusterer hierarchicalClusterer;
+
+  public HierarchicalClusterOperation(
+      String modelName, List<String> identity, long time, long samples) {
     super(modelName, identity, time, samples);
   }
 
@@ -43,40 +42,22 @@ public class PCAOperation extends AbstractMLModelOperation {
       attributes.add(new Attribute(s));
     }
     structure = new Instances(modelName, attributes, 0);
-    filter = new AttributeSelection();
+    hierarchicalClusterer = new HierarchicalClusterer();
   }
 
   @Override
   protected void buildModel(Instances trainingData) throws Exception {
-    // Set up the PrincipalComponents evaluator
-    PrincipalComponents pca = new PrincipalComponents();
-    pca.setVarianceCovered(0.95); // For example, keep 95% of variance
-
-    // Set up the Ranker search method
-    Ranker ranker = new Ranker();
-    ranker.setNumToSelect(-1);
-
-    // Set up the AttributeSelection filter
-    filter.setEvaluator(pca);
-    filter.setSearch(ranker);
-    filter.setInputFormat(trainingData);
-
-    // Apply the filter to the training data to initialize it
-    Filter.useFilter(trainingData, filter);
+    hierarchicalClusterer.buildClusterer(trainingData);
     isModelTrained = true;
   }
 
-
   @Override
   protected double applyModel(Instance instance) throws Exception {
-    Instances instanceData = new Instances(structure, 0);
-    instanceData.add(instance);
-    Instances transformedData = Filter.useFilter(instanceData, filter);
-    return transformedData.firstInstance().value(0); // Return the first principal component as an example
+    return hierarchicalClusterer.clusterInstance(instance);
   }
 
   @Override
   public String toString() {
-    return "PCA(" + super.toString() + ")";
+    return "HierarchicalCluster(" + super.toString() + ")";
   }
 }

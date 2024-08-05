@@ -10,55 +10,90 @@ This document describes the various functions and operators supported by the Jav
 ### K-means Clustering
 
 - **Description**: Performs K-means clustering on the provided data. *(Extension)*
-- **Usage**: `K-means_clustering(modelName, param1, param2, ...)`
+- **Usage**: `K-means_clustering(operationName, modelName, param1, param2, ...)`
+- **Operations**:
+  - `distance`: Returns the distance of the instance from the cluster centroid.
+  - `clusterLabel`: Returns the cluster label of the instance.
+  - `centroid[idx]`: Returns the value of the `idx`th dimension of the cluster centroid.
+  - `clusterSizes[idx]`: Returns the size of the `idx`th cluster.
+  - `totalClusters`: Returns the total number of clusters.
 - **Example**:
   ```sql
-  K-means_clustering(modelName, param1, param2, ...)
+  K-means_clustering(distance, home_temp_model, temperature, humidity)
   ```
 
 ### Linear Regression
 
 - **Description**: Performs linear regression analysis. *(Extension)*
-- **Usage**: `linear_regression(param1, param2, ...)`
+- **Usage**: `linear_regression(operationName, modelName, param1, param2, ...)`
+- **Operations**:
+  - `predict`: Predicts the target value based on the input features.
+  - `coefficients`: Returns the regression coefficients.
+  - `r_squared`: Returns the R-squared value of the model.
+  - `mse`: Returns the mean squared error of the model.
+  - `intercept`: Returns the intercept of the regression model.
 - **Example**:
   ```sql
-  linear_regression(modelName, param1, param2, ...)
+  linear_regression(predict, temperature_model, temperature, humidity, pressure)
   ```
 
 ### Decision Tree
 
 - **Description**: Builds a decision tree for classification or regression. *(Extension)*
-- **Usage**: `decision_tree(param1, param2, ...)`
+- **Usage**: `decision_tree(operationName, modelName, param1, param2, ...)`
+- **Operations**:
+  - `classify`: Classifies the instance and returns the predicted class.
+  - `classifyProb`: Returns the probability distribution over all possible classes for the instance.
 - **Example**:
   ```sql
-  decision_tree(modelName, param1, param2, ...)
+  decision_tree(classify, weather_model, temperature, humidity, pressure)
   ```
 
 ### Naive Bayes
 
 - **Description**: Performs classification using the Naive Bayes algorithm. *(Extension)*
-- **Usage**: `naive_bayes(modelName, param1, param2, ...)`
+- **Usage**: `naive_bayes(operationName, modelName, param1, param2, ...)`
+- **Operations**:
+  - `classify`: Classifies the instance and returns the predicted class.
+  - `classifyProb`: Returns the probability distribution over all possible classes for the instance.
 - **Example**:
   ```sql
-  naive_bayes(modelName, param1, param2, ...)
+  naive_bayes(classify, email_model, word1, word2, word3)
   ```
 
 ### Hierarchical Clustering
 
 - **Description**: Performs hierarchical clustering. *(Extension)*
 - **Usage**: `hierarchical_clustering(modelName, param1, param2, ...)`
+- **Operations**:
+  - `dendrogram`: Returns the dendrogram of the hierarchical clustering.
+  - `clusterLabel`: Returns the cluster label of the instance.
 - **Example**:
   ```sql
-  hierarchical_clustering(modelName, param1, param2, ...)
+  hierarchical_clustering(hierarchy_model, param1, param2, ...)
   ```
 
 ### PCA (Principal Component Analysis)
 
 - **Description**: Performs Principal Component Analysis. *(Extension)*
-- **Usage**: `pca(modelName, param1, param2, ...)`
+- **Usage**: `pca(operationName, modelName, param1, param2, ...)`
+- **Operations**:
+  - `applypca[idx]`: Applies PCA and returns the `idx`th principal component.
+  - `explainedVariance`: Returns the total explained variance.
 - **Example**:
   ```sql
-  pca(modelName, param1, param2, ...)
+  pca(applypca[1], pca_model, param1, param2, ...)
+  ```
+
+### TensorFlow
+
+- **Description**: Performs operations using a TensorFlow model. *(Extension)*
+- **Usage**: `tensorflow(operationName, modelName, param1, param2, ...)`
+- **Operations**:
+  - `predict`: Predicts the target value based on the input features.
+- **Example**:
+  ```sql
+  tensorflow(predict, tf_model, feature1, feature2, feature3)
   ```
 
 ### Model Exists
@@ -66,8 +101,8 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Checks if a model exists. *(Extension)*
 - **Usage**: `model_exists(modelName)`
 - **Example**:
-```sql
-  model_exists("linearModel")
+  ```sql
+  model_exists(linearModel)
   ```
 
 ## Logical Operators
@@ -77,7 +112,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Logical AND operator.
 - **Usage**: `expression AND expression`
 - **Example**:
-```sql
+  ```sql
   (x > 5) AND (y < 10)
   ```
 
@@ -86,7 +121,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Logical OR operator.
 - **Usage**: `expression OR expression`
 - **Example**:
-```sql
+  ```sql
   (x > 5) OR (y < 10)
   ```
 
@@ -95,7 +130,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Logical NOT operator.
 - **Usage**: `NOT expression`
 - **Example**:
-```sql
+  ```sql
   NOT (x > 5)
   ```
 
@@ -106,7 +141,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Checks if a value is between two specified values.
 - **Usage**: `value BETWEEN low AND high`
 - **Example**:
-```sql
+  ```sql
   age BETWEEN 18 AND 65
   ```
 
@@ -115,7 +150,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Checks if a value matches a specified pattern.
 - **Usage**: `value LIKE pattern`
 - **Example**:
-```sql
+  ```sql
   name LIKE 'John%'
   ```
 
@@ -124,7 +159,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Checks if a value is within a set of values.
 - **Usage**: `value IN (value1, value2, ...)`
 - **Example**:
-```sql
+  ```sql
   country IN ('USA', 'Canada', 'UK')
   ```
 
@@ -133,7 +168,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Checks if a value is NULL.
 - **Usage**: `value IS NULL`
 - **Example**:
-```sql
+  ```sql
   middleName IS NULL
   ```
 
@@ -144,7 +179,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Adds two values.
 - **Usage**: `value1 + value2`
 - **Example**:
-```sql
+  ```sql
   salary + bonus
   ```
 
@@ -153,7 +188,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Subtracts one value from another.
 - **Usage**: `value1 - value2`
 - **Example**:
-```sql
+  ```sql
   revenue - cost
   ```
 
@@ -162,7 +197,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Multiplies two values.
 - **Usage**: `value1 * value2`
 - **Example**:
-```sql
+  ```sql
   quantity * price
   ```
 
@@ -171,7 +206,7 @@ This document describes the various functions and operators supported by the Jav
 - **Description**: Divides one value by another.
 - **Usage**: `value1 / value2`
 - **Example**:
-```sql
+  ```sql
   total / count
   ```
 

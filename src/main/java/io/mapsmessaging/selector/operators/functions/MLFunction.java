@@ -23,7 +23,12 @@ import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster.HierarchicalClusterOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans.KMeansClusterOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LinearRegressionOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow.TensorFlowOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,15 +81,15 @@ public class MLFunction extends Operation {
       case "k-means_clustering":
         return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
       case "linear_regression":
-        return new LinearRegressionOperation(modelName, identifiers, sampleTime, sampleSize);
+        return new LinearRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
       case "decision_tree":
         return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
       case "naive_bayes":
-        return new NaiveBayesOperation(modelName, identifiers, sampleTime, sampleSize);
+        return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
       case "hierarchical_clustering":
         return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
       case "pca":
-        return new PCAOperation(modelName, identifiers, sampleTime, sampleSize);
+        return new PCAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
       case "tensorflow":
         return new TensorFlowOperation(modelName, identifiers);
       case "model_exists":

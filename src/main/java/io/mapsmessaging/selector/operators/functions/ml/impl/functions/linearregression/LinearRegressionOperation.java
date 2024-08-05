@@ -15,21 +15,24 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
-import java.util.ArrayList;
-import java.util.List;
-import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.functions.LinearRegression;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 
-public class NaiveBayesOperation extends AbstractMLModelOperation {
-  private NaiveBayes naiveBayes;
+import java.util.ArrayList;
+import java.util.List;
 
-  public NaiveBayesOperation(String modelName, List<String> identity, long time, long samples) {
+public class LinearRegressionOperation extends AbstractMLModelOperation {
+  private LinearRegression linearRegression;
+  private final LinearRegressionFunction linearRegressionFunction;
+
+  public LinearRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) {
     super(modelName, identity, time, samples);
+    linearRegressionFunction = computeFunction(operationName);
   }
 
   @Override
@@ -39,24 +42,33 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
     for (String s : identity) {
       attributes.add(new Attribute(s));
     }
+    // Adding target attribute for regression
+    attributes.add(new Attribute("target"));
     structure = new Instances(modelName, attributes, 0);
     structure.setClassIndex(structure.numAttributes() - 1);
-    naiveBayes = new NaiveBayes();
+    linearRegression = new LinearRegression();
   }
 
   @Override
   protected void buildModel(Instances trainingData) throws Exception {
-    naiveBayes.buildClassifier(trainingData);
+    linearRegression.buildClassifier(trainingData);
     isModelTrained = true;
   }
 
   @Override
   protected double applyModel(Instance instance) throws Exception {
-    return naiveBayes.classifyInstance(instance);
+    return linearRegressionFunction.compute(linearRegression, instance);
   }
 
   @Override
   public String toString() {
-    return "NaiveBayes(" + super.toString() + ")";
+    return "LinearRegression("+ linearRegressionFunction.getName() +","+ super.toString() + ")";
+  }
+
+  private static LinearRegressionFunction computeFunction(String operation) {
+    if (operation.toLowerCase().equals("predict")) {
+      return new PredictFunction();
+    }
+    throw new UnsupportedOperationException("Unknown operation: " + operation);
   }
 }

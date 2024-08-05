@@ -15,10 +15,10 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
-import weka.clusterers.HierarchicalClusterer;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -26,12 +26,13 @@ import weka.core.Instances;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HierarchicalClusterOperation extends AbstractMLModelOperation {
-  private HierarchicalClusterer hierarchicalClusterer;
+public class NaiveBayesOperation extends AbstractMLModelOperation {
+  private NaiveBayes naiveBayes;
+  private final NaiveBayesFunction naiveBayesFunction;
 
-  public HierarchicalClusterOperation(
-      String modelName, List<String> identity, long time, long samples) {
+  public NaiveBayesOperation(String modelName, String operationName, List<String> identity, long time, long samples) {
     super(modelName, identity, time, samples);
+    naiveBayesFunction = computeFunction(operationName);
   }
 
   @Override
@@ -42,22 +43,33 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation {
       attributes.add(new Attribute(s));
     }
     structure = new Instances(modelName, attributes, 0);
-    hierarchicalClusterer = new HierarchicalClusterer();
+    structure.setClassIndex(structure.numAttributes() - 1);
+    naiveBayes = new NaiveBayes();
   }
 
   @Override
   protected void buildModel(Instances trainingData) throws Exception {
-    hierarchicalClusterer.buildClusterer(trainingData);
+    naiveBayes.buildClassifier(trainingData);
     isModelTrained = true;
   }
 
   @Override
   protected double applyModel(Instance instance) throws Exception {
-    return hierarchicalClusterer.clusterInstance(instance);
+    return naiveBayesFunction.compute(naiveBayes, instance);
   }
 
   @Override
   public String toString() {
-    return "HierarchicalCluster(" + super.toString() + ")";
+    return "NaiveBayes(" + naiveBayesFunction.getName()+","+ super.toString() + ")";
+  }
+
+  private static NaiveBayesFunction computeFunction(String operation) {
+    switch (operation.toLowerCase()) {
+      case "classifyprob":
+        return new ClassifyProbFunction();
+      case "classify":
+      default:
+        return new ClassifyFunction();
+    }
   }
 }

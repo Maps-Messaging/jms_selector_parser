@@ -15,7 +15,7 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow;
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
