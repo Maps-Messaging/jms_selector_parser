@@ -9,14 +9,17 @@ This document describes the various functions and operators supported by the Jav
 
 ### K-means Clustering
 
-- **Description**: Performs K-means clustering on the provided data. *(Extension)*
+- **Description**: Performs K-means clustering on the provided data. K-means clustering partitions data into K distinct clusters based on feature similarity.
 - **Usage**: `K-means_clustering(operationName, modelName, param1, param2, ...)`
 - **Operations**:
-  - `distance`: Returns the distance of the instance from the cluster centroid.
-  - `clusterLabel`: Returns the cluster label of the instance.
-  - `centroid[idx]`: Returns the value of the `idx`th dimension of the cluster centroid.
-  - `clusterSizes[idx]`: Returns the size of the `idx`th cluster.
-  - `totalClusters`: Returns the total number of clusters.
+  - `distance`: Returns the distance of the instance from the nearest cluster centroid. This can be used to understand how close a data point is to the center of the cluster it belongs to.
+  - `clusterLabel`: Returns the cluster label of the instance, indicating which cluster the instance belongs to.
+  - `centroid[idx]`: Returns the value of the `idx`th dimension of the cluster centroid, providing insight into the cluster's center in a specific dimension.
+  - `clusterSizes[idx]`: Returns the size of the `idx`th cluster, which indicates the number of instances in that cluster.
+  - `totalClusters`: Returns the total number of clusters formed by the K-means algorithm.
+  - `silhouettescore` : Returns the silhouette score for the clustering, which measures how similar an instance is to its own cluster compared to other clusters. This score helps evaluate the quality of the clustering.
+
+
 - **Example**:
   ```sql
   K-means_clustering(distance, home_temp_model, temperature, humidity)
@@ -24,14 +27,10 @@ This document describes the various functions and operators supported by the Jav
 
 ### Linear Regression
 
-- **Description**: Performs linear regression analysis. *(Extension)*
+- **Description**: Performs linear regression analysis to predict a target variable based on one or more predictor variables. Linear regression fits a linear model to the data.
 - **Usage**: `linear_regression(operationName, modelName, param1, param2, ...)`
 - **Operations**:
-  - `predict`: Predicts the target value based on the input features.
-  - `coefficients`: Returns the regression coefficients.
-  - `r_squared`: Returns the R-squared value of the model.
-  - `mse`: Returns the mean squared error of the model.
-  - `intercept`: Returns the intercept of the regression model.
+  - `predict`: Predicts the target value based on the input features using the linear regression model.
 - **Example**:
   ```sql
   linear_regression(predict, temperature_model, temperature, humidity, pressure)
@@ -39,10 +38,10 @@ This document describes the various functions and operators supported by the Jav
 
 ### Decision Tree
 
-- **Description**: Builds a decision tree for classification or regression. *(Extension)*
+- **Description**: Builds a decision tree for classification or regression. Decision trees are used to model decisions and their possible consequences, including chance event outcomes.
 - **Usage**: `decision_tree(operationName, modelName, param1, param2, ...)`
 - **Operations**:
-  - `classify`: Classifies the instance and returns the predicted class.
+  - `classify`: Classifies the instance and returns the predicted class label.
   - `classifyProb`: Returns the probability distribution over all possible classes for the instance.
 - **Example**:
   ```sql
@@ -51,10 +50,10 @@ This document describes the various functions and operators supported by the Jav
 
 ### Naive Bayes
 
-- **Description**: Performs classification using the Naive Bayes algorithm. *(Extension)*
+- **Description**: Performs classification using the Naive Bayes algorithm. Naive Bayes classifiers are simple probabilistic classifiers based on applying Bayes' theorem with strong (naive) independence assumptions between the features.
 - **Usage**: `naive_bayes(operationName, modelName, param1, param2, ...)`
 - **Operations**:
-  - `classify`: Classifies the instance and returns the predicted class.
+  - `classify`: Classifies the instance and returns the predicted class label.
   - `classifyProb`: Returns the probability distribution over all possible classes for the instance.
 - **Example**:
   ```sql
@@ -63,11 +62,8 @@ This document describes the various functions and operators supported by the Jav
 
 ### Hierarchical Clustering
 
-- **Description**: Performs hierarchical clustering. *(Extension)*
+- **Description**: Performs hierarchical clustering, which is a method of cluster analysis that seeks to build a hierarchy of clusters.
 - **Usage**: `hierarchical_clustering(modelName, param1, param2, ...)`
-- **Operations**:
-  - `dendrogram`: Returns the dendrogram of the hierarchical clustering.
-  - `clusterLabel`: Returns the cluster label of the instance.
 - **Example**:
   ```sql
   hierarchical_clustering(hierarchy_model, param1, param2, ...)
@@ -75,11 +71,11 @@ This document describes the various functions and operators supported by the Jav
 
 ### PCA (Principal Component Analysis)
 
-- **Description**: Performs Principal Component Analysis. *(Extension)*
+- **Description**: Performs Principal Component Analysis (PCA) to reduce the dimensionality of the data by transforming it to a new set of variables (principal components) that are uncorrelated and that capture the maximum variance in the data.
 - **Usage**: `pca(operationName, modelName, param1, param2, ...)`
 - **Operations**:
   - `applypca[idx]`: Applies PCA and returns the `idx`th principal component.
-  - `explainedVariance`: Returns the total explained variance.
+  - `explainedVariance`: Returns the total explained variance by the principal components.
 - **Example**:
   ```sql
   pca(applypca[1], pca_model, param1, param2, ...)
@@ -87,10 +83,10 @@ This document describes the various functions and operators supported by the Jav
 
 ### TensorFlow
 
-- **Description**: Performs operations using a TensorFlow model. *(Extension)*
+- **Description**: Performs operations using a TensorFlow model. TensorFlow is an open-source platform for machine learning.
 - **Usage**: `tensorflow(operationName, modelName, param1, param2, ...)`
 - **Operations**:
-  - `predict`: Predicts the target value based on the input features.
+  - `predict`: Predicts the target value based on the input features using the TensorFlow model.
 - **Example**:
   ```sql
   tensorflow(predict, tf_model, feature1, feature2, feature3)
@@ -98,7 +94,7 @@ This document describes the various functions and operators supported by the Jav
 
 ### Model Exists
 
-- **Description**: Checks if a model exists. *(Extension)*
+- **Description**: Checks if a model exists in the model store. This can be used to verify the presence of a pre-trained model before attempting to use it.
 - **Usage**: `model_exists(modelName)`
 - **Example**:
   ```sql
