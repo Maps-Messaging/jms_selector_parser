@@ -16,7 +16,7 @@
  */
 package io.mapsmessaging.selector;
 
-public abstract class IdentifierMutator extends IdentifierResolver {
+public abstract class IdentifierMutator implements IdentifierResolver {
 
   public abstract Object remove(String key);
 

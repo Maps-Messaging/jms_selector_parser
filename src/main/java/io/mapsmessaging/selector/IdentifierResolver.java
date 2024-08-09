@@ -17,24 +17,11 @@
 
 package io.mapsmessaging.selector;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+public interface IdentifierResolver  {
 
-public abstract class IdentifierResolver implements IdentityAccess {
+  Object get(String key);
 
-  private final Map<String, Object> results = new LinkedHashMap<>();
-
-  public abstract Object get(String key);
-
-  public byte[] getOpaqueData() {
+  default byte[] getOpaqueData() {
     return new byte[0];
-  }
-
-  public Object getStoredResult(String key) {
-    return results.get(key);
-  }
-
-  public void setStoredResults(String key, Object value) {
-    results.put(key, value);
   }
 }

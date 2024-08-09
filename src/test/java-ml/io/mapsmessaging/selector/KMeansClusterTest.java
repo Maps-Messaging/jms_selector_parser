@@ -64,7 +64,7 @@ class KMeansClusterTest {
     }
   }
 
-  class ArrayIdentifierResolver extends IdentifierResolver {
+  class ArrayIdentifierResolver implements IdentifierResolver {
 
     private final double[][] data;
     protected int index =0;
@@ -78,11 +78,6 @@ class KMeansClusterTest {
       key = key.substring(1);
       int idx = Integer.parseInt(key);
       return data[index][idx];
-    }
-
-    @Override
-    public byte[] getOpaqueData() {
-      return super.getOpaqueData();
     }
   }
 
