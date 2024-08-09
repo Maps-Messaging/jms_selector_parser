@@ -20,7 +20,7 @@ import io.mapsmessaging.selector.IdentifierMutator;
 
 import java.util.Map;
 
-class MapEvaluator implements IdentifierMutator {
+class MapEvaluator extends IdentifierMutator {
 
   private final Map<String, Object> map;
 

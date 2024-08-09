@@ -20,7 +20,7 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
-import io.mapsmessaging.selector.operators.functions.MLFunction;
+import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
 
 public class ModelExistFunction extends Operation {
 

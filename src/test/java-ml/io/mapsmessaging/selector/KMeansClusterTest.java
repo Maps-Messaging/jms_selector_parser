@@ -18,7 +18,7 @@
 package io.mapsmessaging.selector;
 
 import io.mapsmessaging.selector.operators.ParserExecutor;
-import io.mapsmessaging.selector.operators.functions.MLFunction;
+import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -64,30 +64,7 @@ class KMeansClusterTest {
     }
   }
 
-  @Test
-  void testReloadModel() throws Exception {
-    MLFunction.setDefaultSampleSize(10);
-    ParserExecutor executor = SelectorParser.compile("K-means_clustering ( distance, model , a0 , a1) > 0");
-    ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
-    // Train the model with the training data
-    while(resolver.index< trainingData.length){
-      executor.evaluate(resolver);
-      resolver.index++;
-    }
-
-
-    Assertions.assertTrue(MLFunction.getModelStore().modelExists("model"));
-    resolver = new ArrayIdentifierResolver(testData);
-    while(resolver.index< testData.length){
-      executor = SelectorParser.compile(results[resolver.index]);
-      Assertions.assertTrue(executor.evaluate(resolver));
-      resolver.index++;
-    }
-  }
-
-
-
-  class ArrayIdentifierResolver implements IdentifierResolver {
+  class ArrayIdentifierResolver extends IdentifierResolver {
 
     private final double[][] data;
     protected int index =0;
@@ -105,7 +82,7 @@ class KMeansClusterTest {
 
     @Override
     public byte[] getOpaqueData() {
-      return IdentifierResolver.super.getOpaqueData();
+      return super.getOpaqueData();
     }
   }
 

@@ -35,7 +35,7 @@ import org.openjdk.jmh.infra.Blackhole;
 public class ParallelStreamJMH {
 
   ParserExecutor executor;
-  private List<IdentifierResolver> data;
+  private List<IdentityAccess> data;
 
   @Setup
   public void parallelStreams() throws ParseException {

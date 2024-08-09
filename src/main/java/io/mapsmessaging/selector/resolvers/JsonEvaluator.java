@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class JsonEvaluator implements IdentifierMutator {
+public class JsonEvaluator extends IdentifierMutator {
 
   private final JSONObject jsonObject;
 

@@ -15,13 +15,9 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions;
-
-import io.mapsmessaging.selector.IdentifierResolver;
+package io.mapsmessaging.selector.operators.functions.ml;import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
-import io.mapsmessaging.selector.operators.functions.ml.impl.functions.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster.HierarchicalClusterOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans.KMeansClusterOperation;
@@ -93,7 +89,7 @@ public class MLFunction extends Operation {
       case "tensorflow":
         return new TensorFlowOperation(modelName, identifiers);
       case "model_exists":
-        return new ModelExistFunction(modelName);
+        return new io.mapsmessaging.selector.operators.functions.ml.impl.functions.ModelExistFunction(modelName);
       default:
         throw new UnsupportedOperationException("Unknown ML function: " + functionName);
     }

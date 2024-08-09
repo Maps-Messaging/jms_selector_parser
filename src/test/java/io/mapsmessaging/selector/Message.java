@@ -19,7 +19,7 @@ package io.mapsmessaging.selector;
 
 import java.util.Map;
 
-public class Message implements IdentifierMutator {
+public class Message extends IdentifierMutator {
 
   private Map<String, Object> map;
   private byte[] opaqueData;

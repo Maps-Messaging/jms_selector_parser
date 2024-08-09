@@ -15,26 +15,10 @@
  *
  */
 
-package io.mapsmessaging.selector;
+package io.mapsmessaging.selector.operators.functions.ml;public interface ModelStore {
+  void saveModel(String modelId, byte[] modelData) throws Exception;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+  byte[] loadModel(String modelId) throws Exception;
 
-public abstract class IdentifierResolver implements IdentityAccess {
-
-  private final Map<String, Object> results = new LinkedHashMap<>();
-
-  public abstract Object get(String key);
-
-  public byte[] getOpaqueData() {
-    return new byte[0];
-  }
-
-  public Object getStoredResult(String key) {
-    return results.get(key);
-  }
-
-  public void setStoredResults(String key, Object value) {
-    results.put(key, value);
-  }
+  boolean modelExists(String modelId) throws Exception;
 }

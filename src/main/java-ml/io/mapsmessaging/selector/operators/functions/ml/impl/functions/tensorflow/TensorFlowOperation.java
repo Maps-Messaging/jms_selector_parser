@@ -19,7 +19,7 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorfl
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
-import io.mapsmessaging.selector.operators.functions.MLFunction;
+import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
 import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import org.tensorflow.Result;

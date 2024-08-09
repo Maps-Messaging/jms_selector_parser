@@ -15,12 +15,8 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector;
 
-public interface ModelStore {
-  void saveModel(String modelId, byte[] modelData) throws Exception;
-
-  byte[] loadModel(String modelId) throws Exception;
-
-  boolean modelExists(String modelId) throws Exception;
+public interface IdentityAccess {
+  Object get(String key);
 }

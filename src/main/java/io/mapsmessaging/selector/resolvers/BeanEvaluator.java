@@ -26,7 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-class BeanEvaluator implements IdentifierMutator {
+class BeanEvaluator extends IdentifierMutator {
 
   private static final Map<String, Map<String, Method>> LOADED_GET_MAPPINGS =
       new ConcurrentHashMap<>();
