@@ -20,12 +20,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mapsmessaging</groupId>
-  <artifactId>jms_selector_parser</artifactId>
+  <artifactId>jms_selector_parser_ml</artifactId>
   <version>1.1.16-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Extensible JMS Selector Parser</name>
-  <description>Provides an extensible Selector Parser conforms to the JMS Selector Syntax that is based on a subset of the SQL92</description>
+  <description>Provides an extensible Selector Parser conforms to the JMS Selector Syntax that is based on a subset of the SQL92 with extensions for machine learning</description>
   <url>http://www.mapsmessaging.io</url>
 
   <developers>
@@ -67,27 +67,20 @@
     <sonar.test.exclusions>
       **/*Test.*,**.*JMH.*
     </sonar.test.exclusions>
-
-    <!-- Sonar-JaCoCo properties -->
     <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.language>java</sonar.language>
-
     <sonar.projectKey>Maps-Messaging_jms_selector</sonar.projectKey>
     <sonar.organization>maps-messaging</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-
     <sonar.c.file.suffixes>-</sonar.c.file.suffixes>
     <sonar.cpp.file.suffixes>-</sonar.cpp.file.suffixes>
     <sonar.objc.file.suffixes>-</sonar.objc.file.suffixes>
-
     <github.global.server>github</github.global.server>
     <project.scm.id>github</project.scm.id>
     <gpg.keyname>matthew.buckton@mapsmessaging.io</gpg.keyname>
   </properties>
-
-
 
   <profiles>
     <profile>
@@ -120,7 +113,6 @@
     </profile>
   </profiles>
 
-
   <distributionManagement>
     <snapshotRepository>
       <id>maps_snapshots</id>
@@ -134,7 +126,101 @@
   </distributionManagement>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>META-INF/services/io.mapsmessaging.selector.extensions.ParserExtension</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
+      <plugin>
+        <groupId>com.helger.maven</groupId>
+        <artifactId>ph-javacc-maven-plugin</artifactId>
+        <version>4.1.5</version>
+        <executions>
+          <execution>
+            <id>javacc</id>
+            <goals>
+              <goal>javacc</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${basedir}/src/main/javacc/ml</sourceDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/main/java-ml</source>
+              </sources>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <!-- Add the test ML-specific sources -->
+                <source>src/test/java-ml</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <excludePackageNames>io.mapsmessaging.selector</excludePackageNames>
+          <charset>UTF-8</charset>
+          <encoding>UTF-8</encoding>
+          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+          <reportOutputDirectory>${project.build.directory}/site/docs</reportOutputDirectory>
+          <show>public</show>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <id>attach-javadocs</id>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.8.0</version>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -154,15 +240,12 @@
         </executions>
       </plugin>
 
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.3.1</version>
         <configuration>
-          <argLine>
-            @{argLine} -Dfile.encoding=UTF-8
-          </argLine>
+          <argLine>@{argLine} -Dfile.encoding=UTF-8</argLine>
           <includes>
             <include>**/*Test.java</include>
             <include>**/Test**.java</include>
@@ -170,47 +253,12 @@
         </configuration>
       </plugin>
 
-      <!-- build the source jar as well -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Compile the javacc file -->
-      <plugin>
-        <groupId>com.helger.maven</groupId>
-        <artifactId>ph-javacc-maven-plugin</artifactId>
-        <version>4.1.5</version>
-        <executions>
-          <execution>
-            <id>javacc</id>
-            <goals>
-              <goal>javacc</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${basedir}/src/main/javacc</sourceDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Code coverage -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.12</version>
         <configuration>
           <excludes>
-            <!-- test code, lets not track the testing -->
             <exclude>**/*Test.*</exclude>
           </excludes>
         </configuration>
@@ -220,7 +268,6 @@
               <goal>prepare-agent</goal>
             </goals>
           </execution>
-          <!-- attached to Maven test phase -->
           <execution>
             <id>report</id>
             <phase>test</phase>
@@ -231,51 +278,24 @@
         </executions>
       </plugin>
 
-      <!-- Build greater then JDK 7 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
-          <source>11</source>
-          <target>11</target>
+          <source>13</source>
+          <target>13</target>
           <compilerArgs>
             <arg>-h</arg>
             <arg>src/main/cpp/</arg>
           </compilerArgs>
         </configuration>
       </plugin>
-
-      <!-- JavaDoc -->
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <excludePackageNames>
-            io.mapsmessaging.selector
-          </excludePackageNames>
-          <charset>UTF-8</charset>
-          <encoding>UTF-8</encoding>
-          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-          <reportOutputDirectory>${project.build.directory}/site/docs</reportOutputDirectory>
-          <show>public</show>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <id>attach-javadocs</id>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.8.0</version>
-      </plugin>
     </plugins>
   </build>
 
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.json/json -->
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
@@ -286,6 +306,18 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.34</version>
+    </dependency>
+
+    <dependency>
+      <groupId>nz.ac.waikato.cms.weka</groupId>
+      <artifactId>weka-stable</artifactId>
+      <version>3.8.6</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-platform</artifactId>
+      <version>1.0.0-rc.1</version>
     </dependency>
 
     <dependency>
@@ -302,7 +334,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Junit5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
