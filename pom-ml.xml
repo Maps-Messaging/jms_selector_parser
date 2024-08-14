@@ -24,7 +24,7 @@
   <version>1.1.16-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Extensible JMS Selector Parser</name>
+  <name>Extensible JMS Selector Parser with ML Support</name>
   <description>Provides an extensible Selector Parser conforms to the JMS Selector Syntax that is based on a subset of the SQL92 with extensions for machine learning</description>
   <url>http://www.mapsmessaging.io</url>
 
