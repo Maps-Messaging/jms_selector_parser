@@ -54,7 +54,6 @@ public class FileModelStore implements ModelStore {
   @Override
   public boolean modelExists(String s) throws Exception {
     File file = new File(rootDirectory, s);
-    System.err.println(file.getAbsolutePath());
     return file.exists();
   }
 }
