@@ -259,9 +259,6 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
             <version>3.2.0</version>
-            <configuration>
-              <finalName>${project.artifactId}-${project.version}-ml</finalName>
-            </configuration>
           </plugin>
 
           <plugin>
@@ -274,9 +271,6 @@
                 <goals>
                   <goal>jar-no-fork</goal>
                 </goals>
-                <configuration>
-                  <finalName>${project.artifactId}-${project.version}-ml</finalName>
-                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -295,9 +289,6 @@
                 <goals>
                   <goal>jar</goal>
                 </goals>
-                <configuration>
-                  <finalName>${project.artifactId}-${project.version}-ml</finalName>
-                </configuration>
                 <id>attach-javadocs</id>
               </execution>
             </executions>
@@ -335,6 +326,22 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
