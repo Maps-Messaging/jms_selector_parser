@@ -228,5 +228,6 @@ For support and queries, please reach out through our [support channel](https://
 For further details about the MapsMessaging ecosystem, visit [our main project page](https://www.mapsmessaging.io/).
 
 
+[![Build status](https://badge.buildkite.com/f583bc25c29d7d49b1d4566b07f06eda241d3de9c2cff056c0.svg)](https://buildkite.com/mapsmessaging/010-jms-selector-library-snapshot-build)
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=Maps-Messaging_jms_selector)
