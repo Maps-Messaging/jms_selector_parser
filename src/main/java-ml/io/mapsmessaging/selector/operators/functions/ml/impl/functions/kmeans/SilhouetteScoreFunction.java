@@ -17,6 +17,7 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
+import lombok.Data;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -67,18 +68,8 @@ public class SilhouetteScoreFunction implements KMeansFunction {
 
     for (int i = 0; i < kmeans.getNumClusters(); i++) {
       if (i != currentCluster) {
-        double sum = 0.0;
-        int count = 0;
-
-        for (int j = 0; j < instances.numInstances(); j++) {
-          Instance other = instances.instance(j);
-          if (kmeans.clusterInstance(other) == i) {
-            sum += distanceFunction.distance(instance, other);
-            count++;
-          }
-        }
-
-        double avgDistance = (count == 0) ? 0 : sum / count;
+        CalcData data = innerLoop(i, kmeans, instance,instances, distanceFunction);
+        double avgDistance = (data.count == 0) ? 0 : data.sum / data.count;
         if (avgDistance < minDistance) {
           minDistance = avgDistance;
         }
@@ -87,8 +78,27 @@ public class SilhouetteScoreFunction implements KMeansFunction {
 
     return minDistance;
   }
+
+  private CalcData innerLoop(int i, SimpleKMeans kmeans,Instance instance, Instances instances, EuclideanDistance distanceFunction) throws Exception {
+    CalcData data = new CalcData();
+    for (int j = 0; j < instances.numInstances(); j++) {
+      Instance other = instances.instance(j);
+      if (kmeans.clusterInstance(other) == i) {
+        data.sum += distanceFunction.distance(instance, other);
+        data.count++;
+      }
+    }
+    return data;
+  }
+
   @Override
   public String getName() {
     return "silhouettescore";
+  }
+
+  @Data
+  private static class CalcData{
+    double sum = 0.0;
+    int count = 0;
   }
 }

@@ -15,10 +15,14 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;public interface ModelStore {
-  void saveModel(String modelId, byte[] modelData) throws Exception;
+package io.mapsmessaging.selector.operators.functions.ml;
 
-  byte[] loadModel(String modelId) throws Exception;
+import java.io.IOException;
 
-  boolean modelExists(String modelId) throws Exception;
+public interface ModelStore {
+  void saveModel(String modelId, byte[] modelData) throws IOException;
+
+  byte[] loadModel(String modelId) throws IOException;
+
+  boolean modelExists(String modelId) throws IOException;
 }

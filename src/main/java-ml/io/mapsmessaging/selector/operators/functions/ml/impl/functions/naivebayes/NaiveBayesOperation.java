@@ -30,7 +30,7 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
   private NaiveBayes naiveBayes;
   private final NaiveBayesFunction naiveBayesFunction;
 
-  public NaiveBayesOperation(String modelName, String operationName, List<String> identity, long time, long samples) {
+  public NaiveBayesOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws Exception {
     super(modelName, identity, time, samples);
     naiveBayesFunction = computeFunction(operationName);
   }

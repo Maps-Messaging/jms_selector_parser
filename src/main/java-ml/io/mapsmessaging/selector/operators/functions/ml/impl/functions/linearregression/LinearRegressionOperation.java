@@ -30,7 +30,7 @@ public class LinearRegressionOperation extends AbstractMLModelOperation {
   private LinearRegression linearRegression;
   private final LinearRegressionFunction linearRegressionFunction;
 
-  public LinearRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) {
+  public LinearRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws Exception {
     super(modelName, identity, time, samples);
     linearRegressionFunction = computeFunction(operationName);
   }
@@ -66,7 +66,7 @@ public class LinearRegressionOperation extends AbstractMLModelOperation {
   }
 
   private static LinearRegressionFunction computeFunction(String operation) {
-    if (operation.toLowerCase().equals("predict")) {
+    if (operation.equalsIgnoreCase("predict")) {
       return new PredictFunction();
     }
     throw new UnsupportedOperationException("Unknown operation: " + operation);

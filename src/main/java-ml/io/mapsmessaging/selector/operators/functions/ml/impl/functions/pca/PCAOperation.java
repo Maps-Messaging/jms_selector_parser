@@ -33,7 +33,7 @@ public class PCAOperation extends AbstractMLModelOperation {
   private AttributeSelection filter;
   private final PCAFunction pcaFunction;
 
-  public PCAOperation(String modelName, String operationName, List<String> identity, long time, long samples) {
+  public PCAOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws Exception {
     super(modelName, identity, time, samples);
     pcaFunction = computeFunction(operationName);
   }
@@ -84,7 +84,7 @@ public class PCAOperation extends AbstractMLModelOperation {
       int index = Integer.parseInt(indexStr);
       return new ApplyPCAFunction(index);
     }
-    if (operation.toLowerCase().equals("explainedvariance")) {
+    if (operation.equalsIgnoreCase("explainedvariance")) {
       return new ExplainedVarianceFunction();
     }
     throw new UnsupportedOperationException("Unknown operation: " + operation);

@@ -50,7 +50,7 @@ public class TensorFlowOperation extends AbstractModelOperations {
     isModelTrained = true;
   }
 
-  protected Object[] evaluateList(IdentifierResolver resolver) throws ParseException {
+  protected Object[] evaluateList(IdentifierResolver resolver) {
     Object[] dataset = new Object[identity.size()];
     for (int x = 0; x < identity.size(); x++) {
       dataset[x] = resolver.get(identity.get(x));

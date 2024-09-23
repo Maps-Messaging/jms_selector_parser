@@ -73,25 +73,29 @@ public class MLFunction extends Operation {
 
   @Override
   public Object compile() {
-    switch (functionName.toLowerCase()) {
-      case "k-means_clustering":
-        return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-      case "linear_regression":
-        return new LinearRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-      case "decision_tree":
-        return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-      case "naive_bayes":
-        return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-      case "hierarchical_clustering":
-        return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
-      case "pca":
-        return new PCAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-      case "tensorflow":
-        return new TensorFlowOperation(modelName, identifiers);
-      case "model_exists":
-        return new io.mapsmessaging.selector.operators.functions.ml.impl.functions.ModelExistFunction(modelName);
-      default:
-        throw new UnsupportedOperationException("Unknown ML function: " + functionName);
+    try {
+      switch (functionName.toLowerCase()) {
+        case "k-means_clustering":
+          return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "linear_regression":
+          return new LinearRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "decision_tree":
+          return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "naive_bayes":
+          return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "hierarchical_clustering":
+          return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
+        case "pca":
+          return new PCAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "tensorflow":
+          return new TensorFlowOperation(modelName, identifiers);
+        case "model_exists":
+          return new io.mapsmessaging.selector.operators.functions.ml.impl.functions.ModelExistFunction(modelName);
+        default:
+          throw new UnsupportedOperationException("Unknown ML function: " + functionName);
+      }
+    } catch (Exception e) {
+      throw new UnsupportedOperationException("ML Function failed to load", e);
     }
   }
 

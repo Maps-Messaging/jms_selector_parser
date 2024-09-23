@@ -31,19 +31,15 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected final long sampleTime;
   protected Instances structure;
 
-  protected AbstractMLModelOperation(
-      String modelName, List<String> identity, long time, long samples) {
+  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
+  protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples) throws Exception {
     super(modelName, identity);
     this.sampleSize = samples;
     this.sampleTime = (time > 0) ? System.currentTimeMillis() + time : 0;
-    try {
-      initializeModel();
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException(e);
-    }
+    initializeModel();
   }
 
+  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
   protected void initializeModel() throws Exception {
     initializeSpecificModel();
     if (MLFunction.getModelStore().modelExists(modelName)) {
@@ -106,9 +102,12 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     return dataset;
   }
 
+  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
   protected abstract void initializeSpecificModel() throws Exception;
 
+  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
   protected abstract double applyModel(Instance instance) throws Exception;
 
+  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
   protected abstract void buildModel(Instances trainingData) throws Exception;
 }

@@ -17,15 +17,20 @@
 
 package io.mapsmessaging.selector;
 
+import lombok.Getter;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Message extends IdentifierMutator {
 
+  @Getter
   private Map<String, Object> map;
   private byte[] opaqueData;
 
   public Message() {
-
+    map = new LinkedHashMap<>();
+    opaqueData = null;
   }
 
   @Override
@@ -59,10 +64,6 @@ public class Message extends IdentifierMutator {
 
   public void setOpaqueData(byte[] opaqueData) {
     this.opaqueData = opaqueData;
-  }
-
-  public Map<String, Object> getMap() {
-    return map;
   }
 
   public void setMap(Map<String, Object> map) {

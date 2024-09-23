@@ -29,7 +29,7 @@ import java.util.List;
 public class HierarchicalClusterOperation extends AbstractMLModelOperation {
   private HierarchicalClusterer hierarchicalClusterer;
 
-  public HierarchicalClusterOperation(String modelName, List<String> identity, long time, long samples) {
+  public HierarchicalClusterOperation(String modelName, List<String> identity, long time, long samples) throws Exception {
     super(modelName, identity, time, samples);
   }
 

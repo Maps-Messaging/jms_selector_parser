@@ -18,6 +18,8 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.store;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
+
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,17 +31,17 @@ public class MapModelStore implements ModelStore {
   }
 
   @Override
-  public void saveModel(String modelId, byte[] modelData) throws Exception {
+  public void saveModel(String modelId, byte[] modelData) {
     modelStore.put(modelId, modelData);
   }
 
   @Override
-  public byte[] loadModel(String modelId) throws Exception {
+  public byte[] loadModel(String modelId)  {
     return modelStore.get(modelId);
   }
 
   @Override
-  public boolean modelExists(String modelId) throws Exception {
+  public boolean modelExists(String modelId)  {
     return modelStore.containsKey(modelId);
   }
 }

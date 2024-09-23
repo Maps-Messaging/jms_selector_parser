@@ -30,7 +30,7 @@ public class DecisionTreeOperation extends AbstractMLModelOperation {
   private J48 decisionTree;
   private final DecisionTreeFunction decisionTreeFunction;
 
-  public DecisionTreeOperation(String modelName, String operationName, List<String> identity, long time, long samples) {
+  public DecisionTreeOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws Exception {
     super(modelName, identity, time, samples);
     decisionTreeFunction = computeFunction(operationName);
   }
