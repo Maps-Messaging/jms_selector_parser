@@ -32,6 +32,7 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected Instances structure;
 
   @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
+  // NOSONAR: This is thrown from the underlying library, nothing we can do here
   protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples) throws Exception {
     super(modelName, identity);
     this.sampleSize = samples;
@@ -40,6 +41,7 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   }
 
   @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
+  // NOSONAR: This is thrown from the underlying library, nothing we can do here
   protected void initializeModel() throws Exception {
     initializeSpecificModel();
     if (MLFunction.getModelStore().modelExists(modelName)) {
@@ -57,6 +59,7 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   }
 
   @Override
+  // NOSONAR: This is thrown from the underlying library, nothing we can do here
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     try {
       Instance instance = new DenseInstance(1.0, evaluateList(resolver));
@@ -103,11 +106,14 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   }
 
   @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
+  // NOSONAR: This is thrown from the underlying library, nothing we can do here
   protected abstract void initializeSpecificModel() throws Exception;
 
   @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
+  // NOSONAR: This is thrown from the underlying library, nothing we can do here
   protected abstract double applyModel(Instance instance) throws Exception;
 
   @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
+  // NOSONAR: This is thrown from the underlying library, nothing we can do here
   protected abstract void buildModel(Instances trainingData) throws Exception;
 }

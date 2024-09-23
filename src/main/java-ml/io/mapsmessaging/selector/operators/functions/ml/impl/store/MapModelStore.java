@@ -19,7 +19,6 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.store;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
