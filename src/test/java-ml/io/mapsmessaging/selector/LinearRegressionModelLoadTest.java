@@ -24,11 +24,12 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.store.FileModelStor
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class KMeansClusterModelLoadTest {
+class LinearRegressionModelLoadTest {
 
-    private final static String[] SELECTORS ={
-        "K-means_clustering (distance, scd41.arff , CO₂ , temperature, humidity) > 0 OR NOT model_exists(scd41.arff)",
-    } ;
+
+  private final static String[] SELECTORS ={
+      "linear_regression (predict, scd41.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41.arff)",
+  } ;
 
 
   @Test
@@ -52,7 +53,7 @@ class KMeansClusterModelLoadTest {
     ModelStore previous = MLFunction.getModelStore();
     try {
       MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      ParserExecutor executor = SelectorParser.compile("K-means_clustering (distance, scd41.arff , CO₂ , temperature, humidity) < 2");
+      ParserExecutor executor = SelectorParser.compile("linear_regression (predict, scd41.arff , CO₂,  temperature, humidity)< 50");
       Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
         switch (key) {
           case "CO₂":
@@ -82,7 +83,4 @@ class KMeansClusterModelLoadTest {
       MLFunction.setModelStore(previous);
     }
   }
-
-
-
 }

@@ -51,6 +51,7 @@ public class LinearRegressionOperation extends AbstractMLModelOperation {
 
   @Override
   protected void buildModel(Instances trainingData) throws Exception {
+    trainingData.setClassIndex(trainingData.numAttributes() - 1);
     linearRegression.buildClassifier(trainingData);
     isModelTrained = true;
   }
