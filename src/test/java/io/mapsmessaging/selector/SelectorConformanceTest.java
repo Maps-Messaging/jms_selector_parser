@@ -114,9 +114,10 @@ class SelectorConformanceTest {
       try {
         Constants.setThreshold(0.000000001);
         ParserExecutor parser = SelectorParser.compile(selector);
-        parser.toString();
+        ParserExecutor parser1 = SelectorParser.compile(selector);
+        Assertions.assertTrue(parser1.equals(parser));
+        Assertions.assertTrue(parser1.toString().equals(parser.toString()));
       } catch (ParseException e) {
-        e.printStackTrace();
         Assertions.fail("Selector text:" + selector + " failed with exception " + e.getMessage());
       }
     }
