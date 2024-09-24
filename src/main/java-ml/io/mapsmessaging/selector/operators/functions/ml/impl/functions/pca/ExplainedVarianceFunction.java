@@ -17,13 +17,14 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.attributeSelection.PrincipalComponents;
-import weka.filters.supervised.attribute.AttributeSelection;
 import weka.core.Instance;
+import weka.filters.supervised.attribute.AttributeSelection;
 
 public class ExplainedVarianceFunction implements PCAFunction {
   @Override
-  public double compute(AttributeSelection filter, Instance instance) throws Exception {
+  public double compute(AttributeSelection filter, Instance instance) throws ModelException {
     PrincipalComponents pca = (PrincipalComponents) filter.getEvaluator();
     return pca.getVarianceCovered();
   }

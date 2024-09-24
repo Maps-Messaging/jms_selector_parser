@@ -17,11 +17,12 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.trees.J48;
 import weka.core.Instance;
 
 public interface DecisionTreeFunction {
-  double compute(J48 tree, Instance instance) throws Exception;
+  double compute(J48 tree, Instance instance) throws ModelException;
 
   String getName();
 

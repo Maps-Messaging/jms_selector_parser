@@ -17,14 +17,19 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Instance;
 
 public class PredictFunction implements LinearRegressionFunction {
 
   @Override
-  public double compute(LinearRegression linearRegression, Instance instance) throws Exception {
-    return linearRegression.classifyInstance(instance);
+  public double compute(LinearRegression linearRegression, Instance instance) throws ModelException {
+    try {
+      return linearRegression.classifyInstance(instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

@@ -17,6 +17,7 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -30,10 +31,14 @@ public class CentroidFunction implements KMeansFunction {
   }
 
   @Override
-  public double compute(SimpleKMeans kmeans, Instance instance) throws Exception {
-    Instances centroids = kmeans.getClusterCentroids();
-    Instance centroid = centroids.instance(kmeans.clusterInstance(instance));
-    return centroid.value(index);
+  public double compute(SimpleKMeans kmeans, Instance instance) throws ModelException {
+    try {
+      Instances centroids = kmeans.getClusterCentroids();
+      Instance centroid = centroids.instance(kmeans.clusterInstance(instance));
+      return centroid.value(index);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

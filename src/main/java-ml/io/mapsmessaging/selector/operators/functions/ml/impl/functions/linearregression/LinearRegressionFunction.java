@@ -17,11 +17,12 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Instance;
 
 public interface LinearRegressionFunction {
-  double compute(LinearRegression linearRegression, Instance instance) throws Exception;
+  double compute(LinearRegression linearRegression, Instance instance) throws ModelException;
   String getName();
 }
 

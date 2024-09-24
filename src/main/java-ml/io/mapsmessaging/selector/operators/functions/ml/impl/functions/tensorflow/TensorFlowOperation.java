@@ -19,9 +19,12 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorfl
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
-import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
 import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
+import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
+import java.io.IOException;
+import java.util.List;
 import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
@@ -30,8 +33,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.types.TFloat64;
-
-import java.util.List;
 
 public class TensorFlowOperation extends AbstractModelOperations {
   private SavedModelBundle model;
@@ -45,7 +46,7 @@ public class TensorFlowOperation extends AbstractModelOperations {
     }
   }
 
-  protected void initializeModel() throws Exception {
+  protected void initializeModel() throws ModelException {
     loadModel();
     isModelTrained = true;
   }
@@ -78,10 +79,14 @@ public class TensorFlowOperation extends AbstractModelOperations {
     }
   }
 
-  protected void loadModel() throws Exception {
-    byte[] modelData = MLFunction.getModelStore().loadModel(modelName + "_data");
-    model = ModelUtils.byteArrayToModel(modelData, "");
-    isModelTrained = true;
+  protected void loadModel() throws ModelException {
+    try {
+      byte[] modelData = MLFunction.getModelStore().loadModel(modelName + "_data");
+      model = ModelUtils.byteArrayToModel(modelData, "");
+      isModelTrained = true;
+    } catch (IOException e) {
+      throw new ModelException(e);
+    }
   }
 
   private Tensor createTensor(Object[] features) {

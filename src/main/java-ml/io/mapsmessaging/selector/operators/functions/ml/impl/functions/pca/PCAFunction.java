@@ -17,10 +17,11 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
-import weka.filters.supervised.attribute.AttributeSelection;
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.core.Instance;
+import weka.filters.supervised.attribute.AttributeSelection;
 
 public interface PCAFunction {
-  double compute(AttributeSelection filter, Instance instance) throws Exception;
+  double compute(AttributeSelection filter, Instance instance) throws ModelException;
   String getName();
 }

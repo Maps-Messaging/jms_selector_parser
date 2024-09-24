@@ -19,14 +19,13 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebay
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class NaiveBayesOperation extends AbstractMLModelOperation {
   private NaiveBayes naiveBayes;

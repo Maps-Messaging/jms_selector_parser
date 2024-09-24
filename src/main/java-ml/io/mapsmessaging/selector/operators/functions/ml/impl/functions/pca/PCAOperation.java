@@ -19,6 +19,9 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
 import weka.core.Attribute;
@@ -26,10 +29,6 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PCAOperation extends AbstractMLModelOperation {
   private AttributeSelection filter;

@@ -17,14 +17,19 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.trees.J48;
 import weka.core.Instance;
 
 public class ClassifyInstanceFunction implements DecisionTreeFunction {
 
   @Override
-  public double compute(J48 tree, Instance instance) throws Exception {
-    return tree.classifyInstance(instance);
+  public double compute(J48 tree, Instance instance) throws ModelException {
+    try {
+      return tree.classifyInstance(instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

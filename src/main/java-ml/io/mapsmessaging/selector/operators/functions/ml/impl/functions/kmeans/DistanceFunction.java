@@ -17,6 +17,7 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.clusterers.SimpleKMeans;
 import weka.core.EuclideanDistance;
 import weka.core.Instance;
@@ -25,11 +26,15 @@ import weka.core.Instances;
 public class DistanceFunction implements KMeansFunction{
 
   @Override
-  public double compute(SimpleKMeans kmeans, Instance instance) throws Exception {
-    Instances centroids = kmeans.getClusterCentroids();
-    EuclideanDistance distanceFunction = new EuclideanDistance(centroids);
-    Instance centroid = centroids.instance(kmeans.clusterInstance(instance));
-    return distanceFunction.distance(centroid, instance);
+  public double compute(SimpleKMeans kmeans, Instance instance) throws ModelException {
+    try {
+      Instances centroids = kmeans.getClusterCentroids();
+      EuclideanDistance distanceFunction = new EuclideanDistance(centroids);
+      Instance centroid = centroids.instance(kmeans.clusterInstance(instance));
+      return distanceFunction.distance(centroid, instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

@@ -17,14 +17,19 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instance;
 
 public class ClassifyFunction implements NaiveBayesFunction {
 
   @Override
-  public double compute(NaiveBayes naiveBayes, Instance instance) throws Exception {
-    return naiveBayes.classifyInstance(instance);
+  public double compute(NaiveBayes naiveBayes, Instance instance) throws ModelException {
+    try {
+      return naiveBayes.classifyInstance(instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

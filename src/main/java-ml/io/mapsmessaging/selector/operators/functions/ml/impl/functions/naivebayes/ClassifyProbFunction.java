@@ -17,21 +17,26 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instance;
 
 public class ClassifyProbFunction implements NaiveBayesFunction {
 
   @Override
-  public double compute(NaiveBayes naiveBayes, Instance instance) throws Exception {
-    double[] distribution = naiveBayes.distributionForInstance(instance);
-    double maxProbability = Double.NEGATIVE_INFINITY;
-    for (double prob : distribution) {
-      if (prob > maxProbability) {
-        maxProbability = prob;
+  public double compute(NaiveBayes naiveBayes, Instance instance) throws ModelException {
+    try {
+      double[] distribution = naiveBayes.distributionForInstance(instance);
+      double maxProbability = Double.NEGATIVE_INFINITY;
+      for (double prob : distribution) {
+        if (prob > maxProbability) {
+          maxProbability = prob;
+        }
       }
+      return maxProbability;
+    } catch (Exception e) {
+      throw new ModelException(e);
     }
-    return maxProbability;
   }
 
   @Override

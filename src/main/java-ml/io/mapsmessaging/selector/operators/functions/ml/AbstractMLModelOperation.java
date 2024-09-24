@@ -15,10 +15,11 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;import io.mapsmessaging.selector.IdentifierResolver;
+package io.mapsmessaging.selector.operators.functions.ml;
+
+import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

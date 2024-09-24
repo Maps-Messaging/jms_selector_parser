@@ -17,12 +17,13 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instance;
 
 public interface KMeansFunction {
 
-  double compute(SimpleKMeans kmeans, Instance instance) throws Exception;
+  double compute(SimpleKMeans kmeans, Instance instance) throws ModelException;
 
   String getName();
 }

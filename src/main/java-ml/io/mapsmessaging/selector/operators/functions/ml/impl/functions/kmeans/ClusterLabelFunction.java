@@ -17,14 +17,19 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instance;
 
 public class ClusterLabelFunction implements KMeansFunction {
 
   @Override
-  public double compute(SimpleKMeans kmeans, Instance instance) throws Exception {
-    return kmeans.clusterInstance(instance);
+  public double compute(SimpleKMeans kmeans, Instance instance) throws ModelException {
+    try {
+      return kmeans.clusterInstance(instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

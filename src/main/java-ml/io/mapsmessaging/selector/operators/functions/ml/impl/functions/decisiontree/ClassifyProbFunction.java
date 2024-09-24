@@ -17,22 +17,27 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.trees.J48;
 import weka.core.Instance;
 
 public class ClassifyProbFunction implements DecisionTreeFunction {
 
   @Override
-  public double compute(J48 tree, Instance instance) throws Exception {
-    // Sum probabilities of the predicted class as a representation
-    double[] distribution = tree.distributionForInstance(instance);
-    double maxProbability = Double.NEGATIVE_INFINITY;
-    for (double prob : distribution) {
-      if (prob > maxProbability) {
-        maxProbability = prob;
+  public double compute(J48 tree, Instance instance) throws ModelException {
+    try {
+      // Sum probabilities of the predicted class as a representation
+      double[] distribution = tree.distributionForInstance(instance);
+      double maxProbability = Double.NEGATIVE_INFINITY;
+      for (double prob : distribution) {
+        if (prob > maxProbability) {
+          maxProbability = prob;
+        }
       }
+      return maxProbability;
+    } catch (Exception e) {
+      throw new ModelException(e);
     }
-    return maxProbability;
   }
 
   @Override

@@ -17,10 +17,11 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
-import weka.filters.supervised.attribute.AttributeSelection;
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
+import weka.filters.supervised.attribute.AttributeSelection;
 
 public class ApplyPCAFunction implements PCAFunction {
   private final int index;
@@ -30,16 +31,20 @@ public class ApplyPCAFunction implements PCAFunction {
   }
 
   @Override
-  public double compute(AttributeSelection filter, Instance instance) throws Exception {
-    Instances instanceData = new Instances(instance.dataset(), 0);
-    instanceData.add(instance);
-    Instances transformedData = Filter.useFilter(instanceData, filter);
+  public double compute(AttributeSelection filter, Instance instance) throws ModelException {
+    try {
+      Instances instanceData = new Instances(instance.dataset(), 0);
+      instanceData.add(instance);
+      Instances transformedData = Filter.useFilter(instanceData, filter);
 
-    // Ensure the index is within the valid range
-    if (index < 0 || index >= transformedData.numAttributes()) {
-      throw new IllegalArgumentException("Invalid index: " + index);
+      // Ensure the index is within the valid range
+      if (index < 0 || index >= transformedData.numAttributes()) {
+        throw new IllegalArgumentException("Invalid index: " + index);
+      }
+      return transformedData.firstInstance().value(index); // Return the specified principal component
+    } catch (Exception e) {
+      throw new ModelException(e);
     }
-    return transformedData.firstInstance().value(index); // Return the specified principal component
   }
 
   @Override
