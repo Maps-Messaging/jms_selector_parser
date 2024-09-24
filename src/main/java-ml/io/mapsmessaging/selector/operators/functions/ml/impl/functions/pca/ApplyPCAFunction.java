@@ -39,10 +39,7 @@ public class ApplyPCAFunction implements PCAFunction {
     if (index < 0 || index >= transformedData.numAttributes()) {
       throw new IllegalArgumentException("Invalid index: " + index);
     }
-
-    double d= transformedData.firstInstance().value(index); // Return the specified principal component
-    System.err.println(d);
-    return d;
+    return transformedData.firstInstance().value(index); // Return the specified principal component
   }
 
   @Override
