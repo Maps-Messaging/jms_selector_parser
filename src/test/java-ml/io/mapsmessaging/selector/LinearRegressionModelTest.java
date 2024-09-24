@@ -24,7 +24,7 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.store.FileModelStor
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class LinearRegressionModelLoadTest {
+class LinearRegressionModelTest {
 
 
   private final static String[] SELECTORS ={

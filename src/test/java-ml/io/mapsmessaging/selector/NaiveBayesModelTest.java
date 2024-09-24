@@ -24,14 +24,14 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.store.FileModelStor
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class KMeansClusterModelLoadTest {
-
-    private final static String[] SELECTORS ={
-        "K-means_clustering (distance, scd41.arff , CO₂ , temperature, humidity) > 0 OR NOT model_exists(scd41.arff)",
-    } ;
+class NaiveBayesModelTest {
 
 
-  @Test
+  private final static String[] SELECTORS ={
+      "naive_bayes (classify, scd41.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41.arff)",
+  } ;
+
+
   void testLoadModel() throws Exception {
     ModelStore previous = MLFunction.getModelStore();
     try {
@@ -47,12 +47,11 @@ class KMeansClusterModelLoadTest {
     }
   }
 
-  @Test
   void testRunModel() throws Exception {
     ModelStore previous = MLFunction.getModelStore();
     try {
       MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      ParserExecutor executor = SelectorParser.compile("K-means_clustering (distance, scd41.arff , CO₂ , temperature, humidity) < 2");
+      ParserExecutor executor = SelectorParser.compile("naive_bayes (classify, scd41.arff , CO₂,  temperature, humidity)< 50");
       Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
         switch (key) {
           case "CO₂":
@@ -82,7 +81,4 @@ class KMeansClusterModelLoadTest {
       MLFunction.setModelStore(previous);
     }
   }
-
-
-
 }

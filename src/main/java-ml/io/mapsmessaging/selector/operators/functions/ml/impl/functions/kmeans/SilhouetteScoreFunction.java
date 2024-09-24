@@ -96,7 +96,6 @@ public class SilhouetteScoreFunction implements KMeansFunction {
     return "silhouettescore";
   }
 
-  @Data
   private static class CalcData{
     double sum = 0.0;
     int count = 0;

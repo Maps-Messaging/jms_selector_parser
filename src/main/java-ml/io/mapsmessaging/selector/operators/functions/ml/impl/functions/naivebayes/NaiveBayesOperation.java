@@ -49,6 +49,7 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
 
   @Override
   protected void buildModel(Instances trainingData) throws Exception {
+    trainingData.setClassIndex(structure.numAttributes() - 1);
     naiveBayes.buildClassifier(trainingData);
     isModelTrained = true;
   }

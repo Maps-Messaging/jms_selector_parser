@@ -25,7 +25,9 @@ public class ExplainedVarianceFunction implements PCAFunction {
   @Override
   public double compute(AttributeSelection filter, Instance instance) throws Exception {
     PrincipalComponents pca = (PrincipalComponents) filter.getEvaluator();
-    return pca.getVarianceCovered();
+    double d= pca.getVarianceCovered();
+    System.err.println(d);
+    return d;
   }
 
   @Override
