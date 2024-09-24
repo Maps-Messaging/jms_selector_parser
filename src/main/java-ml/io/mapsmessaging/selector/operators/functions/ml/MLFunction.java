@@ -15,7 +15,9 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;import io.mapsmessaging.selector.IdentifierResolver;
+package io.mapsmessaging.selector.operators.functions.ml;
+
+import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
@@ -33,11 +35,17 @@ import lombok.Setter;
 
 public class MLFunction extends Operation {
 
-  @Getter @Setter private static int defaultSampleSize = 100;
+  @Getter
+  @Setter
+  private static int defaultSampleSize = 100;
 
-  @Getter @Setter private static int defaultSampleTime = 0;
+  @Getter
+  @Setter
+  private static int defaultSampleTime = 0;
 
-  @Getter @Setter private static ModelStore modelStore = new MapModelStore();
+  @Getter
+  @Setter
+  private static ModelStore modelStore = new MapModelStore();
 
   private final String functionName;
   private final String operationName;

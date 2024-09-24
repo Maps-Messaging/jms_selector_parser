@@ -19,6 +19,7 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.store;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,5 +43,10 @@ public class MapModelStore implements ModelStore {
   @Override
   public boolean modelExists(String modelId)  {
     return modelStore.containsKey(modelId);
+  }
+
+  @Override
+  public boolean deleteModel(String modelId) {
+    return modelStore.remove(modelId) != null;
   }
 }

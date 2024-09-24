@@ -25,4 +25,6 @@ public interface ModelStore {
   byte[] loadModel(String modelId) throws IOException;
 
   boolean modelExists(String modelId) throws IOException;
+
+  boolean deleteModel(String modelId) throws IOException;
 }

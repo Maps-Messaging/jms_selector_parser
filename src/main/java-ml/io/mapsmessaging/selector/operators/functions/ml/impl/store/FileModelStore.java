@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class FileModelStore implements ModelStore {
 
@@ -63,5 +64,15 @@ public class FileModelStore implements ModelStore {
   public boolean modelExists(String s) {
     File file = new File(rootDirectory, s);
     return file.exists();
+  }
+
+  @Override
+  public boolean deleteModel(String modelId) throws IOException {
+    File file = new File(rootDirectory, modelId);
+    if(file.exists()) {
+      Files.delete(file.toPath());
+      return true;
+    }
+    return false;
   }
 }
