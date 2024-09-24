@@ -19,13 +19,14 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearre
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LinearRegressionOperation extends AbstractMLModelOperation {
   private LinearRegression linearRegression;

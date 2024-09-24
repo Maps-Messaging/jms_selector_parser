@@ -19,12 +19,10 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorfl
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
-import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
 import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
+import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
-import java.io.IOException;
-import java.util.List;
 import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
@@ -33,6 +31,9 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.types.TFloat64;
+
+import java.io.IOException;
+import java.util.List;
 
 public class TensorFlowOperation extends AbstractModelOperations {
   private SavedModelBundle model;

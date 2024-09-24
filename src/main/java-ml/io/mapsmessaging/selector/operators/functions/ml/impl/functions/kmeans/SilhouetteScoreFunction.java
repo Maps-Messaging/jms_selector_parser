@@ -18,10 +18,11 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import lombok.Data;
 import weka.clusterers.SimpleKMeans;
-import weka.core.EuclideanDistance;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.EuclideanDistance;
 
 public class SilhouetteScoreFunction implements KMeansFunction {
 

@@ -19,8 +19,8 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.attributeSelection.PrincipalComponents;
-import weka.core.Instance;
 import weka.filters.supervised.attribute.AttributeSelection;
+import weka.core.Instance;
 
 public class ExplainedVarianceFunction implements PCAFunction {
   @Override

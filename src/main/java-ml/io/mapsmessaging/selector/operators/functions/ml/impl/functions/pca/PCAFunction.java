@@ -18,8 +18,8 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.core.Instance;
 import weka.filters.supervised.attribute.AttributeSelection;
+import weka.core.Instance;
 
 public interface PCAFunction {
   double compute(AttributeSelection filter, Instance instance) throws ModelException;

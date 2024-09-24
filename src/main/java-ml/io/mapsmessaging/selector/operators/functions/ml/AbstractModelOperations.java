@@ -15,9 +15,7 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;
-
-import io.mapsmessaging.selector.operators.Operation;
+package io.mapsmessaging.selector.operators.functions.ml;import io.mapsmessaging.selector.operators.Operation;
 import java.util.List;
 
 public abstract class AbstractModelOperations extends Operation {

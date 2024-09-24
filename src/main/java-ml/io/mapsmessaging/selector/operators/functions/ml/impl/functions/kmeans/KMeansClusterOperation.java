@@ -18,10 +18,12 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
 import weka.core.Instance;
