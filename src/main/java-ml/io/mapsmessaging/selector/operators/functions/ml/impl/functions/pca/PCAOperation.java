@@ -18,6 +18,7 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
 import weka.core.Attribute;
@@ -26,6 +27,7 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +35,13 @@ public class PCAOperation extends AbstractMLModelOperation {
   private AttributeSelection filter;
   private final PCAFunction pcaFunction;
 
-  public PCAOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws Exception {
+  public PCAOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity, time, samples);
     pcaFunction = computeFunction(operationName);
   }
 
   @Override
-  protected void initializeSpecificModel() throws Exception {
+  protected void initializeSpecificModel() {
     // Adding attributes based on the identity
     ArrayList<Attribute> attributes = new ArrayList<>();
     for (String s : identity) {
@@ -50,7 +52,7 @@ public class PCAOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void buildModel(Instances trainingData) throws Exception {
+  protected void buildModel(Instances trainingData) throws ModelException {
     // Set up the PrincipalComponents evaluator
     PrincipalComponents pca = new PrincipalComponents();
     pca.setVarianceCovered(0.95); // For example, keep 95% of variance
@@ -62,16 +64,24 @@ public class PCAOperation extends AbstractMLModelOperation {
     // Set up the AttributeSelection filter
     filter.setEvaluator(pca);
     filter.setSearch(ranker);
-    filter.setInputFormat(trainingData);
+    try {
+      filter.setInputFormat(trainingData);
 
-    // Apply the filter to the training data to initialize it
-    Filter.useFilter(trainingData, filter);
-    isModelTrained = true;
+      // Apply the filter to the training data to initialize it
+      Filter.useFilter(trainingData, filter);
+      isModelTrained = true;
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override
-  protected double applyModel(Instance instance) throws Exception {
-    return pcaFunction.compute(filter, instance);
+  protected double applyModel(Instance instance) throws ModelException {
+    try {
+      return pcaFunction.compute(filter, instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

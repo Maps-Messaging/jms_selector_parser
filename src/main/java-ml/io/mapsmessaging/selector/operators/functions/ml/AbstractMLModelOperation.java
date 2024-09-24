@@ -18,6 +18,8 @@
 package io.mapsmessaging.selector.operators.functions.ml;import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import weka.core.Attribute;
@@ -31,9 +33,7 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected final long sampleTime;
   protected Instances structure;
 
-  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
-  // NOSONAR: This is thrown from the underlying library, nothing we can do here
-  protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples) throws Exception {
+  protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity);
     this.sampleSize = samples;
     this.sampleTime = (time > 0) ? System.currentTimeMillis() + time : 0;
@@ -42,7 +42,7 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
 
   @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
   // NOSONAR: This is thrown from the underlying library, nothing we can do here
-  protected void initializeModel() throws Exception {
+  protected void initializeModel() throws IOException, ModelException {
     initializeSpecificModel();
     if (MLFunction.getModelStore().modelExists(modelName)) {
       byte[] loadedModel = MLFunction.getModelStore().loadModel(modelName);
@@ -105,15 +105,9 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     return dataset;
   }
 
-  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
-  // NOSONAR: This is thrown from the underlying library, nothing we can do here
-  protected abstract void initializeSpecificModel() throws Exception;
+  protected abstract void initializeSpecificModel() throws ModelException;
 
-  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
-  // NOSONAR: This is thrown from the underlying library, nothing we can do here
-  protected abstract double applyModel(Instance instance) throws Exception;
+  protected abstract double applyModel(Instance instance) throws ModelException;
 
-  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
-  // NOSONAR: This is thrown from the underlying library, nothing we can do here
-  protected abstract void buildModel(Instances trainingData) throws Exception;
+  protected abstract void buildModel(Instances trainingData) throws ModelException;
 }

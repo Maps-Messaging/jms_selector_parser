@@ -18,11 +18,13 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +32,13 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
   private NaiveBayes naiveBayes;
   private final NaiveBayesFunction naiveBayesFunction;
 
-  public NaiveBayesOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws Exception {
+  public NaiveBayesOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity, time, samples);
     naiveBayesFunction = computeFunction(operationName);
   }
 
   @Override
-  protected void initializeSpecificModel() throws Exception {
+  protected void initializeSpecificModel(){
     // Adding attributes based on the identity
     ArrayList<Attribute> attributes = new ArrayList<>();
     for (String s : identity) {
@@ -48,15 +50,23 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void buildModel(Instances trainingData) throws Exception {
+  protected void buildModel(Instances trainingData) throws ModelException {
     trainingData.setClassIndex(structure.numAttributes() - 1);
-    naiveBayes.buildClassifier(trainingData);
-    isModelTrained = true;
+    try {
+      naiveBayes.buildClassifier(trainingData);
+      isModelTrained = true;
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override
-  protected double applyModel(Instance instance) throws Exception {
-    return naiveBayesFunction.compute(naiveBayes, instance);
+  protected double applyModel(Instance instance) throws ModelException {
+    try {
+      return naiveBayesFunction.compute(naiveBayes, instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

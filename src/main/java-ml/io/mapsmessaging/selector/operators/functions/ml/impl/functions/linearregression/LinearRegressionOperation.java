@@ -18,11 +18,13 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +32,13 @@ public class LinearRegressionOperation extends AbstractMLModelOperation {
   private LinearRegression linearRegression;
   private final LinearRegressionFunction linearRegressionFunction;
 
-  public LinearRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws Exception {
+  public LinearRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity, time, samples);
     linearRegressionFunction = computeFunction(operationName);
   }
 
   @Override
-  protected void initializeSpecificModel() throws Exception {
+  protected void initializeSpecificModel()  {
     // Adding attributes based on the identity
     ArrayList<Attribute> attributes = new ArrayList<>();
     for (String s : identity) {
@@ -50,15 +52,23 @@ public class LinearRegressionOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void buildModel(Instances trainingData) throws Exception {
+  protected void buildModel(Instances trainingData) throws ModelException {
     trainingData.setClassIndex(trainingData.numAttributes() - 1);
-    linearRegression.buildClassifier(trainingData);
-    isModelTrained = true;
+    try {
+      linearRegression.buildClassifier(trainingData);
+      isModelTrained = true;
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override
-  protected double applyModel(Instance instance) throws Exception {
-    return linearRegressionFunction.compute(linearRegression, instance);
+  protected double applyModel(Instance instance) throws ModelException {
+    try {
+      return linearRegressionFunction.compute(linearRegression, instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override

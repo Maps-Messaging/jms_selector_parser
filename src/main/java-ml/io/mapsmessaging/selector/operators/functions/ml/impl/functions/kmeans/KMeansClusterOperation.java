@@ -18,9 +18,12 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -30,30 +33,42 @@ public class KMeansClusterOperation extends AbstractMLModelOperation {
   private SimpleKMeans kmeans;
   private final KMeansFunction kmeansFunction;
 
-  public KMeansClusterOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws Exception {
+  public KMeansClusterOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity, time, samples);
     kmeansFunction = computeFunction(operationName);
   }
 
-  protected void initializeSpecificModel() throws Exception {
+  protected void initializeSpecificModel() throws ModelException {
     ArrayList<Attribute> attributes = new ArrayList<>();
     for (String s : identity) {
       attributes.add(new Attribute(s));
     }
     structure = new Instances(modelName, attributes, 0);
     kmeans = new SimpleKMeans();
-    kmeans.setNumClusters(3);
+    try {
+      kmeans.setNumClusters(3);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override
-  protected void buildModel(Instances trainingData) throws Exception {
-    kmeans.buildClusterer(trainingData);
-    isModelTrained = true;
+  protected void buildModel(Instances trainingData) throws ModelException {
+    try {
+      kmeans.buildClusterer(trainingData);
+      isModelTrained = true;
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override
-  protected double applyModel(Instance instance) throws Exception {
-    return kmeansFunction.compute(kmeans, instance);
+  protected double applyModel(Instance instance) throws ModelException {
+    try {
+      return kmeansFunction.compute(kmeans, instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
   @Override
