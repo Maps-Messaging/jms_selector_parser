@@ -20,15 +20,29 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.store;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.tensorflow.SavedModelBundle;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
 
+
 public class ModelUtils {
+
+  @Getter
+  @Setter
+  private static long thresholdsize = 100_000_000L; // Maximum allowed uncompressed size (adjust as needed)
+  @Getter
+  @Setter
+  private static int thresholdentries = 10_000; // Maximum allowed entries in the archive
+  @Getter
+  @Setter
+  private static double thresholdRatio = 100.0; // Maximum allowed compression ratio
+
 
   public static byte[] instancesToByteArray(Instances instances) throws IOException {
     ArffSaver saver = new ArffSaver();
@@ -49,27 +63,72 @@ public class ModelUtils {
 
   // Load a TensorFlow model from a byte array
   public static SavedModelBundle byteArrayToModel(byte[] data, String modelDir) throws IOException {
+    // Constants for threshold checks
+
     // Create a temporary directory
     Path tempDir = Files.createTempDirectory(modelDir + File.separator + "tf_model");
+    if(!tempDir.toFile().setReadable(true, true) &&
+        !tempDir.toFile().setWritable(true, true) &&
+        !tempDir.toFile().setExecutable(true, true)){
+      throw new IOException("Unable to secure temp directory");
+    }
+
     tempDir.toFile().deleteOnExit();
+
+    long totalSizeArchive = 0;
+    int totalEntryArchive = 0;
 
     // Decompress the byte array into the temporary directory
     try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(data))) {
       ZipEntry zipEntry;
+
       while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+        // Check number of entries to prevent Zip Bomb attack
+        totalEntryArchive++;
+        if (totalEntryArchive > thresholdentries) {
+          throw new IOException("Too many entries in ZIP file");
+        }
+
         Path filePath = tempDir.resolve(zipEntry.getName());
         if (zipEntry.isDirectory()) {
           Files.createDirectories(filePath);
         } else {
           Files.createDirectories(filePath.getParent());
-          Files.copy(zipInputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+
+          // Calculate compression ratio and check for suspicious entries
+          long uncompressedSize = zipEntry.getSize();
+          long compressedSize = zipEntry.getCompressedSize();
+          if (uncompressedSize > 0 && compressedSize > 0) {
+            double compressionRatio = (double) uncompressedSize / compressedSize;
+            if (compressionRatio > thresholdRatio) {
+              throw new IOException("Suspicious ZIP entry detected, possible ZIP bomb");
+            }
+          }
+
+          // Prevent oversized uncompressed data
+          if (totalSizeArchive + uncompressedSize > thresholdsize) {
+            throw new IOException("Uncompressed data exceeds allowed limit");
+          }
+
+          // Extract the file
+          try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(filePath))) {
+            byte[] buffer = new byte[2048];
+            int nBytes;
+            while ((nBytes = zipInputStream.read(buffer)) > 0) {
+              out.write(buffer, 0, nBytes);
+            }
+          }
+
+          totalSizeArchive += uncompressedSize;
         }
         zipInputStream.closeEntry();
       }
     }
+
     // Load the model from the temporary directory
     return SavedModelBundle.load(tempDir.toString(), "serve");
   }
+
 
   private ModelUtils() {}
 }
