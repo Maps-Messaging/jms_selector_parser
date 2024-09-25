@@ -86,8 +86,9 @@ public class PCAOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "PCA(" + super.toString() + ")";
+    return "PCA("+ pcaFunction.getName() +","+ super.toString() + ")";
   }
+
   private static PCAFunction computeFunction(String operation) {
     if (operation.toLowerCase().startsWith("applypca[")) {
       String indexStr = operation.substring(9, operation.length() - 1); // Extract the index

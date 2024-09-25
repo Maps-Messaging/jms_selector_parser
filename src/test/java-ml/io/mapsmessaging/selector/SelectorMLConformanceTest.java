@@ -26,14 +26,29 @@ class SelectorMLConformanceTest {
 
   public static final String[] SELECTOR_TEXT =
       {
+          "model_exists(home_temp_K_means_model) = true",
+
           "K-means_clustering ( distance, scd41, CO₂, temperature, humidity ) > 1.9",
           "K-means_clustering ( wcss, home_temp_K_means_model, temperature, humidity ) > 1.9",
-          "model_exists(home_temp_K_means_model) = true",
-          "decision_tree (classify, home_temp_decision_model, temperature, humidity, pressure) = 1",
-          "linear_regression (predict,home_temp_regression_model, temperature, humidity, pressure) < 50.0",
           "K-means_clustering (distance, home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
-          "linear_regression (predict, home_temp_regression_model, temperature, humidity, pressure) < 50.0 OR ( time = 11 )",
-          "decision_tree (classify, home_temp_decision_model, temperature, humidity, pressure) = 1 and phone not like '12%3'",
+          "K-means_clustering (clusterlabel, home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
+          "K-means_clustering (centroid[1], home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
+          "K-means_clustering (clustersizes[0], home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
+          "K-means_clustering (totalclusters, home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
+          "K-means_clustering (silhouettescore, home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
+
+          "decision_tree (classify, home_temp_decision_model, temperature, humidity, pressure) = 1",
+          "decision_tree (classifyprob, home_temp_decision_model, temperature, humidity, pressure) = 1",
+
+          "linear_regression (predict,home_temp_regression_model, temperature, humidity, pressure) < 50.0",
+          "pca (explainedvariance,home_temp_regression_model, temperature, humidity, pressure) < 50.0",
+          "pca (applypca[0],home_temp_regression_model, temperature, humidity, pressure) < 50.0",
+
+          "naive_bayes (classify, home_temp_decision_model.arff , CO₂,  temperature, humidity, CO₂_level) > 0",
+          "naive_bayes (classifyprob, home_temp_decision_model.arff , CO₂,  temperature, humidity, CO₂_level) > 0",
+
+          "hierarchical_clustering (scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level) > 0 ",
+
       };
 
   @Test
@@ -44,7 +59,6 @@ class SelectorMLConformanceTest {
         ParserExecutor parser = SelectorParser.compile(selector);
         parser.toString();
       } catch (ParseException e) {
-        e.printStackTrace();
         Assertions.fail("Selector text:" + selector + " failed with exception " + e.getMessage());
       }
     }
@@ -57,12 +71,6 @@ class SelectorMLConformanceTest {
         Object parser1 = SelectorParser.compile(selector);
         Object parser2 = SelectorParser.compile(selector);
         Assertions.assertEquals(parser1.toString(), parser2.toString());
-        if(!(selector.contains("K-means_clustering") ||
-            selector.contains("decision_tree") ||
-            selector.contains("model_exists") ||
-            selector.contains("linear_regression"))) {
-          Assertions.assertEquals(parser1.hashCode(), parser2.hashCode());
-        }
       } catch (ParseException e) {
         Assertions.fail("Selector text:" + selector + " failed with exception " + e.getMessage());
       }

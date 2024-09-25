@@ -49,10 +49,11 @@ public class MLFunction extends Operation {
 
   private final String functionName;
   private final String operationName;
-  private final String modelName;
   private final long sampleSize;
   private final long sampleTime;
   private final List<String> identifiers;
+
+  private String modelName;
 
   public MLFunction(String functionName, List<String> list) {
     this.functionName = functionName;
@@ -92,6 +93,8 @@ public class MLFunction extends Operation {
         case "naive_bayes":
           return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "hierarchical_clustering":
+          identifiers.add(0, modelName);
+          modelName = operationName;
           return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
         case "pca":
           return new PCAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);

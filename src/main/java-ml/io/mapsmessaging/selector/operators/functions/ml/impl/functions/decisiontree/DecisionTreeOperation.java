@@ -71,7 +71,7 @@ public class DecisionTreeOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "DecisionTree(" + super.toString() + ")";
+    return "DecisionTree("+ decisionTreeFunction.getName() +","+ super.toString() + ")";
   }
 
   private static DecisionTreeFunction computeFunction(String operation){
