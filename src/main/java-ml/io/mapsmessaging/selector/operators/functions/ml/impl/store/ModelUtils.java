@@ -81,52 +81,55 @@ public class ModelUtils {
     // Decompress the byte array into the temporary directory
     try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(data))) {
       ZipEntry zipEntry;
-
       while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-        // Check number of entries to prevent Zip Bomb attack
         totalEntryArchive++;
         if (totalEntryArchive > thresholdentries) {
           throw new IOException("Too many entries in ZIP file");
         }
-
-        Path filePath = tempDir.resolve(zipEntry.getName());
-        if (zipEntry.isDirectory()) {
-          Files.createDirectories(filePath);
-        } else {
-          Files.createDirectories(filePath.getParent());
-
-          // Calculate compression ratio and check for suspicious entries
-          long uncompressedSize = zipEntry.getSize();
-          long compressedSize = zipEntry.getCompressedSize();
-          if (uncompressedSize > 0 && compressedSize > 0) {
-            double compressionRatio = (double) uncompressedSize / compressedSize;
-            if (compressionRatio > thresholdRatio) {
-              throw new IOException("Suspicious ZIP entry detected, possible ZIP bomb");
-            }
-          }
-
-          // Prevent oversized uncompressed data
-          if (totalSizeArchive + uncompressedSize > thresholdsize) {
-            throw new IOException("Uncompressed data exceeds allowed limit");
-          }
-
-          // Extract the file
-          try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(filePath))) {
-            byte[] buffer = new byte[2048];
-            int nBytes;
-            while ((nBytes = zipInputStream.read(buffer)) > 0) {
-              out.write(buffer, 0, nBytes);
-            }
-          }
-
-          totalSizeArchive += uncompressedSize;
-        }
+        totalSizeArchive = processEntry(tempDir, zipInputStream, zipEntry, totalSizeArchive);
         zipInputStream.closeEntry();
       }
     }
 
     // Load the model from the temporary directory
     return SavedModelBundle.load(tempDir.toString(), "serve");
+  }
+
+  private static long processEntry(Path tempDir, ZipInputStream zipInputStream, ZipEntry zipEntry, long totalSizeArchive) throws IOException {
+    // Check number of entries to prevent Zip Bomb attack
+
+    Path filePath = tempDir.resolve(zipEntry.getName());
+    if (zipEntry.isDirectory()) {
+      Files.createDirectories(filePath);
+    } else {
+      Files.createDirectories(filePath.getParent());
+
+      // Calculate compression ratio and check for suspicious entries
+      long uncompressedSize = zipEntry.getSize();
+      long compressedSize = zipEntry.getCompressedSize();
+      if (uncompressedSize > 0 && compressedSize > 0) {
+        double compressionRatio = (double) uncompressedSize / compressedSize;
+        if (compressionRatio > thresholdRatio) {
+          throw new IOException("Suspicious ZIP entry detected, possible ZIP bomb");
+        }
+      }
+
+      // Prevent oversized uncompressed data
+      if (totalSizeArchive + uncompressedSize > thresholdsize) {
+        throw new IOException("Uncompressed data exceeds allowed limit");
+      }
+
+      // Extract the file
+      try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(filePath))) {
+        byte[] buffer = new byte[2048];
+        int nBytes;
+        while ((nBytes = zipInputStream.read(buffer)) > 0) {
+          out.write(buffer, 0, nBytes);
+        }
+      }
+      totalSizeArchive += uncompressedSize;
+    }
+    return totalSizeArchive;
   }
 
 
