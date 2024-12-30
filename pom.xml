@@ -182,7 +182,7 @@
               </execution>
             </executions>
             <groupId>org.apache.maven.plugins</groupId>
-            <version>3.10.1</version>
+            <version>3.11.2</version>
           </plugin>
         </plugins>
       </build>
@@ -293,7 +293,7 @@
               </execution>
             </executions>
             <groupId>org.apache.maven.plugins</groupId>
-            <version>3.10.1</version>
+            <version>3.11.2</version>
           </plugin>
         </plugins>
       </build>
@@ -306,7 +306,7 @@
         <dependency>
           <groupId>org.tensorflow</groupId>
           <artifactId>tensorflow-core-platform</artifactId>
-          <version>1.0.0-rc.2</version>
+          <version>1.0.0</version>
         </dependency>
       </dependencies>
     </profile>
@@ -365,7 +365,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.5.2</version>
         <configuration>
           <argLine>-Xmx8G -Dfile.encoding=UTF-8 @{argLine}</argLine>
           <includes>
@@ -430,7 +430,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.34</version>
+      <version>1.18.36</version>
     </dependency>
 
     <dependency>
@@ -451,7 +451,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.11.2</version>
+      <version>5.11.4</version>
       <scope>test</scope>
     </dependency>
 
