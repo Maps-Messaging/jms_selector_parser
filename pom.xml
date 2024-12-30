@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mapsmessaging</groupId>
   <artifactId>jms_selector_parser</artifactId>
-  <version>1.1.16-SNAPSHOT</version>
+  <version>ml-1.1.16-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Extensible JMS Selector Parser</name>
@@ -170,7 +170,7 @@
               <charset>UTF-8</charset>
               <encoding>UTF-8</encoding>
               <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-              <reportOutputDirectory>${project.build.directory}/site/docs</reportOutputDirectory>
+              <outputDirectory>${project.build.directory}/site/docs</outputDirectory>
               <show>public</show>
             </configuration>
             <executions>
@@ -281,7 +281,7 @@
               <charset>UTF-8</charset>
               <encoding>UTF-8</encoding>
               <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-              <reportOutputDirectory>${project.build.directory}/site/docs</reportOutputDirectory>
+              <outputDirectory>${project.build.directory}/site/docs</outputDirectory>
               <show>public</show>
             </configuration>
             <executions>
