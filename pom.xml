@@ -1,5 +1,5 @@
 <!--
-  ~  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+  ~  Copyright [ 2020 - 2025 ] [Matthew Buckton]
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@
   </scm>
 
   <properties>
+    <nvd.api.key>${env.NVD_API_KEY}</nvd.api.key>
     <maven.compiler.source>13</maven.compiler.source>
     <maven.compiler.target>13</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -417,6 +418,24 @@
           </compilerArgs>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>11.1.1</version>
+        <configuration>
+          <nvdApiKey>${nvd.api.key}</nvdApiKey>
+          <failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
+          <failOnError>false</failOnError>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 
