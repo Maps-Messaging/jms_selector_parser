@@ -1,5 +1,5 @@
 /*
- *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+ *  Copyright [ 2020 - 2025 ] [Matthew Buckton]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
  */
 package io.mapsmessaging.selector.resolvers;
 
+import com.google.gson.JsonObject;
 import io.mapsmessaging.selector.IdentifierResolver;
 import java.util.Map;
-import org.json.JSONObject;
+
 
 public class EvaluatorFactory {
 
@@ -30,8 +31,8 @@ public class EvaluatorFactory {
     if (obj instanceof Map) {
       return new MapEvaluator((Map<String, Object>) obj);
     }
-    if(obj instanceof JSONObject){
-      return new JsonEvaluator((JSONObject) obj);
+    if(obj instanceof JsonObject){
+      return new JsonEvaluator((JsonObject) obj);
     }
     return new BeanEvaluator(obj);
   }

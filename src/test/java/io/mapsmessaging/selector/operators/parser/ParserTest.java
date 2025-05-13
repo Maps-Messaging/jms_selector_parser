@@ -1,5 +1,5 @@
 /*
- *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+ *  Copyright [ 2020 - 2025 ] [Matthew Buckton]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,10 +98,10 @@ class ParserTest {
   void parserLoadDoubleTest() throws ParseException {
     String[] arguments = {"value"};
     FunctionOperator operation = ParserFactory.getInstance().loadParser("json", Arrays.asList(arguments));
-    String jsonString = "{test:10.0; value:20.0}";
+    String jsonString = "{test:10.0; value:20.1}";
     MessageBuilder messageBuilder = new MessageBuilder();
     messageBuilder.setOpaqueData(jsonString.getBytes());
-    Assertions.assertEquals(20.0, operation.evaluate(messageBuilder.build()));
+    Assertions.assertEquals(20.1d, operation.evaluate(messageBuilder.build()));
     Assertions.assertNotEquals(201.0, operation.evaluate(messageBuilder.build()));
   }
 

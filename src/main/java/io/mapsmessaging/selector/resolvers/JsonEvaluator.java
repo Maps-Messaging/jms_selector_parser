@@ -1,5 +1,5 @@
 /*
- *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+ *  Copyright [ 2020 - 2025 ] [Matthew Buckton]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,19 @@
 
 package io.mapsmessaging.selector.resolvers;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import io.mapsmessaging.selector.IdentifierMutator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class JsonEvaluator extends IdentifierMutator {
 
-  private final JSONObject jsonObject;
+  private final JsonObject jsonObject;
 
-  public JsonEvaluator(JSONObject jsonObject){
+  public JsonEvaluator(JsonObject jsonObject){
     this.jsonObject = jsonObject;
   }
 
@@ -69,19 +69,19 @@ public class JsonEvaluator extends IdentifierMutator {
     return keyPath;
   }
 
-  private static  Object locateObject(JSONObject json, String[] searchPath){
+  private static  Object locateObject(JsonObject json, String[] searchPath){
     if(searchPath != null){
       // Walk the JSON path first
       for(var x=0;x<searchPath.length;x++){
         var path = searchPath[x];
         var jsonLookup = json.get(path);
-        if(jsonLookup instanceof JSONArray){
+        if(jsonLookup instanceof JsonArray){
           var sub = new String[searchPath.length-(x +1)];
           System.arraycopy(searchPath, x+1, sub, 0, sub.length);
-          return arrayLookup(json.getJSONArray(path), sub);
+          return arrayLookup(json.getAsJsonArray(path), sub);
         }
-        else if(jsonLookup instanceof JSONObject){
-          json = (JSONObject) jsonLookup;
+        else if(jsonLookup instanceof JsonObject){
+          json = (JsonObject) jsonLookup;
         }
         else{
           return jsonLookup;
@@ -91,19 +91,19 @@ public class JsonEvaluator extends IdentifierMutator {
     return null;
   }
 
-  private static Object arrayLookup(JSONArray array, String[] path){
+  private static Object arrayLookup(JsonArray array, String[] path){
     // We have an array, so the next element in the path must be an index ( ie number)
     var idx = Integer.parseInt(path[0]);
     Object lookup = array.get(idx);
-    if(lookup instanceof JSONObject){
+    if(lookup instanceof JsonObject){
       var sub = new String[path.length-1];
       System.arraycopy(path, 1, sub, 0, sub.length);
-      return locateObject( (JSONObject) lookup, sub);
+      return locateObject( (JsonObject) lookup, sub);
     }
-    else if(lookup instanceof JSONArray){
+    else if(lookup instanceof JsonArray){
       var sub = new String[path.length-1];
       System.arraycopy(path, 1, sub, 0, sub.length);
-      return arrayLookup( (JSONArray) lookup, sub);
+      return arrayLookup( (JsonArray) lookup, sub);
     }
     return lookup;
   }

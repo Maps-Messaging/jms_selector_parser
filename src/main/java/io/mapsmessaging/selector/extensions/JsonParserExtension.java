@@ -1,5 +1,5 @@
 /*
- *  Copyright [ 2020 - 2024 ] [Matthew Buckton]
+ *  Copyright [ 2020 - 2025 ] [Matthew Buckton]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,16 @@
 
 package io.mapsmessaging.selector.extensions;
 
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import io.mapsmessaging.selector.ParseException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import io.mapsmessaging.selector.IdentifierResolver;
 
 public class JsonParserExtension implements ParserExtension {
@@ -70,7 +73,7 @@ public class JsonParserExtension implements ParserExtension {
   public Object evaluate(IdentifierResolver resolver) {
     byte[] payload = resolver.getOpaqueData();
     if (payload != null && payload.length > 0) {
-      var json = new JSONObject(new String(payload));
+      JsonObject json = JsonParser.parseString(new String(payload)).getAsJsonObject();
       if (!json.isEmpty()) {
         var located = locateObject(json, keyPath);
         return parseJSON(located);
@@ -79,7 +82,7 @@ public class JsonParserExtension implements ParserExtension {
     return null;
   }
 
-  public Object locateObject(JSONObject json) {
+  public Object locateObject(JsonObject json) {
     Object t = locateObject(json, keyPath);
     if (t != null) {
       t = parseJSON(t);
@@ -87,18 +90,18 @@ public class JsonParserExtension implements ParserExtension {
     return t;
   }
 
-  public Object locateObject(JSONObject json, String[] searchPath) {
+  public Object locateObject(JsonObject json, String[] searchPath) {
     if (keyPath != null) {
       // Walk the JSON path first
       for (var x = 0; x < searchPath.length; x++) {
         var path = searchPath[x];
         var jsonObject = json.get(path);
-        if (jsonObject instanceof JSONArray) {
+        if (jsonObject instanceof JsonArray) {
           var sub = new String[searchPath.length - (x + 1)];
           System.arraycopy(searchPath, x + 1, sub, 0, sub.length);
-          return arrayLookup(json.getJSONArray(path), sub);
-        } else if (jsonObject instanceof JSONObject) {
-          json = (JSONObject) jsonObject;
+          return arrayLookup(json.getAsJsonArray(path), sub);
+        } else if (jsonObject instanceof JsonObject) {
+          json = (JsonObject) jsonObject;
         } else {
           return jsonObject;
         }
@@ -107,23 +110,37 @@ public class JsonParserExtension implements ParserExtension {
     return null;
   }
 
-  private Object arrayLookup(JSONArray array, String[] path) {
+  private Object arrayLookup(JsonArray array, String[] path) {
     // We have an array, so the next element in the path must be an index ( ie number)
     var idx = Integer.parseInt(path[0]);
     Object lookup = array.get(idx);
-    if (lookup instanceof JSONObject) {
+    if (lookup instanceof JsonObject) {
       var sub = new String[path.length - 1];
       System.arraycopy(path, 1, sub, 0, sub.length);
-      return locateObject((JSONObject) lookup, sub);
-    } else if (lookup instanceof JSONArray) {
+      return locateObject((JsonObject) lookup, sub);
+    } else if (lookup instanceof JsonArray) {
       var sub = new String[path.length - 1];
       System.arraycopy(path, 1, sub, 0, sub.length);
-      return arrayLookup((JSONArray) lookup, sub);
+      return arrayLookup((JsonArray) lookup, sub);
     }
     return lookup;
   }
 
   private Object parseJSON(Object lookup) {
+    if (lookup instanceof JsonPrimitive) {
+      JsonPrimitive primitive = (JsonPrimitive) lookup;
+      if (primitive.isBoolean()) {
+        return primitive.getAsBoolean();
+      } else if (primitive.isNumber()) {
+        Number number = primitive.getAsNumber();
+        if(primitive.getAsString().contains(".")) {
+          return number.doubleValue();
+        }
+        return number.longValue();
+      } else if (primitive.isString()) {
+        return primitive.getAsString();
+      }
+    }
     if (lookup instanceof String
         || lookup instanceof Float
         || lookup instanceof Double
