@@ -20,18 +20,22 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression;
 
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import java.io.IOException;
+import java.util.List;
+import smile.data.DataFrame;
+import smile.data.formula.Formula;
 import smile.regression.LinearModel;
+import smile.regression.OLS;
 
-public class PredictFunction implements LinearRegressionFunction {
+public class OlsRegressionOperation extends LinearRegressionOperation {
 
-  @Override
-  public double compute(LinearModel linearModel, double[] data)  {
-    return linearModel.predict(data);
+  public OlsRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
+    super(modelName, operationName, identity, time, samples);
   }
 
   @Override
-  public String getName() {
-    return "predict";
+  protected LinearModel generate(Formula formula, DataFrame dataFrame) {
+    return OLS.fit(formula, dataFrame);
   }
 }
-

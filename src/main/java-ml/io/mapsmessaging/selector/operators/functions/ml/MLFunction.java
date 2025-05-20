@@ -26,7 +26,10 @@ import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster.HierarchicalClusterOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LassoRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LinearRegressionOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.OlsRegressionOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.RidgeRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow.TensorFlowOperation;
@@ -94,8 +97,12 @@ public class MLFunction extends Operation {
           return new XMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "k-means_lloyd":
           return new KMeansLloydClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "linear_regression":
-          return new LinearRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "ridge":
+          return new RidgeRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "ols", "linear_regression":
+          return new OlsRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "lasso":
+          return new LassoRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "decision_tree":
           return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "naive_bayes":

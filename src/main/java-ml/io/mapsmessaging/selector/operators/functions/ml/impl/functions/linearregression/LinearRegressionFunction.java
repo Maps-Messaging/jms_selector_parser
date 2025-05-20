@@ -20,12 +20,10 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.classifiers.functions.LinearRegression;
-import weka.core.Instance;
+import smile.regression.LinearModel;
 
 public interface LinearRegressionFunction {
-  double compute(LinearRegression linearRegression, Instance instance) throws ModelException;
+  double compute(LinearModel linearModel, double[] data);
+
   String getName();
 }
-

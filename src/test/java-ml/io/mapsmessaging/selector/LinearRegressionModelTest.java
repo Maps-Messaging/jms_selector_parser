@@ -26,26 +26,33 @@ import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.FileModelStore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 class LinearRegressionModelTest {
 
+  private static Stream<String> selectors() {
+    return Stream.of(
+        "linear_regression (predict, scd41_alt.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41.arff)",
+        "ols (predict, scd41_alt.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41.arff)",
+        "ridge (predict, scd41_alt.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41.arff)",
+        "lasso (predict, scd41_alt.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41.arff)"
+    );
+  }
 
-  private final static String[] SELECTORS ={
-      "linear_regression (predict, scd41.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41.arff)",
-  } ;
-
-
-  @Test
-  void testLoadModel() throws Exception {
+  @ParameterizedTest
+  @MethodSource("selectors")
+  void testSelectorParser(String selector) throws Exception {
     ModelStore previous = MLFunction.getModelStore();
     try {
       MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      Assertions.assertTrue(MLFunction.getModelStore().modelExists("scd41.arff"));
-      Assertions.assertNotNull(MLFunction.getModelStore().loadModel("scd41.arff"));
-      for(String selector : SELECTORS) {
-        ParserExecutor executor = SelectorParser.compile(selector);
-        Assertions.assertNotNull(executor);
-      }
+      Assertions.assertTrue(MLFunction.getModelStore().modelExists("scd41_alt.arff"));
+      Assertions.assertNotNull(MLFunction.getModelStore().loadModel("scd41_alt.arff"));
+
+      ParserExecutor executor = SelectorParser.compile(selector);
+      Assertions.assertNotNull(executor);
     } finally {
       MLFunction.setModelStore(previous);
     }
@@ -56,7 +63,7 @@ class LinearRegressionModelTest {
     ModelStore previous = MLFunction.getModelStore();
     try {
       MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      ParserExecutor executor = SelectorParser.compile("linear_regression (predict, scd41.arff , CO₂,  temperature, humidity)< 50");
+      ParserExecutor executor = SelectorParser.compile("linear_regression (predict, scd41_alt.arff , CO₂,  temperature, humidity) < 50");
       Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
         switch (key) {
           case "CO₂":
@@ -75,9 +82,9 @@ class LinearRegressionModelTest {
           case "CO₂":
             return 1200;
           case "temperature":
-            return 20.9;
+            return 30.9;
           case "humidity":
-            return 55.6;
+            return 30.4;
           default:
             return Double.NaN;
         }

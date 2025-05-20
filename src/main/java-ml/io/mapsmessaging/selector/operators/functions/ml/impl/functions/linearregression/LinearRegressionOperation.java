@@ -22,61 +22,22 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearre
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.classifiers.functions.LinearRegression;
-import weka.core.Attribute;
-import weka.core.Instance;
-import weka.core.Instances;
-
+import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import smile.data.DataFrame;
+import smile.data.formula.Formula;
+import smile.regression.LinearModel;
 
-public class LinearRegressionOperation extends AbstractMLModelOperation {
-  private LinearRegression linearRegression;
+public abstract class LinearRegressionOperation extends AbstractMLModelOperation implements SmileFunction {
+
   private final LinearRegressionFunction linearRegressionFunction;
+  private LinearModel linearModel;
+
 
   public LinearRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity, time, samples);
     linearRegressionFunction = computeFunction(operationName);
-  }
-
-  @Override
-  protected void initializeSpecificModel()  {
-    // Adding attributes based on the identity
-    ArrayList<Attribute> attributes = new ArrayList<>();
-    for (String s : identity) {
-      attributes.add(new Attribute(s));
-    }
-    // Adding target attribute for regression
-    attributes.add(new Attribute("target"));
-    structure = new Instances(modelName, attributes, 0);
-    structure.setClassIndex(structure.numAttributes() - 1);
-    linearRegression = new LinearRegression();
-  }
-
-  @Override
-  protected void buildModel(Instances trainingData) throws ModelException {
-    trainingData.setClassIndex(trainingData.numAttributes() - 1);
-    try {
-      linearRegression.buildClassifier(trainingData);
-      isModelTrained = true;
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
-  }
-
-  @Override
-  protected double applyModel(Instance instance) throws ModelException {
-    try {
-      return linearRegressionFunction.compute(linearRegression, instance);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
-  }
-
-  @Override
-  public String toString() {
-    return "LinearRegression("+ linearRegressionFunction.getName() +","+ super.toString() + ")";
   }
 
   private static LinearRegressionFunction computeFunction(String operation) {
@@ -84,5 +45,30 @@ public class LinearRegressionOperation extends AbstractMLModelOperation {
       return new PredictFunction();
     }
     throw new UnsupportedOperationException("Unknown operation: " + operation);
+  }
+
+  @Override
+  public String toString() {
+    return "LinearRegression("+ linearRegressionFunction.getName() +","+ super.toString() + ")";
+  }
+
+  @Override
+  public void buildModel(DataFrame dataFrame)  {
+    String labelColumn = dataFrame.schema().field(dataFrame.columns().size() - 1).name();
+    Formula formula = Formula.lhs(labelColumn);
+    linearModel = generate(formula, dataFrame);
+    isModelTrained = true;
+  }
+
+  protected abstract LinearModel generate(Formula formula, DataFrame dataFrame);
+
+  @Override
+  public double applyModel(double[] data) {
+    return linearRegressionFunction.compute(linearModel, data);
+  }
+
+  @Override
+  protected void initializeSpecificModel() {
+
   }
 }
