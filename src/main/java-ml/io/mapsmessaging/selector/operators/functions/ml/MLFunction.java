@@ -30,6 +30,8 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearreg
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.OlsRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.RidgeRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCACorOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAFitOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow.TensorFlowOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore;
@@ -112,8 +114,10 @@ public class MLFunction extends Operation {
           identifiers.addFirst(modelName);
           modelName = operationName;
           return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
-        case "pca":
-          return new PCAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "pca", "pca_fit":
+          return new PCAFitOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "pca_cor":
+          return new PCACorOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "random_forest":
         case "logistic_regression":
         case "mlp":

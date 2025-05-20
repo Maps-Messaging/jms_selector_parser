@@ -29,7 +29,7 @@ import smile.feature.extraction.PCA;
 import java.io.IOException;
 import java.util.List;
 
-public class PCAOperation extends AbstractMLModelOperation implements SmileFunction {
+public abstract class PCAOperation extends AbstractMLModelOperation implements SmileFunction {
   private final PCAFunction pcaFunction;
   private PCA pca;
 
@@ -60,9 +60,12 @@ public class PCAOperation extends AbstractMLModelOperation implements SmileFunct
 
   @Override
   public void buildModel(DataFrame trainingData)  {
-    pca = PCA.fit(trainingData, trainingData.names()).getProjection(trainingData.names().length);;
+    pca = create(trainingData);
     isModelTrained = true;
   }
+
+
+  public abstract PCA create(DataFrame trainingData);
 
   @Override
   public double applyModel(double[] data)  {

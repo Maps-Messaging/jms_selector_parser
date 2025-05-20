@@ -34,7 +34,11 @@ class PCAModelTest {
 
   private static final String[] SELECTORS = {
       "pca (applypca[2], scd41.arff , CO₂,  temperature, humidity)< 2 OR NOT model_exists(scd41.arff)",
-      "pca (explainedvariance[1], scd41.arff , CO₂,  temperature, humidity)< 1 OR NOT model_exists(scd41.arff)"
+      "pca (explainedvariance[1], scd41.arff , CO₂,  temperature, humidity)< 1 OR NOT model_exists(scd41.arff)",
+      "pca_fit (applypca[2], scd41.arff , CO₂,  temperature, humidity)< 2 OR NOT model_exists(scd41.arff)",
+      "pca_fit (explainedvariance[1], scd41.arff , CO₂,  temperature, humidity)< 1 OR NOT model_exists(scd41.arff)",
+      "pca_cor (applypca[2], scd41.arff , CO₂,  temperature, humidity)< 2 OR NOT model_exists(scd41.arff)",
+      "pca_cor (explainedvariance[1], scd41.arff , CO₂,  temperature, humidity)< 1 OR NOT model_exists(scd41.arff)"
   };
 
   static Stream<String> selectorProvider() {

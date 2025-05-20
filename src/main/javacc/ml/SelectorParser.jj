@@ -143,7 +143,9 @@ TOKEN [IGNORE_CASE]:
         | "decision_tree"        // Decision tree classifier
         | "naive_bayes"          // Naive Bayes classifier
         | "hierarchical"         // Hierarchical clustering
-        | "pca"                  // Principal Component Analysis
+        | "pca"                  // Principal Component Analysis (default: covariance matrix)
+        | "pca_fit"              // Principal Component Analysis using covariance matrix
+        | "pca_cor"              // Principal Component Analysis using correlation matrix
         | "random_forest"        // Random Forest classifier (ensemble of trees)
         | "Logistic_regression"  // Logistic Regression classifier
         | "mlp"                  // Multi-Layer Perceptron (neural network)
