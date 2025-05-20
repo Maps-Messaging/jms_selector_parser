@@ -131,21 +131,30 @@ SKIP :
 TOKEN [IGNORE_CASE]:
 {
     < ML_FUNCTION:
-    "TensorFlow" |
-    "k-means" |
-    "g-means" |
-    "x-means" |
-    "k-means_lloyd" |
-    "linear_regression" |
-    "ols" |
-    "ridge" |
-    "lasso" |
-    "decision_tree" |
-    "naive_bayes" |
-    "hierarchical" |
-    "pca" |
-    "model_exists"
-     >
+          "TensorFlow"           // External model (e.g., TensorFlow SavedModel)
+        | "k-means"              // K-Means clustering
+        | "g-means"              // G-Means clustering
+        | "x-means"              // X-Means clustering
+        | "k-means_lloyd"        // Lloyd's algorithm for K-Means
+        | "linear_regression"    // Linear regression model
+        | "ols"                  // Ordinary Least Squares regression
+        | "ridge"                // Ridge regression (L2 regularization)
+        | "lasso"                // Lasso regression (L1 regularization)
+        | "decision_tree"        // Decision tree classifier
+        | "naive_bayes"          // Naive Bayes classifier
+        | "hierarchical"         // Hierarchical clustering
+        | "pca"                  // Principal Component Analysis
+        | "random_forest"        // Random Forest classifier (ensemble of trees)
+        | "Logistic_regression"  // Logistic Regression classifier
+        | "mlp"                  // Multi-Layer Perceptron (neural network)
+        | "qda"                  // Quadratic Discriminant Analysis
+        | "lda"                  // Linear Discriminant Analysis
+        | "isolation_forest"     // Unsupervised anomaly detection
+        | "one_class_svm"        // One-Class SVM for anomaly detection
+        | "svm"                  // Support Vector Machine classifier
+        | "knn"                  // K-Nearest Neighbors classifier
+        | "model_exists"         // Check if model exists (boolean)
+    >
   | < TRUE:      "TRUE" >
   | < FALSE:     "FALSE" >
   | < NULL:      "NULL" >

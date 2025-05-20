@@ -26,5 +26,6 @@ import weka.core.Instance;
 
 public interface NaiveBayesFunction {
   double compute(NaiveBayes naiveBayes, Instance instance) throws ModelException;
+
   String getName();
 }

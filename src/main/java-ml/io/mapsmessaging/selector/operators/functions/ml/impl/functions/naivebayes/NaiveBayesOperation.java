@@ -22,26 +22,37 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebay
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class NaiveBayesOperation extends AbstractMLModelOperation {
-  private NaiveBayes naiveBayes;
   private final NaiveBayesFunction naiveBayesFunction;
+  private NaiveBayes naiveBayes;
 
-  public NaiveBayesOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
+  public NaiveBayesOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
+      throws ModelException, IOException {
     super(modelName, identity, time, samples);
     naiveBayesFunction = computeFunction(operationName);
   }
 
+  private static NaiveBayesFunction computeFunction(String operation) {
+    switch (operation.toLowerCase()) {
+      case "classifyprob":
+        return new ClassifyProbFunction();
+      case "classify":
+      default:
+        return new ClassifyFunction();
+    }
+  }
+
   @Override
-  protected void initializeSpecificModel(){
+  protected void initializeSpecificModel() {
     // Adding attributes based on the identity
     ArrayList<Attribute> attributes = new ArrayList<>();
     for (String s : identity) {
@@ -74,16 +85,6 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "NaiveBayes(" + naiveBayesFunction.getName()+","+ super.toString() + ")";
-  }
-
-  private static NaiveBayesFunction computeFunction(String operation) {
-    switch (operation.toLowerCase()) {
-      case "classifyprob":
-        return new ClassifyProbFunction();
-      case "classify":
-      default:
-        return new ClassifyFunction();
-    }
+    return "NaiveBayes(" + naiveBayesFunction.getName() + "," + super.toString() + ")";
   }
 }

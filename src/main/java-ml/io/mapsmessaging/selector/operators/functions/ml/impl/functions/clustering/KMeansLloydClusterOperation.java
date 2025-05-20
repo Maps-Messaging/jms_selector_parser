@@ -43,10 +43,6 @@ public class KMeansLloydClusterOperation extends ClusteringOperation {
 
   @Override
   public String toString() {
-    return "k-means_lloyd(" +
-        kmeansFunction.getName() +
-        ", " +
-        super.toString() +
-        ")";
+    return "k-means_lloyd(" + kmeansFunction.getName() + ", " + super.toString() + ")";
   }
 }

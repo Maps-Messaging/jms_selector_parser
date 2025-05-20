@@ -35,12 +35,14 @@ public class DecisionTreeOperation extends AbstractMLModelOperation implements S
   private DecisionTree decisionTree;
   private StructType schema;
 
-  public DecisionTreeOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
+  public DecisionTreeOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
+      throws ModelException, IOException {
     super(modelName, identity, time, samples);
     decisionTreeFunction = computeFunction(operationName);
   }
 
-  private static DecisionTreeFunction computeFunction(String operation){
+  private static DecisionTreeFunction computeFunction(String operation) {
     switch (operation.toLowerCase()) {
       case "classifyprob":
         return new ClassifyProbFunction();
@@ -51,9 +53,7 @@ public class DecisionTreeOperation extends AbstractMLModelOperation implements S
   }
 
   @Override
-  protected void initializeSpecificModel()  {
-
-  }
+  protected void initializeSpecificModel() {}
 
   @Override
   public void buildModel(DataFrame data) throws ModelException {
@@ -71,6 +71,6 @@ public class DecisionTreeOperation extends AbstractMLModelOperation implements S
 
   @Override
   public String toString() {
-    return "DecisionTree("+ decisionTreeFunction.getName() +","+ super.toString() + ")";
+    return "DecisionTree(" + decisionTreeFunction.getName() + "," + super.toString() + ")";
   }
 }

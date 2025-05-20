@@ -74,6 +74,6 @@ public abstract class ClusteringOperation extends AbstractMLModelOperation
     return kmeansFunction.compute(kmeans, input);
   }
 
-  public abstract CentroidClustering<double[], double[]> createClusterMeans(double[][] data, Clustering.Options options);
-
+  public abstract CentroidClustering<double[], double[]> createClusterMeans(
+      double[][] data, Clustering.Options options);
 }

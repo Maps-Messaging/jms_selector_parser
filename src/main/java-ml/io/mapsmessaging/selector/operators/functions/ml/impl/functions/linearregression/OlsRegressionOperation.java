@@ -30,7 +30,9 @@ import smile.regression.OLS;
 
 public class OlsRegressionOperation extends LinearRegressionOperation {
 
-  public OlsRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
+  public OlsRegressionOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
+      throws ModelException, IOException {
     super(modelName, operationName, identity, time, samples);
   }
 

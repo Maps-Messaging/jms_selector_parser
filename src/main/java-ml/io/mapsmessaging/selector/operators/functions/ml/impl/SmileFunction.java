@@ -23,8 +23,8 @@ package io.mapsmessaging.selector.operators.functions.ml.impl;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import smile.data.DataFrame;
 
-
 public interface SmileFunction {
-   void buildModel(DataFrame dataFrame ) throws ModelException;
-   double applyModel(double[] data) throws ModelException;
+  void buildModel(DataFrame dataFrame) throws ModelException;
+
+  double applyModel(double[] data) throws ModelException;
 }

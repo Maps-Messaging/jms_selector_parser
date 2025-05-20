@@ -26,5 +26,6 @@ import weka.core.Instance;
 
 public interface PCAFunction {
   double compute(AttributeSelection filter, Instance instance) throws ModelException;
+
   String getName();
 }

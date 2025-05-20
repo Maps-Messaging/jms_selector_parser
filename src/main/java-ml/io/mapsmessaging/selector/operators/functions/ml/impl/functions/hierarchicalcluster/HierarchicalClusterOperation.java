@@ -23,21 +23,19 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarch
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
-import smile.clustering.HierarchicalClustering;
-import smile.clustering.linkage.WardLinkage;
-import smile.data.DataFrame;
-
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import smile.clustering.HierarchicalClustering;
+import smile.clustering.linkage.WardLinkage;
+import smile.data.DataFrame;
 
 public class HierarchicalClusterOperation extends AbstractMLModelOperation implements SmileFunction {
 
   private HierarchicalClustering hierarchicalClusterer;
   private double[][] centroids;
-  private int numClusters = 3;
+  private final int numClusters = 3;
 
 
   public HierarchicalClusterOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {

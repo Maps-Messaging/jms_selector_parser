@@ -24,11 +24,9 @@ import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import smile.data.DataFrame;
 import weka.core.Attribute;
 import weka.core.DenseInstance;

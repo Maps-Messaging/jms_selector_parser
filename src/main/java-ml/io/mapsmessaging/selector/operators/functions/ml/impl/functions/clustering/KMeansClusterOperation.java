@@ -27,14 +27,17 @@ import smile.clustering.CentroidClustering;
 import smile.clustering.Clustering;
 import smile.clustering.KMeans;
 
-public class KMeansClusterOperation extends ClusteringOperation{
+public class KMeansClusterOperation extends ClusteringOperation {
 
-  public KMeansClusterOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
+  public KMeansClusterOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
+      throws ModelException, IOException {
     super(modelName, operationName, identity, time, samples);
   }
 
   @Override
-  public CentroidClustering<double[], double[]> createClusterMeans(double[][] data, Clustering.Options options) {
+  public CentroidClustering<double[], double[]> createClusterMeans(
+      double[][] data, Clustering.Options options) {
     return KMeans.fit(data, options);
   }
 

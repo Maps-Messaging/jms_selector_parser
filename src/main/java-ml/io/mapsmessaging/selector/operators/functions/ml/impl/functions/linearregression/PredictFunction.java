@@ -25,7 +25,7 @@ import smile.regression.LinearModel;
 public class PredictFunction implements LinearRegressionFunction {
 
   @Override
-  public double compute(LinearModel linearModel, double[] data)  {
+  public double compute(LinearModel linearModel, double[] data) {
     return linearModel.predict(data);
   }
 
@@ -34,4 +34,3 @@ public class PredictFunction implements LinearRegressionFunction {
     return "predict";
   }
 }
-

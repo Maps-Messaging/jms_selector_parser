@@ -35,12 +35,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PCAOperation extends AbstractMLModelOperation {
-  private AttributeSelection filter;
   private final PCAFunction pcaFunction;
+  private AttributeSelection filter;
 
-  public PCAOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
+  public PCAOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
+      throws ModelException, IOException {
     super(modelName, identity, time, samples);
     pcaFunction = computeFunction(operationName);
+  }
+
+  private static PCAFunction computeFunction(String operation) {
+    if (operation.toLowerCase().startsWith("applypca[")) {
+      String indexStr = operation.substring(9, operation.length() - 1); // Extract the index
+      int index = Integer.parseInt(indexStr);
+      return new ApplyPCAFunction(index);
+    }
+    if (operation.equalsIgnoreCase("explainedvariance")) {
+      return new ExplainedVarianceFunction();
+    }
+    throw new UnsupportedOperationException("Unknown operation: " + operation);
   }
 
   @Override
@@ -89,18 +103,6 @@ public class PCAOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "PCA("+ pcaFunction.getName() +","+ super.toString() + ")";
-  }
-
-  private static PCAFunction computeFunction(String operation) {
-    if (operation.toLowerCase().startsWith("applypca[")) {
-      String indexStr = operation.substring(9, operation.length() - 1); // Extract the index
-      int index = Integer.parseInt(indexStr);
-      return new ApplyPCAFunction(index);
-    }
-    if (operation.equalsIgnoreCase("explainedvariance")) {
-      return new ExplainedVarianceFunction();
-    }
-    throw new UnsupportedOperationException("Unknown operation: " + operation);
+    return "PCA(" + pcaFunction.getName() + "," + super.toString() + ")";
   }
 }

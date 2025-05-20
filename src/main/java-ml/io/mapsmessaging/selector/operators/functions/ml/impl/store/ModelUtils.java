@@ -28,7 +28,6 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.csv.CSVFormat;
@@ -39,7 +38,6 @@ import smile.io.Write;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
-
 
 public class ModelUtils {
 
@@ -53,6 +51,8 @@ public class ModelUtils {
   @Setter
   private static double thresholdRatio = 100.0; // Maximum allowed compression ratio
 
+
+  private ModelUtils() {}
 
   public static byte[] instancesToByteArray(Instances instances) throws IOException {
     ArffSaver saver = new ArffSaver();
@@ -186,8 +186,4 @@ public class ModelUtils {
       Files.deleteIfExists(temp);
     }
   }
-
-
-
-  private ModelUtils() {}
 }

@@ -24,9 +24,7 @@ import smile.classification.DecisionTree;
 import smile.data.type.StructType;
 
 public interface DecisionTreeFunction {
-  double compute(StructType schema,  DecisionTree tree, double[] data);
+  double compute(StructType schema, DecisionTree tree, double[] data);
 
   String getName();
-
 }
-

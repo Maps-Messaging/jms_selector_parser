@@ -20,12 +20,11 @@
 
 package io.mapsmessaging.selector.operators.functions.ml;
 
-public class ModelException extends Exception{
+public class ModelException extends Exception {
 
   public ModelException(String msg) {
     super(msg);
   }
-
 
   public ModelException(Exception e) {
     super(e);
@@ -34,5 +33,4 @@ public class ModelException extends Exception{
   public ModelException(String msg, Exception e) {
     super(msg, e);
   }
-
 }

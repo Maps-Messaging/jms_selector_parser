@@ -29,13 +29,15 @@ import smile.data.DataFrame;
 import smile.data.formula.Formula;
 import smile.regression.LinearModel;
 
-public abstract class LinearRegressionOperation extends AbstractMLModelOperation implements SmileFunction {
+public abstract class LinearRegressionOperation extends AbstractMLModelOperation
+    implements SmileFunction {
 
   private final LinearRegressionFunction linearRegressionFunction;
   private LinearModel linearModel;
 
-
-  public LinearRegressionOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
+  public LinearRegressionOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
+      throws ModelException, IOException {
     super(modelName, identity, time, samples);
     linearRegressionFunction = computeFunction(operationName);
   }
@@ -49,11 +51,11 @@ public abstract class LinearRegressionOperation extends AbstractMLModelOperation
 
   @Override
   public String toString() {
-    return "LinearRegression("+ linearRegressionFunction.getName() +","+ super.toString() + ")";
+    return "LinearRegression(" + linearRegressionFunction.getName() + "," + super.toString() + ")";
   }
 
   @Override
-  public void buildModel(DataFrame dataFrame)  {
+  public void buildModel(DataFrame dataFrame) {
     String labelColumn = dataFrame.schema().field(dataFrame.columns().size() - 1).name();
     Formula formula = Formula.lhs(labelColumn);
     linearModel = generate(formula, dataFrame);
@@ -68,7 +70,5 @@ public abstract class LinearRegressionOperation extends AbstractMLModelOperation
   }
 
   @Override
-  protected void initializeSpecificModel() {
-
-  }
+  protected void initializeSpecificModel() {}
 }

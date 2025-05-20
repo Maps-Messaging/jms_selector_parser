@@ -27,7 +27,6 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.functions.clusterin
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster.HierarchicalClusterOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LassoRegressionOperation;
-import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LinearRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.OlsRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.RidgeRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
@@ -41,17 +40,11 @@ import lombok.Setter;
 
 public class MLFunction extends Operation {
 
-  @Getter
-  @Setter
-  private static int defaultSampleSize = 100;
+  @Getter @Setter private static int defaultSampleSize = 100;
 
-  @Getter
-  @Setter
-  private static int defaultSampleTime = 0;
+  @Getter @Setter private static int defaultSampleTime = 0;
 
-  @Getter
-  @Setter
-  private static ModelStore modelStore = new MapModelStore();
+  @Getter @Setter private static ModelStore modelStore = new MapModelStore();
 
   private final String functionName;
   private final String operationName;
@@ -64,12 +57,11 @@ public class MLFunction extends Operation {
     this.functionName = functionName;
     identifiers = new ArrayList<>();
     int startIdx = 1;
-    if(list.size() > 1){
+    if (list.size() > 1) {
       this.operationName = list.get(0);
       this.modelName = list.get(1);
       startIdx = 2;
-    }
-    else{
+    } else {
       this.modelName = list.get(0);
       this.operationName = "";
     }
@@ -90,39 +82,58 @@ public class MLFunction extends Operation {
     try {
       switch (functionName.toLowerCase()) {
         case "k-means":
-          return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new KMeansClusterOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "g-means":
-          return new GMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new GMeansClusterOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "x-means":
-          return new XMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new XMeansClusterOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "k-means_lloyd":
-          return new KMeansLloydClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new KMeansLloydClusterOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "ridge":
-          return new RidgeRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new RidgeRegressionOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "ols", "linear_regression":
-          return new OlsRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new OlsRegressionOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "lasso":
-          return new LassoRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new LassoRegressionOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "decision_tree":
-          return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new DecisionTreeOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "naive_bayes":
-          return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new NaiveBayesOperation(
+              modelName, operationName, identifiers, sampleTime, sampleSize);
         case "hierarchical":
-          identifiers.add(0, modelName);
+          identifiers.addFirst(modelName);
           modelName = operationName;
           return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
         case "pca":
           return new PCAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "random_forest":
+        case "logistic_regression":
+        case "mlp":
+        case "qda":
+        case "lda":
+        case "isolation_forest":
+        case "one_class_svm":
+        case "svm":
+        case "knn":
+          throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow":
           return new TensorFlowOperation(modelName, identifiers);
         case "model_exists":
-          return new io.mapsmessaging.selector.operators.functions.ml.impl.functions.ModelExistFunction(modelName);
+          return new io.mapsmessaging.selector.operators.functions.ml.impl.functions
+              .ModelExistFunction(modelName);
         default:
           throw new UnsupportedOperationException("Unknown ML function: " + functionName);
       }
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new UnsupportedOperationException("ML Function failed to load : "+functionName, e);
+      throw new UnsupportedOperationException("ML Function failed to load : " + functionName, e);
     }
   }
 
