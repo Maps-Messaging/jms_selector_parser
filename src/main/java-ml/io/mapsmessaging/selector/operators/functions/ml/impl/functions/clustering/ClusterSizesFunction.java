@@ -18,27 +18,28 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.clusterers.SimpleKMeans;
-import weka.core.Instance;
-import weka.core.Instances;
+import smile.clustering.CentroidClustering;
 
-public class CentroidFunction implements KMeansFunction {
+public class ClusterSizesFunction implements KMeansFunction {
 
   private final int index;
 
-  public CentroidFunction(int index) {
+  public ClusterSizesFunction(int index) {
     this.index = index;
   }
 
   @Override
-  public double compute(SimpleKMeans kmeans, Instance instance) throws ModelException {
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance)
+      throws ModelException {
     try {
-      Instances centroids = kmeans.getClusterCentroids();
-      Instance centroid = centroids.instance(kmeans.clusterInstance(instance));
-      return centroid.value(index);
+      int[] sizes = model.size();
+      if (index < 0 || index >= sizes.length) {
+        throw new IndexOutOfBoundsException("Cluster index out of bounds: " + index);
+      }
+      return sizes[index];
     } catch (Exception e) {
       throw new ModelException(e);
     }
@@ -46,6 +47,6 @@ public class CentroidFunction implements KMeansFunction {
 
   @Override
   public String getName() {
-    return "centroid["+index+"]";
+    return "clustersizes[" + index + "]";
   }
 }

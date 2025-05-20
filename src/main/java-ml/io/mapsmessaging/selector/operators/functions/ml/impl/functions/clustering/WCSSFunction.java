@@ -18,26 +18,21 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.clusterers.SimpleKMeans;
-import weka.core.Instance;
+import smile.clustering.CentroidClustering;
 
-public class ClusterLabelFunction implements KMeansFunction {
+public class WCSSFunction implements KMeansFunction {
 
   @Override
-  public double compute(SimpleKMeans kmeans, Instance instance) throws ModelException {
-    try {
-      return kmeans.clusterInstance(instance);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
+  public double compute(CentroidClustering<double[], double[]> kmeans, double[] instance)
+      throws ModelException {
+    return kmeans.distortion();
   }
 
   @Override
   public String getName() {
-    return "clusterlabel";
+    return "wcss";
   }
-
 }

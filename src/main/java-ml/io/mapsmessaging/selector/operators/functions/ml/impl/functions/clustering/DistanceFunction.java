@@ -18,15 +18,30 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.clusterers.SimpleKMeans;
-import weka.core.Instance;
+import smile.clustering.CentroidClustering;
+import smile.math.distance.EuclideanDistance;
 
-public interface KMeansFunction {
+public class DistanceFunction implements KMeansFunction {
 
-  double compute(SimpleKMeans kmeans, Instance instance) throws ModelException;
+  private final EuclideanDistance distance = new EuclideanDistance();
 
-  String getName();
+  @Override
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance)
+      throws ModelException {
+    try {
+      int cluster = model.predict(instance);
+      double[] centroid = model.centers()[cluster];
+      return distance.d(instance, centroid);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
+  }
+
+  @Override
+  public String getName() {
+    return "distance";
+  }
 }

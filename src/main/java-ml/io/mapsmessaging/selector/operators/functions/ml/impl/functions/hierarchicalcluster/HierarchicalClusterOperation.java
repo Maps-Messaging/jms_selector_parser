@@ -22,17 +22,23 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarch
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.clusterers.HierarchicalClusterer;
-import weka.core.Attribute;
-import weka.core.Instance;
-import weka.core.Instances;
+import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
+import smile.clustering.HierarchicalClustering;
+import smile.clustering.linkage.WardLinkage;
+import smile.data.DataFrame;
+
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class HierarchicalClusterOperation extends AbstractMLModelOperation {
-  private HierarchicalClusterer hierarchicalClusterer;
+public class HierarchicalClusterOperation extends AbstractMLModelOperation implements SmileFunction {
+
+  private HierarchicalClustering hierarchicalClusterer;
+  private double[][] centroids;
+  private int numClusters = 3;
+
 
   public HierarchicalClusterOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity, time, samples);
@@ -40,36 +46,101 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation {
 
   @Override
   protected void initializeSpecificModel() {
-    // Adding attributes based on the identity
-    ArrayList<Attribute> attributes = new ArrayList<>();
-    for (String s : identity) {
-      attributes.add(new Attribute(s));
-    }
-    structure = new Instances(modelName, attributes, 0);
-    hierarchicalClusterer = new HierarchicalClusterer();
   }
 
-  @Override
-  protected void buildModel(Instances trainingData) throws ModelException {
-    try {
-      hierarchicalClusterer.buildClusterer(trainingData);
-      isModelTrained = true;
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
-  }
-
-  @Override
-  protected double applyModel(Instance instance) throws ModelException {
-    try {
-      return hierarchicalClusterer.clusterInstance(instance);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
-  }
 
   @Override
   public String toString() {
     return "HierarchicalCluster(" + super.toString() + ")";
   }
+
+  @Override
+  public void buildModel(DataFrame dataFrame) {
+    double[][] data = normalize(dataFrame.toArray());
+    WardLinkage linkage = WardLinkage.of(data);
+    hierarchicalClusterer = HierarchicalClustering.fit(linkage);
+
+    int[] labels = hierarchicalClusterer.partition(numClusters);
+
+    Map<Integer, Integer> clusterMap = new HashMap<>();
+    int clusterIndex = 0;
+    for (int label : labels) {
+      if (!clusterMap.containsKey(label)) {
+        clusterMap.put(label, clusterIndex++);
+      }
+    }
+    centroids = new double[clusterMap.size()][data[0].length];
+    int[] counts = new int[clusterMap.size()];
+
+    for (int i = 0; i < data.length; i++) {
+      int cluster = clusterMap.get(labels[i]);
+      for (int j = 0; j < data[i].length; j++) {
+        centroids[cluster][j] += data[i][j];
+      }
+      counts[cluster]++;
+    }
+
+    for (int i = 0; i < centroids.length; i++) {
+      for (int j = 0; j < centroids[i].length; j++) {
+        centroids[i][j] /= counts[i];
+      }
+    }
+
+  }
+
+  private double[][] normalize(double[][] data) {
+    int cols = data[0].length;
+    double[] mean = new double[cols];
+    double[] std = new double[cols];
+
+    for (double[] row : data) {
+      for (int j = 0; j < cols; j++) {
+        mean[j] += row[j];
+      }
+    }
+    for (int j = 0; j < cols; j++) {
+      mean[j] /= data.length;
+    }
+    for (double[] row : data) {
+      for (int j = 0; j < cols; j++) {
+        double diff = row[j] - mean[j];
+        std[j] += diff * diff;
+      }
+    }
+    for (int j = 0; j < cols; j++) {
+      std[j] = Math.sqrt(std[j] / data.length);
+      if (std[j] == 0) std[j] = 1;
+    }
+
+    double[][] normalized = new double[data.length][cols];
+    for (int i = 0; i < data.length; i++) {
+      for (int j = 0; j < cols; j++) {
+        normalized[i][j] = (data[i][j] - mean[j]) / std[j];
+      }
+    }
+    return normalized;
+  }
+
+
+  @Override
+  public double applyModel(double[] data) {
+    double minDistance = Double.MAX_VALUE;
+    int closestCluster = -1;
+
+    for (int i = 0; i < centroids.length; i++) {
+      double dist = 0.0;
+      for (int j = 0; j < data.length; j++) {
+        double diff = data[j] - centroids[i][j];
+        dist += diff * diff;
+      }
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestCluster = i;
+      }
+    }
+
+    return closestCluster;
+  }
+
+
 }

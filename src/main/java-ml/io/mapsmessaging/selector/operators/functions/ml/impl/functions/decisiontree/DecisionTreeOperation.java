@@ -22,59 +22,22 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decision
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.classifiers.trees.J48;
-import weka.core.Attribute;
-import weka.core.Instance;
-import weka.core.Instances;
-
+import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import smile.classification.DecisionTree;
+import smile.data.DataFrame;
+import smile.data.formula.Formula;
+import smile.data.type.StructType;
 
-public class DecisionTreeOperation extends AbstractMLModelOperation {
-  private J48 decisionTree;
+public class DecisionTreeOperation extends AbstractMLModelOperation implements SmileFunction {
   private final DecisionTreeFunction decisionTreeFunction;
+  private DecisionTree decisionTree;
+  private StructType schema;
 
   public DecisionTreeOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity, time, samples);
     decisionTreeFunction = computeFunction(operationName);
-  }
-
-  @Override
-  protected void initializeSpecificModel()  {
-    // Adding attributes based on the identity
-    ArrayList<Attribute> attributes = new ArrayList<>();
-    for (String s : identity) {
-      attributes.add(new Attribute(s));
-    }
-    structure = new Instances(modelName, attributes, 0);
-    structure.setClassIndex(structure.numAttributes() - 1);
-    decisionTree = new J48();
-  }
-
-  @Override
-  protected void buildModel(Instances trainingData) throws ModelException {
-    trainingData.setClassIndex(trainingData.numAttributes() - 1);
-    try {
-      decisionTree.buildClassifier(trainingData);
-      isModelTrained = true;
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
-  }
-
-  @Override
-  protected double applyModel(Instance instance) throws ModelException {
-    try {
-      return decisionTreeFunction.compute(decisionTree, instance);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
-  }
-
-  @Override
-  public String toString() {
-    return "DecisionTree("+ decisionTreeFunction.getName() +","+ super.toString() + ")";
   }
 
   private static DecisionTreeFunction computeFunction(String operation){
@@ -85,5 +48,29 @@ public class DecisionTreeOperation extends AbstractMLModelOperation {
       default:
         return new ClassifyInstanceFunction();
     }
+  }
+
+  @Override
+  protected void initializeSpecificModel()  {
+
+  }
+
+  @Override
+  public void buildModel(DataFrame data) throws ModelException {
+    String labelColumn = data.schema().field(data.columns().size() - 1).name();
+    var formula = Formula.lhs(labelColumn);
+    decisionTree = DecisionTree.fit(formula, data);
+    schema = data.schema();
+    isModelTrained = true;
+  }
+
+  @Override
+  public double applyModel(double[] data) {
+    return decisionTreeFunction.compute(schema, decisionTree, data);
+  }
+
+  @Override
+  public String toString() {
+    return "DecisionTree("+ decisionTreeFunction.getName() +","+ super.toString() + ")";
   }
 }

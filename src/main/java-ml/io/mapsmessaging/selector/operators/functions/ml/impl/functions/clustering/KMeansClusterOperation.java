@@ -18,25 +18,28 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.clusterers.SimpleKMeans;
-import weka.core.Instance;
+import java.io.IOException;
+import java.util.List;
+import smile.clustering.CentroidClustering;
+import smile.clustering.Clustering;
+import smile.clustering.KMeans;
 
-public class TotalClustersFunction implements KMeansFunction {
+public class KMeansClusterOperation extends ClusteringOperation{
 
-  @Override
-  public double compute(SimpleKMeans kmeans, Instance instance) throws ModelException {
-    try {
-      return kmeans.getNumClusters();
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
+  public KMeansClusterOperation(String modelName, String operationName, List<String> identity, long time, long samples) throws ModelException, IOException {
+    super(modelName, operationName, identity, time, samples);
   }
 
   @Override
-  public String getName() {
-    return "totalclusters";
+  public CentroidClustering<double[], double[]> createClusterMeans(double[][] data, Clustering.Options options) {
+    return KMeans.fit(data, options);
+  }
+
+  @Override
+  public String toString() {
+    return "k-means(" + kmeansFunction.getName() + ", " + super.toString() + ")";
   }
 }

@@ -18,21 +18,21 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
-public class ModelException extends Exception{
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import smile.clustering.CentroidClustering;
 
-  public ModelException(String msg) {
-    super(msg);
+public class TotalClustersFunction implements KMeansFunction {
+
+  @Override
+  public double compute(CentroidClustering<double[], double[]> kmeans, double[] instance)
+      throws ModelException {
+    return kmeans.k();
   }
 
-
-  public ModelException(Exception e) {
-    super(e);
+  @Override
+  public String getName() {
+    return "totalclusters";
   }
-
-  public ModelException(String msg, Exception e) {
-    super(msg, e);
-  }
-
 }

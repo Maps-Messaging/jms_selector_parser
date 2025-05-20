@@ -18,13 +18,18 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;import io.mapsmessaging.selector.IdentifierResolver;
+package io.mapsmessaging.selector.operators.functions.ml;
+
+import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
+import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import smile.data.DataFrame;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -49,8 +54,13 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     initializeSpecificModel();
     if (MLFunction.getModelStore().modelExists(modelName)) {
       byte[] loadedModel = MLFunction.getModelStore().loadModel(modelName);
-      structure = ModelUtils.byteArrayToInstances(loadedModel);
-      buildModel(structure);
+      if(this instanceof SmileFunction) {
+        DataFrame dataFrame = ModelUtils.dataFrameFromBytes(loadedModel, null);
+        ((SmileFunction)this).buildModel(dataFrame);
+      } else {
+        structure = ModelUtils.byteArrayToInstances(loadedModel);
+        buildModel(structure);
+      }
       isModelTrained = true;
     } else {
       ArrayList<Attribute> attributes = new ArrayList<>();
@@ -65,26 +75,29 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   // NOSONAR: This is thrown from the underlying library, nothing we can do here
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     try {
-      Instance instance = new DenseInstance(1.0, evaluateList(resolver));
+      double[] data = evaluateList(resolver);
+      Instance instance = new DenseInstance(1.0, data);
       instance.setDataset(structure);
 
       // Buffer the instance
-      dataBuffer.add(instance);
 
-      if (!isModelTrained
-          && ((dataBuffer.size() >= sampleSize)
-              || (sampleTime != 0 && System.currentTimeMillis() > sampleTime))) {
-        Instances trainingData = new Instances(structure, dataBuffer.size());
-        trainingData.addAll(dataBuffer);
-        buildModel(trainingData);
-        dataBuffer.clear();
-        if (isModelTrained) {
-          MLFunction.getModelStore()
-              .saveModel(modelName, ModelUtils.instancesToByteArray(trainingData));
+      if (!isModelTrained){
+        dataBuffer.add(instance);
+        if( ((dataBuffer.size() >= sampleSize) ||
+            (sampleTime != 0 && System.currentTimeMillis() > sampleTime))) {
+          Instances trainingData = new Instances(structure, dataBuffer.size());
+          trainingData.addAll(dataBuffer);
+          buildModel(trainingData);
+          dataBuffer.clear();
+          if (isModelTrained) {
+            MLFunction.getModelStore().saveModel(modelName, ModelUtils.instancesToByteArray(trainingData));
+          }
         }
       }
-
       if (isModelTrained) {
+        if(this instanceof SmileFunction) {
+          return ((SmileFunction)this).applyModel(data);
+        }
         return applyModel(instance);
       }
     } catch (Exception e) {
@@ -108,9 +121,21 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     return dataset;
   }
 
+  protected double[] convertInstanceToDoubleArray(Instance instance) {
+    double[] values = new double[instance.numAttributes()];
+    for (int i = 0; i < instance.numAttributes(); i++) {
+      values[i] = instance.value(i);
+    }
+    return values;
+  }
+
   protected abstract void initializeSpecificModel() throws ModelException;
 
-  protected abstract double applyModel(Instance instance) throws ModelException;
+  protected double applyModel(Instance instance) throws ModelException{
+    return 0;
+  }
 
-  protected abstract void buildModel(Instances trainingData) throws ModelException;
+  protected void buildModel(Instances trainingData) throws ModelException{
+
+  }
 }

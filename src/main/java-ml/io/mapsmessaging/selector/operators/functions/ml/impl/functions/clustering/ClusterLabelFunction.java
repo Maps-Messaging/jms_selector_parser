@@ -18,21 +18,25 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
-public class ModelException extends Exception{
+import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import smile.clustering.CentroidClustering;
 
-  public ModelException(String msg) {
-    super(msg);
+public class ClusterLabelFunction implements KMeansFunction {
+
+  @Override
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance)
+      throws ModelException {
+    try {
+      return model.predict(instance);
+    } catch (Exception e) {
+      throw new ModelException(e);
+    }
   }
 
-
-  public ModelException(Exception e) {
-    super(e);
+  @Override
+  public String getName() {
+    return "clusterlabel";
   }
-
-  public ModelException(String msg, Exception e) {
-    super(msg, e);
-  }
-
 }

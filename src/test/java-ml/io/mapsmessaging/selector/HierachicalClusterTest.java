@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 class HierachicalClusterTest {
 
   private final static String[] SELECTORS ={
-      "hierarchical_clustering (scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level) > 0 OR NOT model_exists(scd41_alt.arff)",
+      "hierarchical (scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level) > 0 OR NOT model_exists(scd41_alt.arff)",
   } ;
 
 
@@ -55,7 +55,7 @@ class HierachicalClusterTest {
     ModelStore previous = MLFunction.getModelStore();
     try {
       MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      ParserExecutor executor = SelectorParser.compile("hierarchical_clustering ( scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level) = 0");
+      ParserExecutor executor = SelectorParser.compile("hierarchical ( scd41.arff , CO₂,  temperature, humidity) = 0");
       Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
         switch (key) {
           case "CO₂":

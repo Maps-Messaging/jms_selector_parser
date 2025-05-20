@@ -20,19 +20,16 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.classifiers.trees.J48;
-import weka.core.Instance;
+import smile.classification.DecisionTree;
+import smile.data.Tuple;
+import smile.data.type.StructType;
 
 public class ClassifyInstanceFunction implements DecisionTreeFunction {
 
   @Override
-  public double compute(J48 tree, Instance instance) throws ModelException {
-    try {
-      return tree.classifyInstance(instance);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
+  public double compute(StructType schema, DecisionTree tree, double[] data) {
+    Tuple tuple = Tuple.of(schema, data);
+    return tree.predict(tuple, new double[data.length]);
   }
 
   @Override

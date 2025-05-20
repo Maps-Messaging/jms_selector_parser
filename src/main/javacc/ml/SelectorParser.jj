@@ -130,7 +130,7 @@ SKIP :
 
 TOKEN [IGNORE_CASE]:
 {
-    < ML_FUNCTION: "TensorFlow" | "K-means_clustering" | "linear_regression" | "decision_tree" | "naive_bayes" |"hierarchical_clustering" | "pca" | "model_exists" >
+    < ML_FUNCTION: "TensorFlow" | "k-means" | "g-means" | "x-means" | "k-means_lloyd" |"linear_regression" | "decision_tree" | "naive_bayes" |"hierarchical" | "pca" | "model_exists" >
   | < TRUE:      "TRUE" >
   | < FALSE:     "FALSE" >
   | < NULL:      "NULL" >

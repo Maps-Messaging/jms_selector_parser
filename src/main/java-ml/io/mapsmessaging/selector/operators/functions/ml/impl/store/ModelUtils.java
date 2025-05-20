@@ -21,14 +21,21 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.store;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.ParseException;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.csv.CSVFormat;
 import org.tensorflow.SavedModelBundle;
+import smile.data.DataFrame;
+import smile.io.Read;
+import smile.io.Write;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
@@ -134,6 +141,52 @@ public class ModelUtils {
     }
     return totalSizeArchive;
   }
+
+  public static byte[] dataFrameToBytes(DataFrame df, String format) throws IOException {
+    if(format == null || format.isEmpty()){
+      format = "arff";
+    }
+    switch (format.toLowerCase(Locale.ROOT)) {
+      case "csv" : {
+        Path temp = Files.createTempFile("df", ".csv");
+        Write.csv(df, temp, CSVFormat.DEFAULT);
+        byte[] bytes = Files.readAllBytes(temp);
+        Files.deleteIfExists(temp);
+        return bytes;
+      }
+      case "arff" : {
+        Path temp = Files.createTempFile("df", ".arff");
+        Write.arff(df, temp, "relation");
+        byte[] bytes = Files.readAllBytes(temp);
+        Files.deleteIfExists(temp);
+        return bytes;
+      }
+      case "arrow" : {
+        Path temp = Files.createTempFile("df", ".feather");
+        Write.arrow(df, temp);
+        byte[] bytes = Files.readAllBytes(temp);
+        Files.deleteIfExists(temp);
+        return bytes;
+      }
+      default: throw new IllegalArgumentException("Unsupported format: " + format);
+    }
+  }
+
+  public static DataFrame dataFrameFromBytes(byte[] data, String format) throws IOException {
+    if(format == null || format.isEmpty()){
+      format = "arff";
+    }
+    Path temp = Files.createTempFile("df", "." + format.toLowerCase(Locale.ROOT));
+    try {
+      Files.write(temp, data);
+      return Read.data(temp.toString(), format);
+    } catch (URISyntaxException | ParseException e) {
+      throw new IOException(e);
+    } finally {
+      Files.deleteIfExists(temp);
+    }
+  }
+
 
 
   private ModelUtils() {}

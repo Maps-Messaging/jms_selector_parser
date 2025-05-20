@@ -23,9 +23,9 @@ package io.mapsmessaging.selector.operators.functions.ml;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster.HierarchicalClusterOperation;
-import io.mapsmessaging.selector.operators.functions.ml.impl.functions.kmeans.KMeansClusterOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LinearRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAOperation;
@@ -55,7 +55,6 @@ public class MLFunction extends Operation {
   private final long sampleSize;
   private final long sampleTime;
   private final List<String> identifiers;
-
   private String modelName;
 
   public MLFunction(String functionName, List<String> list) {
@@ -87,15 +86,21 @@ public class MLFunction extends Operation {
   public Object compile() {
     try {
       switch (functionName.toLowerCase()) {
-        case "k-means_clustering":
+        case "k-means":
           return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "g-means":
+          return new GMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "x-means":
+          return new XMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "k-means_lloyd":
+          return new KMeansLloydClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "linear_regression":
           return new LinearRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "decision_tree":
           return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "naive_bayes":
           return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "hierarchical_clustering":
+        case "hierarchical":
           identifiers.add(0, modelName);
           modelName = operationName;
           return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
@@ -109,7 +114,8 @@ public class MLFunction extends Operation {
           throw new UnsupportedOperationException("Unknown ML function: " + functionName);
       }
     } catch (Exception e) {
-      throw new UnsupportedOperationException("ML Function failed to load", e);
+      e.printStackTrace();
+      throw new UnsupportedOperationException("ML Function failed to load : "+functionName, e);
     }
   }
 

@@ -20,12 +20,11 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.classifiers.trees.J48;
-import weka.core.Instance;
+import smile.classification.DecisionTree;
+import smile.data.type.StructType;
 
 public interface DecisionTreeFunction {
-  double compute(J48 tree, Instance instance) throws ModelException;
+  double compute(StructType schema,  DecisionTree tree, double[] data);
 
   String getName();
 

@@ -39,17 +39,17 @@ class KMeansClusterTest {
   };
 
   private static String[] results = {
-      "K-means_clustering (distance, modelName1, a0, a1) between 0.047 and 0.050",
-      "K-means_clustering (distance, modelName1, a0, a1) between 0.162 and 0.164",
-      "K-means_clustering (distance, modelName1, a0, a1) between 1.472 and 1.474",
-      "K-means_clustering (distance, modelName1, a0, a1) > 16"
+      "k-means (distance, modelName1, a0, a1) between 0.047 and 0.050",
+      "k-means (distance, modelName1, a0, a1) between 0.162 and 0.164",
+      "k-means (distance, modelName1, a0, a1) between 1.472 and 1.474",
+      "k-means (distance, modelName1, a0, a1) > 16"
   };
 
 
   @Test
   void testModel() throws ParseException {
     MLFunction.setDefaultSampleSize(10);
-    ParserExecutor executor = SelectorParser.compile("K-means_clustering (distance, modelName1 , a0 , a1) > 0 OR NOT model_exists(modelName1)");
+    ParserExecutor executor = SelectorParser.compile("k-means (distance, modelName1 , a0 , a1) > 0 OR NOT model_exists(modelName1)");
     ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
     // Train the model with the training data
     while(resolver.index< trainingData.length){
@@ -62,7 +62,7 @@ class KMeansClusterTest {
     while(resolver.index< testData.length){
       executor = SelectorParser.compile(results[resolver.index]);
       boolean result = executor.evaluate(resolver);
-      Assertions.assertTrue(result);
+      Assertions.assertTrue(result, "Failed : "+results[resolver.index]);
       resolver.index++;
     }
   }
