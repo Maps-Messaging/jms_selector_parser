@@ -24,55 +24,64 @@ import io.mapsmessaging.selector.operators.ParserExecutor;
 import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.FileModelStore;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 class PCAModelTest {
 
-  private final static String[] SELECTORS = {
-    "pca (applypca[2], scd41.arff , CO₂,  temperature, humidity)< 1 OR NOT model_exists(scd41.arff)",
-    "pca (explainedvariance, scd41.arff , CO₂,  temperature, humidity)< 1 OR NOT model_exists(scd41.arff)"
+  private static final String[] SELECTORS = {
+      "pca (applypca[2], scd41.arff , CO₂,  temperature, humidity)< 2 OR NOT model_exists(scd41.arff)",
+      "pca (explainedvariance[1], scd41.arff , CO₂,  temperature, humidity)< 1 OR NOT model_exists(scd41.arff)"
   };
 
-  @Test
-  void testLoadModel() throws Exception {
-    ModelStore previous = MLFunction.getModelStore();
-    try {
-      MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      Assertions.assertTrue(MLFunction.getModelStore().modelExists("scd41.arff"));
-      Assertions.assertNotNull(MLFunction.getModelStore().loadModel("scd41.arff"));
-      for(String selector : SELECTORS) {
-        ParserExecutor executor = SelectorParser.compile(selector);
-        Assertions.assertNotNull(executor);
-      }
-    } finally {
-      MLFunction.setModelStore(previous);
-    }
+  static Stream<String> selectorProvider() {
+    return Stream.of(SELECTORS);
+  }
+
+  private ModelStore previous;
+
+  @BeforeEach
+  void setUp() {
+    previous = MLFunction.getModelStore();
+    MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
+  }
+
+  @AfterEach
+  void tearDown() {
+    MLFunction.setModelStore(previous);
   }
 
   @Test
-  void testRunModel() throws Exception {
-    ModelStore previous = MLFunction.getModelStore();
-    try {
-      MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      for(String selector : SELECTORS) {
-        ParserExecutor executor = SelectorParser.compile(selector);
-        Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
-          switch (key) {
-            case "CO₂":
-              return 566;
-            case "temperature":
-              return 20.9;
-            case "humidity":
-              return 55.6;
-            default:
-              return Double.NaN;
-          }
-        }));
-      }
+  void testModelExistsAndLoads() throws Exception {
+    Assertions.assertTrue(MLFunction.getModelStore().modelExists("scd41.arff"));
+    Assertions.assertNotNull(MLFunction.getModelStore().loadModel("scd41.arff"));
+  }
 
-    } finally {
-      MLFunction.setModelStore(previous);
-    }
+  @ParameterizedTest
+  @MethodSource("selectorProvider")
+  void testSelectorParses(String selector) throws Exception {
+    ParserExecutor executor = SelectorParser.compile(selector);
+    Assertions.assertNotNull(executor);
+  }
+
+  @ParameterizedTest
+  @MethodSource("selectorProvider")
+  void testSelectorExecutes(String selector) throws Exception {
+    ParserExecutor executor = SelectorParser.compile(selector);
+    Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
+      switch (key) {
+        case "CO₂":
+          return 566;
+        case "temperature":
+          return 20.9;
+        case "humidity":
+          return 55.6;
+        default:
+          return Double.NaN;
+      }
+    }));
   }
 }

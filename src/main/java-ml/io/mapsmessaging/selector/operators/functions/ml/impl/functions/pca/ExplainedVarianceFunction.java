@@ -20,21 +20,24 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.attributeSelection.PrincipalComponents;
-import weka.core.Instance;
-import weka.filters.supervised.attribute.AttributeSelection;
+import smile.feature.extraction.PCA;
 
 public class ExplainedVarianceFunction implements PCAFunction {
+
+  private final int index;
+
+  public ExplainedVarianceFunction(int index) {
+    this.index = index;
+  }
+
   @Override
-  public double compute(AttributeSelection filter, Instance instance) throws ModelException {
-    PrincipalComponents pca = (PrincipalComponents) filter.getEvaluator();
-    return pca.getVarianceCovered();
+  public double compute(PCA pca, double[] data)  {
+    return pca.varianceProportion()[index];
   }
 
   @Override
   public String getName() {
-    return "explainedvariance";
+    return "explainedvariance["+index+"]";
   }
 }
 

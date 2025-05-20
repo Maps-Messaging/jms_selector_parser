@@ -22,21 +22,16 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.attributeSelection.PrincipalComponents;
-import weka.attributeSelection.Ranker;
-import weka.core.Attribute;
-import weka.core.Instance;
-import weka.core.Instances;
-import weka.filters.Filter;
-import weka.filters.supervised.attribute.AttributeSelection;
+import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
+import smile.data.DataFrame;
+import smile.feature.extraction.PCA;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class PCAOperation extends AbstractMLModelOperation {
+public class PCAOperation extends AbstractMLModelOperation implements SmileFunction {
   private final PCAFunction pcaFunction;
-  private AttributeSelection filter;
+  private PCA pca;
 
   public PCAOperation(
       String modelName, String operationName, List<String> identity, long time, long samples)
@@ -47,62 +42,40 @@ public class PCAOperation extends AbstractMLModelOperation {
 
   private static PCAFunction computeFunction(String operation) {
     if (operation.toLowerCase().startsWith("applypca[")) {
-      String indexStr = operation.substring(9, operation.length() - 1); // Extract the index
-      int index = Integer.parseInt(indexStr);
+      int index = extractIndex(operation);
       return new ApplyPCAFunction(index);
     }
-    if (operation.equalsIgnoreCase("explainedvariance")) {
-      return new ExplainedVarianceFunction();
+    if (operation.startsWith("explainedvariance")) {
+      int index = extractIndex(operation);
+      return new ExplainedVarianceFunction(index);
     }
     throw new UnsupportedOperationException("Unknown operation: " + operation);
   }
 
-  @Override
-  protected void initializeSpecificModel() {
-    // Adding attributes based on the identity
-    ArrayList<Attribute> attributes = new ArrayList<>();
-    for (String s : identity) {
-      attributes.add(new Attribute(s));
-    }
-    structure = new Instances(modelName, attributes, 0);
-    filter = new AttributeSelection();
+  private static int extractIndex(String function){
+    int start = function.indexOf("[");
+    int end = function.indexOf("]");
+    return Integer.parseInt(function.substring(start + 1, end));
   }
 
   @Override
-  protected void buildModel(Instances trainingData) throws ModelException {
-    // Set up the PrincipalComponents evaluator
-    PrincipalComponents pca = new PrincipalComponents();
-    pca.setVarianceCovered(0.95); // For example, keep 95% of variance
-
-    // Set up the Ranker search method
-    Ranker ranker = new Ranker();
-    ranker.setNumToSelect(-1);
-
-    // Set up the AttributeSelection filter
-    filter.setEvaluator(pca);
-    filter.setSearch(ranker);
-    try {
-      filter.setInputFormat(trainingData);
-
-      // Apply the filter to the training data to initialize it
-      Filter.useFilter(trainingData, filter);
-      isModelTrained = true;
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
+  public void buildModel(DataFrame trainingData)  {
+    pca = PCA.fit(trainingData, trainingData.names()).getProjection(trainingData.names().length);;
+    isModelTrained = true;
   }
 
   @Override
-  protected double applyModel(Instance instance) throws ModelException {
-    try {
-      return pcaFunction.compute(filter, instance);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
+  public double applyModel(double[] data)  {
+    return pcaFunction.compute(pca, data);
   }
 
   @Override
   public String toString() {
     return "PCA(" + pcaFunction.getName() + "," + super.toString() + ")";
+  }
+
+  @Override
+  protected void initializeSpecificModel() throws ModelException {
+
   }
 }
