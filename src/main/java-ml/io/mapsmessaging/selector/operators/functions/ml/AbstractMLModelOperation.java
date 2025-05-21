@@ -90,6 +90,10 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   }
 
   protected double[] evaluateList(IdentifierResolver resolver) throws ParseException {
+    if(identity.isEmpty()) {
+      identity.addAll(resolver.getKeys());
+    }
+
     double[] dataset = new double[identity.size()];
     for (int x = 0; x < identity.size(); x++) {
       Number val = evaluateToNumber(resolver.get(identity.get(x)), resolver);

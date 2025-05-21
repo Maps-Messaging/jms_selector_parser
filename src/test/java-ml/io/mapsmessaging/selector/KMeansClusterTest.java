@@ -25,6 +25,10 @@ import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 class KMeansClusterTest {
 
@@ -49,7 +53,7 @@ class KMeansClusterTest {
   @Test
   void testModel() throws ParseException {
     MLFunction.setDefaultSampleSize(trainingData.length);
-    ParserExecutor executor = SelectorParser.compile("k-means (distance, modelName1 , a0 , a1) < 10 OR NOT model_exists(modelName1)");
+    ParserExecutor executor = SelectorParser.compile("k-means (distance, modelName1) < 10 OR NOT model_exists(modelName1)");
     ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
     // Train the model with the training data
     while(resolver.index< trainingData.length){
@@ -67,7 +71,7 @@ class KMeansClusterTest {
     }
   }
 
-  class ArrayIdentifierResolver implements IdentifierResolver {
+  static class  ArrayIdentifierResolver implements IdentifierResolver {
 
     private final double[][] data;
     protected int index =0;
@@ -81,6 +85,11 @@ class KMeansClusterTest {
       key = key.substring(1);
       int idx = Integer.parseInt(key);
       return data[index][idx];
+    }
+
+    public List<String> getKeys(){
+      return new ArrayList<>(Arrays.asList("a0", "a1"));
+
     }
   }
 

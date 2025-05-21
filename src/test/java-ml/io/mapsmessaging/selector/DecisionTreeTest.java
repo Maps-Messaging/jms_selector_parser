@@ -59,36 +59,9 @@ class DecisionTreeTest {
     try {
       MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
       ParserExecutor executor = SelectorParser.compile("decision_tree (classify, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level)< 50");
-      Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
-        switch (key) {
-          case "CO₂":
-            return 566;
-          case "temperature":
-            return 20.9;
-          case "humidity":
-            return 55.6;
-          case "CO₂_level":
-            return "Low";
-          default:
-            return Double.NaN;
-        }
-      }));
+      Assertions.assertTrue(executor.evaluate(new TestIdentityResolver2(566,20.9,55.6, 0)));
       executor = SelectorParser.compile("decision_tree (classifyprob, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level)< 50");
-      Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
-        switch (key) {
-          case "CO₂":
-            return 566;
-          case "temperature":
-            return 20.9;
-          case "humidity":
-            return 55.6;
-          case "CO₂_level":
-            return "Low";
-          default:
-            return Double.NaN;
-        }
-      }));
-
+      Assertions.assertTrue(executor.evaluate(new TestIdentityResolver2(566,20.9,55.6, 0)));
     } finally {
       MLFunction.setModelStore(previous);
     }

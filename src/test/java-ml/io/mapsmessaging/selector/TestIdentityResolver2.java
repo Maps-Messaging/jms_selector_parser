@@ -20,18 +20,31 @@
 
 package io.mapsmessaging.selector;
 
-import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 
-public interface IdentifierResolver  {
+public class TestIdentityResolver2 extends TestIdentityResolver {
 
-  Object get(String key);
+  private final int co2Level;
 
-  default byte[] getOpaqueData() {
-    return new byte[0];
+  public TestIdentityResolver2(double co2, double temperature, double humidity, int co2Level) {
+    super(co2, temperature, humidity);
+    this.co2Level = co2Level;
   }
 
-  default List<String> getKeys(){
-    return new ArrayList<>();
+  @Override
+  public Object get(String key) {
+    return switch (key) {
+      case "CO₂" -> co2;
+      case "temperature" -> temperature;
+      case "humidity" -> humidity;
+      case "CO₂_level" -> co2Level;
+      default -> Double.NaN;
+    };
+  }
+
+  @Override
+  public List<String> getKeys() {
+    return List.of("CO₂", "temperature", "humidity", "CO₂_level");
   }
 }
