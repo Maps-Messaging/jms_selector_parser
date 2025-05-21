@@ -22,15 +22,13 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearre
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import java.io.IOException;
 import java.util.List;
 import smile.data.DataFrame;
 import smile.data.formula.Formula;
 import smile.regression.LinearModel;
 
-public abstract class LinearRegressionOperation extends AbstractMLModelOperation
-    implements SmileFunction {
+public abstract class LinearRegressionOperation extends AbstractMLModelOperation {
 
   private final LinearRegressionFunction linearRegressionFunction;
   private LinearModel linearModel;

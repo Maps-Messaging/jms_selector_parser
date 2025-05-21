@@ -31,24 +31,66 @@ public class SelectorMLConformanceTest {
 
   public static Stream<String> selectors() {
     return Stream.of(
-        "model_exists(home_temp_K_means_model) = true",
-        "k-means ( distance, scd41, CO₂, temperature, humidity ) > 1.9",
-        "k-means ( wcss, home_temp_K_means_model, temperature, humidity ) > 1.9",
-        "k-means (distance, home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
-        "k-means (clusterlabel, home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
-        "k-means (centroid[1], home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
-        "k-means (clustersizes[0], home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
-        "k-means (totalclusters, home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
-        "k-means (silhouettescore, home_temp_K_means_model, temperature, humidity, pressure) > 1.9 and time <> 12",
-        "decision_tree (classify, home_temp_decision_model, temperature, humidity, pressure) = 1",
-        "decision_tree (classifyprob, home_temp_decision_model, temperature, humidity, pressure) = 1",
-        "linear_regression (predict,home_temp_regression_model, temperature, humidity, pressure) < 50.0",
-        "pca (explainedvariance,home_temp_regression_model, temperature, humidity, pressure) < 50.0",
-        "pca (applypca[0],home_temp_regression_model, temperature, humidity, pressure) < 50.0",
-        "naive_bayes (classify, home_temp_decision_model.arff , CO₂,  temperature, humidity, CO₂_level) > 0",
-        "naive_bayes (classifyprob, home_temp_decision_model.arff , CO₂,  temperature, humidity, CO₂_level) > 0",
-        "hierarchical (scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level) > 0"
+        "model_exists(example_model.arff) = true",
+
+        // Clustering
+        "k-means (distance, model_kmeans.arff) > 1.0",
+        "k-means (distance, model_kmeans.arff, temp, humidity) > 1.0",
+        "g-means (distance, model_gmeans.arff) > 1.0",
+        "g-means (distance, model_gmeans.arff, temp, humidity) > 1.0",
+        "x-means (distance, model_xmeans.arff) > 1.0",
+        "x-means (distance, model_xmeans.arff, temp, humidity) > 1.0",
+        "k-means_lloyd (distance, model_lloyd.arff) > 1.0",
+        "k-means_lloyd (distance, model_lloyd.arff, temp, humidity) > 1.0",
+        "hierarchical (model_hier.arff) = 1",
+        "hierarchical (model_hier.arff, temp, humidity) = 1",
+
+        // Regression
+        "linear_regression (predict, model_linreg.arff) < 30.0",
+        "linear_regression (predict, model_linreg.arff, temp, humidity) < 30.0",
+        "ols (predict, model_ols.arff) < 30.0",
+        "ols (predict, model_ols.arff, temp, humidity) < 30.0",
+        "ridge (predict, model_ridge.arff) < 30.0",
+        "ridge (predict, model_ridge.arff, temp, humidity) < 30.0",
+        "lasso (predict, model_lasso.arff) < 30.0",
+        "lasso (predict, model_lasso.arff, temp, humidity) < 30.0",
+
+        // Classification
+        "decision_tree (classify, model_dt.arff) = 1",
+        "decision_tree (classify, model_dt.arff, temp, humidity) = 1",
+        "naive_bayes (classify, model_nb.arff) = 1",
+        "naive_bayes (classify, model_nb.arff, temp, humidity) = 1",
+        /*
+        "random_forest (classify, model_rf.arff) = 1",
+        "random_forest (classify, model_rf.arff, temp, humidity) = 1",
+        "logistic_regression (classify, model_logreg.arff) = 1",
+        "logistic_regression (classify, model_logreg.arff, temp, humidity) = 1",
+        "mlp (classify, model_mlp.arff) = 1",
+        "mlp (classify, model_mlp.arff, temp, humidity) = 1",
+        "qda (classify, model_qda.arff) = 1",
+        "qda (classify, model_qda.arff, temp, humidity) = 1",
+        "lda (classify, model_lda.arff) = 1",
+        "lda (classify, model_lda.arff, temp, humidity) = 1",
+        "svm (classify, model_svm.arff) = 1",
+        "svm (classify, model_svm.arff, temp, humidity) = 1",
+        "knn (classify, model_knn.arff) = 1",
+        "knn (classify, model_knn.arff, temp, humidity) = 1",
+
+        // Anomaly Detection
+        "isolation_forest (anomaly, model_iso.arff) = 1",
+        "isolation_forest (anomaly, model_iso.arff, temp, humidity) = 1",
+        "one_class_svm (anomaly, model_ocsvm.arff) = 1",
+        "one_class_svm (anomaly, model_ocsvm.arff, temp, humidity) = 1",
+*/
+        // PCA
+        "pca (explainedvariance, model_pca.arff) > 0.7",
+        "pca (explainedvariance, model_pca.arff, temp, humidity) > 0.7",
+        "pca_fit (explainedvariance, model_pca_fit.arff) > 0.7",
+        "pca_fit (explainedvariance, model_pca_fit.arff, temp, humidity) > 0.7",
+        "pca_cor (explainedvariance, model_pca_cor.arff) > 0.7",
+        "pca_cor (explainedvariance, model_pca_cor.arff, temp, humidity) > 0.7"
     );
+
   }
 
   @ParameterizedTest(name = "Syntax test for: {0}")
@@ -70,7 +112,7 @@ public class SelectorMLConformanceTest {
       Object parser1 = SelectorParser.compile(selector);
       Object parser2 = SelectorParser.compile(selector);
       Assertions.assertEquals(parser1.toString(), parser2.toString());
-    } catch (ParseException e) {
+    } catch (ParseException|UnsupportedOperationException e) {
       Assertions.fail("Selector text failed: " + selector + " with exception: " + e.getMessage());
     }
   }

@@ -64,7 +64,7 @@ public class MLFunction extends Operation {
       this.modelName = list.get(1);
       startIdx = 2;
     } else {
-      this.modelName = list.get(0);
+      this.modelName = list.getFirst();
       this.operationName = "";
     }
     for (int i = startIdx; i < list.size(); i++) {
@@ -83,60 +83,55 @@ public class MLFunction extends Operation {
   public Object compile() {
     try {
       switch (functionName.toLowerCase()) {
-        case "k-means":
-          return new KMeansClusterOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "g-means":
-          return new GMeansClusterOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "x-means":
-          return new XMeansClusterOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "k-means_lloyd":
-          return new KMeansLloydClusterOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "ridge":
-          return new RidgeRegressionOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "ols", "linear_regression":
-          return new OlsRegressionOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "lasso":
-          return new LassoRegressionOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "decision_tree":
-          return new DecisionTreeOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "naive_bayes":
-          return new NaiveBayesOperation(
-              modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "hierarchical":
-          identifiers.addFirst(modelName);
-          modelName = operationName;
+        case "k-means" -> {
+          return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "g-means" -> {
+          return new GMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "x-means" -> {
+          return new XMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "k-means_lloyd" -> {
+          return new KMeansLloydClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "ridge" -> {
+          return new RidgeRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "ols", "linear_regression" -> {
+          return new OlsRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "lasso" -> {
+          return new LassoRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "decision_tree" -> {
+          return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "naive_bayes" -> {
+          return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "hierarchical" -> {
           return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
-        case "pca", "pca_fit":
+        }
+        case "pca", "pca_fit" -> {
           return new PCAFitOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "pca_cor":
+        }
+        case "pca_cor" -> {
           return new PCACorOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "random_forest":
-        case "logistic_regression":
-        case "mlp":
-        case "qda":
-        case "lda":
-        case "isolation_forest":
-        case "one_class_svm":
-        case "svm":
-        case "knn":
-          throw new UnsupportedOperationException("Not yet implemented: " + functionName);
-        case "tensorflow":
+        }
+        case "random_forest", "logistic_regression", "mlp", "qda", "lda", "isolation_forest", "one_class_svm", "svm", "knn" ->
+            throw new UnsupportedOperationException("Not yet implemented: " + functionName);
+        case "tensorflow" -> {
           return new TensorFlowOperation(modelName, identifiers);
-        case "model_exists":
+        }
+        case "model_exists" -> {
           return new io.mapsmessaging.selector.operators.functions.ml.impl.functions
               .ModelExistFunction(modelName);
-        default:
-          throw new UnsupportedOperationException("Unknown ML function: " + functionName);
+        }
+        default -> throw new UnsupportedOperationException("Unknown ML function: " + functionName);
       }
     } catch (Exception e) {
+      e.printStackTrace();
       throw new UnsupportedOperationException("ML Function failed to load : " + functionName, e);
     }
   }

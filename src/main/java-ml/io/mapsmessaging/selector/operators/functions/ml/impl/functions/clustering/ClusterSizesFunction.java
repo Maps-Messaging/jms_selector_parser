@@ -32,17 +32,12 @@ public class ClusterSizesFunction implements KMeansFunction {
   }
 
   @Override
-  public double compute(CentroidClustering<double[], double[]> model, double[] instance)
-      throws ModelException {
-    try {
-      int[] sizes = model.size();
-      if (index < 0 || index >= sizes.length) {
-        throw new IndexOutOfBoundsException("Cluster index out of bounds: " + index);
-      }
-      return sizes[index];
-    } catch (Exception e) {
-      throw new ModelException(e);
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance) {
+    int[] sizes = model.size();
+    if (index < 0 || index >= sizes.length) {
+      throw new IndexOutOfBoundsException("Cluster index out of bounds: " + index);
     }
+    return sizes[index];
   }
 
   @Override

@@ -24,8 +24,7 @@ import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import smile.clustering.CentroidClustering;
 
 public interface KMeansFunction {
-  double compute(CentroidClustering<double[], double[]> model, double[] instance)
-      throws ModelException;
+  double compute(CentroidClustering<double[], double[]> model, double[] instance);
 
   String getName();
 }

@@ -31,18 +31,13 @@ public class CentroidFunction implements KMeansFunction {
   }
 
   @Override
-  public double compute(CentroidClustering<double[], double[]> model, double[] instance)
-      throws ModelException {
-    try {
-      int cluster = model.predict(instance);
-      double[] centroid = model.centers()[cluster];
-      if (index < 0 || index >= centroid.length) {
-        throw new IndexOutOfBoundsException("Centroid index out of bounds: " + index);
-      }
-      return centroid[index];
-    } catch (Exception e) {
-      throw new ModelException(e);
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance){
+    int cluster = model.predict(instance);
+    double[] centroid = model.centers()[cluster];
+    if (index < 0 || index >= centroid.length) {
+      throw new IndexOutOfBoundsException("Centroid index out of bounds: " + index);
     }
+    return centroid[index];
   }
 
   @Override

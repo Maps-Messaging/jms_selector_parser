@@ -21,25 +21,18 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.core.Instance;
+import smile.classification.NaiveBayes;
+
+import java.util.Arrays;
+
 
 public class ClassifyProbFunction implements NaiveBayesFunction {
 
   @Override
-  public double compute(NaiveBayes naiveBayes, Instance instance) throws ModelException {
-    try {
-      double[] distribution = naiveBayes.distributionForInstance(instance);
-      double maxProbability = Double.NEGATIVE_INFINITY;
-      for (double prob : distribution) {
-        if (prob > maxProbability) {
-          maxProbability = prob;
-        }
-      }
-      return maxProbability;
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
+  public double compute(NaiveBayes naiveBayes, double[] data) {
+    double[] posterior = new double[naiveBayes.priori().length];
+    naiveBayes.predict(data, posterior);
+    return Arrays.stream(posterior).max().orElse(0.0);
   }
 
   @Override

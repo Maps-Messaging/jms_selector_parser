@@ -31,7 +31,7 @@ class NaiveBayesModelTest {
 
 
   private final static String[] SELECTORS ={
-      "naive_bayes (classify, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level) > 0 OR NOT model_exists(scd41_alt.arff)",
+      "naive_bayes (classify, scd41_alt.arff ) > 0 OR NOT model_exists(scd41_alt.arff)",
   } ;
 
 
@@ -56,7 +56,7 @@ class NaiveBayesModelTest {
     ModelStore previous = MLFunction.getModelStore();
     try {
       MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      ParserExecutor executor = SelectorParser.compile("naive_bayes (classify, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level)< 50");
+      ParserExecutor executor = SelectorParser.compile("naive_bayes (classify, scd41_alt.arff ) = 0");
       Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
         switch (key) {
           case "CO₂":
@@ -65,14 +65,25 @@ class NaiveBayesModelTest {
             return 20.9;
           case "humidity":
             return 55.6;
-          case "CO₂_level":
-            return "Low";
           default:
             return Double.NaN;
         }
       }));
 
-      executor = SelectorParser.compile("naive_bayes (classifyprob, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level)< 50");
+      Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
+        switch (key) {
+          case "CO₂":
+            return 604;
+          case "temperature":
+            return 20.9;
+          case "humidity":
+            return 55.6;
+          default:
+            return Double.NaN;
+        }
+      }));
+
+      executor = SelectorParser.compile("naive_bayes (classifyprob, scd41_alt.arff) = 1");
       Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
         switch (key) {
           case "CO₂":
@@ -81,8 +92,19 @@ class NaiveBayesModelTest {
             return 20.9;
           case "humidity":
             return 55.6;
-          case "CO₂_level":
-            return "High";
+          default:
+            return Double.NaN;
+        }
+      }));
+
+      Assertions.assertTrue(executor.evaluate((IdentifierResolver) key -> {
+        switch (key) {
+          case "CO₂":
+            return 1200;
+          case "temperature":
+            return 20.9;
+          case "humidity":
+            return 55.6;
           default:
             return Double.NaN;
         }

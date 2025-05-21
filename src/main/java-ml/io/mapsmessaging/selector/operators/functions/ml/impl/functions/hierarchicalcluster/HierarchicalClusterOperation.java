@@ -22,8 +22,8 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarch
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +31,9 @@ import smile.clustering.HierarchicalClustering;
 import smile.clustering.linkage.WardLinkage;
 import smile.data.DataFrame;
 
-public class HierarchicalClusterOperation extends AbstractMLModelOperation implements SmileFunction {
+public class HierarchicalClusterOperation extends AbstractMLModelOperation  {
 
-  private HierarchicalClustering hierarchicalClusterer;
   private double[][] centroids;
-  private final int numClusters = 3;
-
 
   public HierarchicalClusterOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity, time, samples);
@@ -49,16 +46,20 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation imple
 
   @Override
   public String toString() {
-    return "HierarchicalCluster(" + super.toString() + ")";
+    return "hierarchical(" + super.toString() + ")";
   }
 
   @Override
   public void buildModel(DataFrame dataFrame) {
+    String[] names = dataFrame.names();
+    if(identity.isEmpty()){
+      identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
+    }
     double[][] data = normalize(dataFrame.toArray());
     WardLinkage linkage = WardLinkage.of(data);
-    hierarchicalClusterer = HierarchicalClustering.fit(linkage);
+    HierarchicalClustering hierarchicalClusterer = HierarchicalClustering.fit(linkage);
 
-    int[] labels = hierarchicalClusterer.partition(numClusters);
+    int[] labels = hierarchicalClusterer.partition(3);
 
     Map<Integer, Integer> clusterMap = new HashMap<>();
     int clusterIndex = 0;

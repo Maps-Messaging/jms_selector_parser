@@ -26,13 +26,8 @@ import smile.clustering.CentroidClustering;
 public class ClusterLabelFunction implements KMeansFunction {
 
   @Override
-  public double compute(CentroidClustering<double[], double[]> model, double[] instance)
-      throws ModelException {
-    try {
-      return model.predict(instance);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance){
+    return model.predict(instance);
   }
 
   @Override

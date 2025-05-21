@@ -26,8 +26,7 @@ import smile.clustering.CentroidClustering;
 public class WCSSFunction implements KMeansFunction {
 
   @Override
-  public double compute(CentroidClustering<double[], double[]> kmeans, double[] instance)
-      throws ModelException {
+  public double compute(CentroidClustering<double[], double[]> kmeans, double[] instance){
     return kmeans.distortion();
   }
 

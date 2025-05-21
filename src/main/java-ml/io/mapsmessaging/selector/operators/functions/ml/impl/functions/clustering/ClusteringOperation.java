@@ -22,15 +22,13 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clusteri
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import smile.clustering.*;
 import smile.data.DataFrame;
 
 import java.io.IOException;
 import java.util.List;
 
-public abstract class ClusteringOperation extends AbstractMLModelOperation
-    implements SmileFunction {
+public abstract class ClusteringOperation extends AbstractMLModelOperation {
   protected final KMeansFunction kmeansFunction;
   private CentroidClustering<double[], double[]> kmeans;
 
@@ -70,7 +68,7 @@ public abstract class ClusteringOperation extends AbstractMLModelOperation
     isModelTrained = true;
   }
 
-  public double applyModel(double[] input) throws ModelException {
+  public double applyModel(double[] input) {
     return kmeansFunction.compute(kmeans, input);
   }
 

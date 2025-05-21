@@ -29,15 +29,10 @@ public class DistanceFunction implements KMeansFunction {
   private final EuclideanDistance distance = new EuclideanDistance();
 
   @Override
-  public double compute(CentroidClustering<double[], double[]> model, double[] instance)
-      throws ModelException {
-    try {
-      int cluster = model.predict(instance);
-      double[] centroid = model.centers()[cluster];
-      return distance.d(instance, centroid);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance) {
+    int cluster = model.predict(instance);
+    double[] centroid = model.centers()[cluster];
+    return distance.d(instance, centroid);
   }
 
   @Override

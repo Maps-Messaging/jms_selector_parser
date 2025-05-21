@@ -22,15 +22,16 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decision
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
+
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import smile.classification.DecisionTree;
 import smile.data.DataFrame;
 import smile.data.formula.Formula;
 import smile.data.type.StructType;
 
-public class DecisionTreeOperation extends AbstractMLModelOperation implements SmileFunction {
+public class DecisionTreeOperation extends AbstractMLModelOperation {
   private final DecisionTreeFunction decisionTreeFunction;
   private DecisionTree decisionTree;
   private StructType schema;
@@ -56,8 +57,12 @@ public class DecisionTreeOperation extends AbstractMLModelOperation implements S
   protected void initializeSpecificModel() {}
 
   @Override
-  public void buildModel(DataFrame data) throws ModelException {
+  public void buildModel(DataFrame data) {
     String labelColumn = data.schema().field(data.columns().size() - 1).name();
+    String[] names = data.names();
+    if(identity.isEmpty()){
+      identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
+    }
     var formula = Formula.lhs(labelColumn);
     decisionTree = DecisionTree.fit(formula, data);
     schema = data.schema();
@@ -71,6 +76,6 @@ public class DecisionTreeOperation extends AbstractMLModelOperation implements S
 
   @Override
   public String toString() {
-    return "DecisionTree(" + decisionTreeFunction.getName() + "," + super.toString() + ")";
+    return "decision_tree(" + decisionTreeFunction.getName() + "," + super.toString() + ")";
   }
 }

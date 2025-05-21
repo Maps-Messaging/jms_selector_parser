@@ -23,12 +23,15 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebay
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.core.Attribute;
-import weka.core.Instance;
-import weka.core.Instances;
+import java.util.*;
+
+
+import smile.classification.NaiveBayes;
+import smile.data.DataFrame;
+import smile.data.measure.NominalScale;
+import smile.stat.distribution.Distribution;
+
+
 
 public class NaiveBayesOperation extends AbstractMLModelOperation {
   private final NaiveBayesFunction naiveBayesFunction;
@@ -53,38 +56,64 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
 
   @Override
   protected void initializeSpecificModel() {
-    // Adding attributes based on the identity
-    ArrayList<Attribute> attributes = new ArrayList<>();
-    for (String s : identity) {
-      attributes.add(new Attribute(s));
-    }
-    structure = new Instances(modelName, attributes, 0);
-    structure.setClassIndex(structure.numAttributes() - 1);
-    naiveBayes = new NaiveBayes();
+
   }
 
-  @Override
-  protected void buildModel(Instances trainingData) throws ModelException {
-    trainingData.setClassIndex(structure.numAttributes() - 1);
-    try {
-      naiveBayes.buildClassifier(trainingData);
-      isModelTrained = true;
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
-  }
-
-  @Override
-  protected double applyModel(Instance instance) throws ModelException {
-    try {
-      return naiveBayesFunction.compute(naiveBayes, instance);
-    } catch (Exception e) {
-      throw new ModelException(e);
-    }
-  }
 
   @Override
   public String toString() {
     return "NaiveBayes(" + naiveBayesFunction.getName() + "," + super.toString() + ")";
+  }
+
+  @Override
+  public void buildModel(DataFrame dataFrame) {
+    String labelColumn = dataFrame.schema().field(dataFrame.ncol() - 1).name();
+    String[] names = dataFrame.names();
+    if(identity.isEmpty()){
+      identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
+    }
+    // Ensure label column has nominal scale
+    var field = dataFrame.schema().field(labelColumn);
+    if (!(field.measure() instanceof NominalScale scale)) {
+      throw new IllegalArgumentException("Label column must be nominal.");
+    }
+
+    int[] y = dataFrame.column(labelColumn).toIntArray();
+    double[][] x = dataFrame.drop(labelColumn).toArray();
+
+    int k = scale.size();            // number of classes
+    int p = x[0].length;             // number of features
+
+    // Calculate priors
+    double[] priors = new double[k];
+    for (int label : y) priors[label]++;
+    for (int i = 0; i < k; i++) priors[i] /= y.length;
+
+    // Compute conditional Gaussians
+    Distribution[][] condprob = new Distribution[k][p];
+    for (int cls = 0; cls < k; cls++) {
+      List<double[]> rows = new ArrayList<>();
+      for (int i = 0; i < x.length; i++) {
+        if (y[i] == cls) rows.add(x[i]);
+      }
+
+      for (int j = 0; j < p; j++) {
+        double[] column = new double[rows.size()];
+        for (int i = 0; i < rows.size(); i++) {
+          column[i] = rows.get(i)[j];
+        }
+        double mean = Arrays.stream(column).average().orElse(0.0);
+        double std = Math.sqrt(Arrays.stream(column).map(v -> Math.pow(v - mean, 2)).average().orElse(1e-6));
+        condprob[cls][j] = new smile.stat.distribution.GaussianDistribution(mean, std);
+      }
+    }
+
+    naiveBayes = new NaiveBayes(priors, condprob);
+  }
+
+
+  @Override
+  public double applyModel(double[] data) {
+    return naiveBayesFunction.compute(naiveBayes, data);
   }
 }

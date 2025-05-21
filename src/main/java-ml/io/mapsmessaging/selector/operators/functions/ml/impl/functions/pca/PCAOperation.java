@@ -22,14 +22,13 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import smile.data.DataFrame;
 import smile.feature.extraction.PCA;
 
 import java.io.IOException;
 import java.util.List;
 
-public abstract class PCAOperation extends AbstractMLModelOperation implements SmileFunction {
+public abstract class PCAOperation extends AbstractMLModelOperation {
   private final PCAFunction pcaFunction;
   private PCA pca;
 
@@ -55,6 +54,9 @@ public abstract class PCAOperation extends AbstractMLModelOperation implements S
   private static int extractIndex(String function){
     int start = function.indexOf("[");
     int end = function.indexOf("]");
+    if(start == -1 || end == -1){
+      return 0;
+    }
     return Integer.parseInt(function.substring(start + 1, end));
   }
 

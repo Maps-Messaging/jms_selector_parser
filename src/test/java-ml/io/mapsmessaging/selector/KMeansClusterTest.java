@@ -39,17 +39,17 @@ class KMeansClusterTest {
   };
 
   private static String[] results = {
-      "k-means (distance, modelName1, a0, a1) between 0.047 and 0.050",
-      "k-means (distance, modelName1, a0, a1) between 0.162 and 0.164",
-      "k-means (distance, modelName1, a0, a1) between 1.472 and 1.474",
-      "k-means (distance, modelName1, a0, a1) > 16"
+      "k-means (distance, modelName1) between 1.13 and 1.69",
+      "k-means (distance, modelName1) between 1.60 and 1.7",
+      "k-means (distance, modelName1) between 1.11 and 1.15",
+      "k-means (distance, modelName1) > 16"
   };
 
 
   @Test
   void testModel() throws ParseException {
-    MLFunction.setDefaultSampleSize(10);
-    ParserExecutor executor = SelectorParser.compile("k-means (distance, modelName1 , a0 , a1) > 0 OR NOT model_exists(modelName1)");
+    MLFunction.setDefaultSampleSize(trainingData.length);
+    ParserExecutor executor = SelectorParser.compile("k-means (distance, modelName1 , a0 , a1) < 10 OR NOT model_exists(modelName1)");
     ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(trainingData);
     // Train the model with the training data
     while(resolver.index< trainingData.length){

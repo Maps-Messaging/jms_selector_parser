@@ -21,11 +21,10 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.core.Instance;
+import smile.classification.NaiveBayes;
 
 public interface NaiveBayesFunction {
-  double compute(NaiveBayes naiveBayes, Instance instance) throws ModelException;
+  double compute(NaiveBayes naiveBayes, double[] data);
 
   String getName();
 }

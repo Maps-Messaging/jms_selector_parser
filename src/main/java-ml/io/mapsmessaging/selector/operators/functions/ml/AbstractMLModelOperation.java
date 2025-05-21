@@ -22,22 +22,19 @@ package io.mapsmessaging.selector.operators.functions.ml;
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
-import io.mapsmessaging.selector.operators.functions.ml.impl.SmileFunction;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import smile.data.DataFrame;
-import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.Instance;
-import weka.core.Instances;
+
 
 public abstract class AbstractMLModelOperation extends AbstractModelOperations {
-  protected final List<Instance> dataBuffer = new ArrayList<>();
+  protected final List<double[]> dataBuffer = new ArrayList<>();
+
   protected final long sampleSize;
   protected final long sampleTime;
-  protected Instances structure;
 
   protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
     super(modelName, identity);
@@ -52,20 +49,12 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     initializeSpecificModel();
     if (MLFunction.getModelStore().modelExists(modelName)) {
       byte[] loadedModel = MLFunction.getModelStore().loadModel(modelName);
-      if(this instanceof SmileFunction) {
-        DataFrame dataFrame = ModelUtils.dataFrameFromBytes(loadedModel, null);
-        ((SmileFunction)this).buildModel(dataFrame);
-      } else {
-        structure = ModelUtils.byteArrayToInstances(loadedModel);
-        buildModel(structure);
+      DataFrame dataFrame = ModelUtils.dataFrameFromBytes(loadedModel, null);
+      buildModel(dataFrame);
+      if(identity.isEmpty()) {
+        identity.addAll(Arrays.asList(dataFrame.names()));
       }
       isModelTrained = true;
-    } else {
-      ArrayList<Attribute> attributes = new ArrayList<>();
-      for (String s : identity) {
-        attributes.add(new Attribute(s));
-      }
-      structure = new Instances(modelName, attributes, 0);
     }
   }
 
@@ -74,36 +63,30 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     try {
       double[] data = evaluateList(resolver);
-      Instance instance = new DenseInstance(1.0, data);
-      instance.setDataset(structure);
 
       // Buffer the instance
 
       if (!isModelTrained){
-        dataBuffer.add(instance);
+        dataBuffer.add(data);
         if( ((dataBuffer.size() >= sampleSize) ||
             (sampleTime != 0 && System.currentTimeMillis() > sampleTime))) {
-          Instances trainingData = new Instances(structure, dataBuffer.size());
-          trainingData.addAll(dataBuffer);
-          buildModel(trainingData);
-          dataBuffer.clear();
+          DataFrame df = ModelUtils.dataFrameFromBuffer(dataBuffer, identity);
+          buildModel(df);
           if (isModelTrained) {
-            MLFunction.getModelStore().saveModel(modelName, ModelUtils.instancesToByteArray(trainingData));
+            MLFunction.getModelStore().saveModel(modelName, ModelUtils.dataFrameToBytes(df, null));
           }
+          dataBuffer.clear();
         }
       }
       if (isModelTrained) {
-        if(this instanceof SmileFunction) {
-          return ((SmileFunction)this).applyModel(data);
-        }
-        return applyModel(instance);
+        return applyModel(data);
       }
     } catch (Exception e) {
       ParseException ex = new ParseException("Error evaluating " + getClass().getSimpleName());
       ex.initCause(e);
       throw ex;
     }
-    return Double.NaN; // or some other placeholder
+    return Double.NaN;
   }
 
   protected double[] evaluateList(IdentifierResolver resolver) throws ParseException {
@@ -119,21 +102,9 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     return dataset;
   }
 
-  protected double[] convertInstanceToDoubleArray(Instance instance) {
-    double[] values = new double[instance.numAttributes()];
-    for (int i = 0; i < instance.numAttributes(); i++) {
-      values[i] = instance.value(i);
-    }
-    return values;
-  }
-
   protected abstract void initializeSpecificModel() throws ModelException;
 
-  protected double applyModel(Instance instance) throws ModelException{
-    return 0;
-  }
+  protected abstract double applyModel(double[] data);
 
-  protected void buildModel(Instances trainingData) throws ModelException{
-
-  }
+  protected abstract void buildModel(DataFrame dataFrame);
 }
