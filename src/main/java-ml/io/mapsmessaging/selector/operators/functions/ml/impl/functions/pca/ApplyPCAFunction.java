@@ -30,9 +30,9 @@ public class ApplyPCAFunction implements PCAFunction {
   }
 
   @Override
-  public double compute(PCA pca, double[] data)  {
+  public double compute(PCA pca, double[] data) {
     double[] val = pca.apply(data);
-    if(index >= val.length) {
+    if (index >= val.length) {
       return val[0];
     }
     return val[index];

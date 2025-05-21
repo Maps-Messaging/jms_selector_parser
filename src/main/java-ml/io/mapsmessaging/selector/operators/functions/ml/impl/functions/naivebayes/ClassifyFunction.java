@@ -20,15 +20,13 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import smile.classification.NaiveBayes;
-
 
 public class ClassifyFunction implements NaiveBayesFunction {
 
   @Override
-  public double compute(NaiveBayes naiveBayes, double[] data)  {
-    double d= naiveBayes.predict(data);
+  public double compute(NaiveBayes naiveBayes, double[] data) {
+    double d = naiveBayes.predict(data);
     System.err.println(d);
     return d;
   }

@@ -24,5 +24,6 @@ import smile.feature.extraction.PCA;
 
 public interface PCAFunction {
   double compute(PCA pca, double[] data);
+
   String getName();
 }

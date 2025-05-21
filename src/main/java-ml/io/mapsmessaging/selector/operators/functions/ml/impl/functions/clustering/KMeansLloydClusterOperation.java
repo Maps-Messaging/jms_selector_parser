@@ -36,7 +36,8 @@ public class KMeansLloydClusterOperation extends ClusteringOperation {
   }
 
   @Override
-  public CentroidClustering<double[], double[]> createClusterMeans(double[][] data, Clustering.Options options) {
+  public CentroidClustering<double[], double[]> createClusterMeans(
+      double[][] data, Clustering.Options options) {
     return KMeans.lloyd(data, options);
   }
 

@@ -2,19 +2,18 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.qda;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import smile.classification.QDA;
-import smile.data.DataFrame;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
+import smile.classification.QDA;
+import smile.data.DataFrame;
 
 public class QDAOperation extends AbstractMLModelOperation {
   private final QDAFunction operation;
   private QDA qda;
 
-  public QDAOperation(String modelName, String operationName, List<String> identity, long time, long samples)
+  public QDAOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
       throws ModelException, IOException {
     super(modelName, identity, time, samples);
     this.operation = computeFunction(operationName);

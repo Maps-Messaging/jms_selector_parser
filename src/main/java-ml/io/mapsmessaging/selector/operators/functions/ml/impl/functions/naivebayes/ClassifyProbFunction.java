@@ -20,11 +20,8 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import smile.classification.NaiveBayes;
-
 import java.util.Arrays;
-
+import smile.classification.NaiveBayes;
 
 public class ClassifyProbFunction implements NaiveBayesFunction {
 

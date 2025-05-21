@@ -22,11 +22,10 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clusteri
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import smile.clustering.*;
-import smile.data.DataFrame;
-
 import java.io.IOException;
 import java.util.List;
+import smile.clustering.*;
+import smile.data.DataFrame;
 
 public abstract class ClusteringOperation extends AbstractMLModelOperation {
   protected final KMeansFunction kmeansFunction;

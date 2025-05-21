@@ -31,13 +31,12 @@ public class ExplainedVarianceFunction implements PCAFunction {
   }
 
   @Override
-  public double compute(PCA pca, double[] data)  {
+  public double compute(PCA pca, double[] data) {
     return pca.varianceProportion()[index];
   }
 
   @Override
   public String getName() {
-    return "explainedvariance["+index+"]";
+    return "explainedvariance[" + index + "]";
   }
 }
-

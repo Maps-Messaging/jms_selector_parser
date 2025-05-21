@@ -20,13 +20,12 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import smile.clustering.CentroidClustering;
 
 public class ClusterLabelFunction implements KMeansFunction {
 
   @Override
-  public double compute(CentroidClustering<double[], double[]> model, double[] instance){
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance) {
     return model.predict(instance);
   }
 

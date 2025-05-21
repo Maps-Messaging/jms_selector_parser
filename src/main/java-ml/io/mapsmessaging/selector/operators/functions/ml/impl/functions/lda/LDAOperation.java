@@ -2,20 +2,18 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.lda;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import smile.classification.LDA;
-import smile.classification.QDA;
-import smile.data.DataFrame;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
+import smile.classification.LDA;
+import smile.data.DataFrame;
 
 public class LDAOperation extends AbstractMLModelOperation {
   private final LDAFunction operation;
   private LDA lda;
 
-  public LDAOperation(String modelName, String operationName, List<String> identity, long time, long samples)
+  public LDAOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
       throws ModelException, IOException {
     super(modelName, identity, time, samples);
     this.operation = computeFunction(operationName);

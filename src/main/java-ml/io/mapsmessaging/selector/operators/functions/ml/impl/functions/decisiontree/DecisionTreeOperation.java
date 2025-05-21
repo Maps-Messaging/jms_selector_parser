@@ -22,7 +22,6 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decision
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -60,7 +59,7 @@ public class DecisionTreeOperation extends AbstractMLModelOperation {
   public void buildModel(DataFrame data) {
     String labelColumn = data.schema().field(data.columns().size() - 1).name();
     String[] names = data.names();
-    if(identity.isEmpty()){
+    if (identity.isEmpty()) {
       identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
     }
     var formula = Formula.lhs(labelColumn);

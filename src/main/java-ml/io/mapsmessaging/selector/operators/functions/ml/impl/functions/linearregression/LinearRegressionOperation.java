@@ -49,7 +49,7 @@ public abstract class LinearRegressionOperation extends AbstractMLModelOperation
 
   @Override
   public String toString() {
-    return getName() +" (" + linearRegressionFunction.getName() + ", " + super.toString() + ")";
+    return getName() + " (" + linearRegressionFunction.getName() + ", " + super.toString() + ")";
   }
 
   @Override

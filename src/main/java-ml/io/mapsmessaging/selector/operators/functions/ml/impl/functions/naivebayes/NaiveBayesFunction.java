@@ -20,7 +20,6 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import smile.classification.NaiveBayes;
 
 public interface NaiveBayesFunction {

@@ -20,7 +20,6 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.isolationforest;
 
-
 import smile.anomaly.IsolationForest;
 
 public class IsAnomalyFunction implements IsolationForestFunction {
@@ -34,4 +33,3 @@ public class IsAnomalyFunction implements IsolationForestFunction {
     return "is_anomaly";
   }
 }
-

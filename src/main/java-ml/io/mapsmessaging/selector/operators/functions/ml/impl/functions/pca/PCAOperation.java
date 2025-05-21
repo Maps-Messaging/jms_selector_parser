@@ -22,22 +22,30 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import java.io.IOException;
+import java.util.List;
 import smile.data.DataFrame;
 import smile.feature.extraction.PCA;
 
-import java.io.IOException;
-import java.util.List;
-
 public abstract class PCAOperation extends AbstractMLModelOperation {
   protected final PCAFunction pcaFunction;
-  private PCA pca;
   protected int index;
+  private PCA pca;
 
   public PCAOperation(
       String modelName, String operationName, List<String> identity, long time, long samples)
       throws ModelException, IOException {
     super(modelName, identity, time, samples);
     pcaFunction = computeFunction(operationName);
+  }
+
+  private static int extractIndex(String function){
+    int start = function.indexOf("[");
+    int end = function.indexOf("]");
+    if(start == -1 || end == -1){
+      return 0;
+    }
+    return Integer.parseInt(function.substring(start + 1, end));
   }
 
   private PCAFunction computeFunction(String operation) {
@@ -50,15 +58,6 @@ public abstract class PCAOperation extends AbstractMLModelOperation {
       return new ExplainedVarianceFunction(index);
     }
     throw new UnsupportedOperationException("Unknown operation: " + operation);
-  }
-
-  private static int extractIndex(String function){
-    int start = function.indexOf("[");
-    int end = function.indexOf("]");
-    if(start == -1 || end == -1){
-      return 0;
-    }
-    return Integer.parseInt(function.substring(start + 1, end));
   }
 
   @Override

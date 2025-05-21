@@ -21,9 +21,6 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.logisticregression;
 
 import smile.classification.LogisticRegression;
-import smile.classification.RandomForest;
-import smile.data.Tuple;
-import smile.data.type.StructType;
 
 public class ClassifyInstanceFunction implements LogisiticRegressionFunction {
 

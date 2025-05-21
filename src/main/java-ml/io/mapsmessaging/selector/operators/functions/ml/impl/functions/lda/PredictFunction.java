@@ -1,7 +1,6 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.lda;
 
 import smile.classification.LDA;
-import smile.classification.QDA;
 
 public class PredictFunction implements LDAFunction {
 

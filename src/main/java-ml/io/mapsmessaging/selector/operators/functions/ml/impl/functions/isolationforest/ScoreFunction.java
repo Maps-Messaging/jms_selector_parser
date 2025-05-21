@@ -25,7 +25,7 @@ import smile.anomaly.IsolationForest;
 public class ScoreFunction implements IsolationForestFunction {
 
   @Override
-  public double compute( IsolationForest tree, double[] data, double threshold ) {
+  public double compute(IsolationForest tree, double[] data, double threshold) {
     return tree.score(data);
   }
 

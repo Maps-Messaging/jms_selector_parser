@@ -24,14 +24,10 @@ import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.*;
-
-
 import smile.classification.NaiveBayes;
 import smile.data.DataFrame;
 import smile.data.measure.NominalScale;
 import smile.stat.distribution.Distribution;
-
-
 
 public class NaiveBayesOperation extends AbstractMLModelOperation {
   private final NaiveBayesFunction naiveBayesFunction;
@@ -55,10 +51,7 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  protected void initializeSpecificModel() {
-
-  }
-
+  protected void initializeSpecificModel() {}
 
   @Override
   public String toString() {
@@ -69,7 +62,7 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
   public void buildModel(DataFrame dataFrame) {
     String labelColumn = dataFrame.schema().field(dataFrame.ncol() - 1).name();
     String[] names = dataFrame.names();
-    if(identity.isEmpty()){
+    if (identity.isEmpty()) {
       identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
     }
     // Ensure label column has nominal scale
@@ -81,8 +74,8 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
     int[] y = dataFrame.column(labelColumn).toIntArray();
     double[][] x = dataFrame.drop(labelColumn).toArray();
 
-    int k = scale.size();            // number of classes
-    int p = x[0].length;             // number of features
+    int k = scale.size(); // number of classes
+    int p = x[0].length; // number of features
 
     // Calculate priors
     double[] priors = new double[k];
@@ -103,14 +96,14 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
           column[i] = rows.get(i)[j];
         }
         double mean = Arrays.stream(column).average().orElse(0.0);
-        double std = Math.sqrt(Arrays.stream(column).map(v -> Math.pow(v - mean, 2)).average().orElse(1e-6));
+        double std =
+            Math.sqrt(Arrays.stream(column).map(v -> Math.pow(v - mean, 2)).average().orElse(1e-6));
         condprob[cls][j] = new smile.stat.distribution.GaussianDistribution(mean, std);
       }
     }
 
     naiveBayes = new NaiveBayes(priors, condprob);
   }
-
 
   @Override
   public double applyModel(double[] data) {

@@ -2,19 +2,19 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.mlp;
 
 import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import smile.classification.MLP;
-import smile.data.DataFrame;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import smile.classification.MLP;
+import smile.data.DataFrame;
 
 public class MLPOperation extends AbstractMLModelOperation {
   private final MLPFunction operation;
   private MLP mlp;
 
-  public MLPOperation(String modelName, String operationName, List<String> identity, long time, long samples)
+  public MLPOperation(
+      String modelName, String operationName, List<String> identity, long time, long samples)
       throws ModelException, IOException {
     super(modelName, identity, time, samples);
     this.operation = computeFunction(operationName);

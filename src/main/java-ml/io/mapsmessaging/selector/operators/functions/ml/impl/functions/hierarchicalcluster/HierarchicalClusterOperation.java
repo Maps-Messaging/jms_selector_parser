@@ -31,18 +31,18 @@ import smile.clustering.HierarchicalClustering;
 import smile.clustering.linkage.WardLinkage;
 import smile.data.DataFrame;
 
-public class HierarchicalClusterOperation extends AbstractMLModelOperation  {
+public class HierarchicalClusterOperation extends AbstractMLModelOperation {
 
   private double[][] centroids;
 
-  public HierarchicalClusterOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
+  public HierarchicalClusterOperation(
+      String modelName, List<String> identity, long time, long samples)
+      throws ModelException, IOException {
     super(modelName, identity, time, samples);
   }
 
   @Override
-  protected void initializeSpecificModel() {
-  }
-
+  protected void initializeSpecificModel() {}
 
   @Override
   public String toString() {
@@ -52,7 +52,7 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation  {
   @Override
   public void buildModel(DataFrame dataFrame) {
     String[] names = dataFrame.names();
-    if(identity.isEmpty()){
+    if (identity.isEmpty()) {
       identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
     }
     double[][] data = normalize(dataFrame.toArray());
@@ -84,7 +84,6 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation  {
         centroids[i][j] /= counts[i];
       }
     }
-
   }
 
   private double[][] normalize(double[][] data) {
@@ -120,7 +119,6 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation  {
     return normalized;
   }
 
-
   @Override
   public double applyModel(double[] data) {
     double minDistance = Double.MAX_VALUE;
@@ -140,6 +138,4 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation  {
 
     return closestCluster;
   }
-
-
 }

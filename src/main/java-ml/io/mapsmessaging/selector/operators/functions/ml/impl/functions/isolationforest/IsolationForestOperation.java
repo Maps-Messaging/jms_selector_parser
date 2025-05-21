@@ -64,19 +64,18 @@ public class IsolationForestOperation extends AbstractMLModelOperation {
     isModelTrained = true;
   }
 
-  private void computeThreshold(DataFrame data){
-    double[] scores = Arrays.stream(data.toArray())
-        .mapToDouble(isolationForest::score)
-        .toArray();
+  private void computeThreshold(DataFrame data) {
+    double[] scores = Arrays.stream(data.toArray()).mapToDouble(isolationForest::score).toArray();
 
     double mean = Arrays.stream(scores).average().orElse(0);
-    double stddev = Math.sqrt(Arrays.stream(scores).map(x -> Math.pow(x - mean, 2)).average().orElse(0));
-    threshold = mean + 2 * stddev;  // 2σ above mean = likely anomaly
+    double stddev =
+        Math.sqrt(Arrays.stream(scores).map(x -> Math.pow(x - mean, 2)).average().orElse(0));
+    threshold = mean + 2 * stddev; // 2σ above mean = likely anomaly
   }
 
   @Override
   public double applyModel(double[] data) {
-    return operation.compute( isolationForest, data, threshold);
+    return operation.compute(isolationForest, data, threshold);
   }
 
   @Override

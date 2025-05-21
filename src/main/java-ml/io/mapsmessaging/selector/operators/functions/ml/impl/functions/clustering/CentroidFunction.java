@@ -19,7 +19,6 @@
  */
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import smile.clustering.CentroidClustering;
 
 public class CentroidFunction implements KMeansFunction {
@@ -31,7 +30,7 @@ public class CentroidFunction implements KMeansFunction {
   }
 
   @Override
-  public double compute(CentroidClustering<double[], double[]> model, double[] instance){
+  public double compute(CentroidClustering<double[], double[]> model, double[] instance) {
     int cluster = model.predict(instance);
     double[] centroid = model.centers()[cluster];
     if (index < 0 || index >= centroid.length) {
