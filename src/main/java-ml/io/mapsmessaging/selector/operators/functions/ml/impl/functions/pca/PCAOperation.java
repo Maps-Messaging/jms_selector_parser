@@ -29,8 +29,9 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class PCAOperation extends AbstractMLModelOperation {
-  private final PCAFunction pcaFunction;
+  protected final PCAFunction pcaFunction;
   private PCA pca;
+  protected int index;
 
   public PCAOperation(
       String modelName, String operationName, List<String> identity, long time, long samples)
@@ -39,13 +40,13 @@ public abstract class PCAOperation extends AbstractMLModelOperation {
     pcaFunction = computeFunction(operationName);
   }
 
-  private static PCAFunction computeFunction(String operation) {
+  private PCAFunction computeFunction(String operation) {
     if (operation.toLowerCase().startsWith("applypca[")) {
-      int index = extractIndex(operation);
+      index = extractIndex(operation);
       return new ApplyPCAFunction(index);
     }
     if (operation.startsWith("explainedvariance")) {
-      int index = extractIndex(operation);
+      index = extractIndex(operation);
       return new ExplainedVarianceFunction(index);
     }
     throw new UnsupportedOperationException("Unknown operation: " + operation);
@@ -76,9 +77,12 @@ public abstract class PCAOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "PCA(" + pcaFunction.getName() + "," + super.toString() + ")";
+    return "pca_fit (" + pcaFunction.getName() + ", " + super.toString() + ")";
   }
 
+  protected String getSubString(){
+    return super.toString();
+  }
   @Override
   protected void initializeSpecificModel() throws ModelException {
 

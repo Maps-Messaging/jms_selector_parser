@@ -45,7 +45,7 @@ public class ModelExistFunction extends Operation {
   }
 
   public String toString() {
-    return "model_exist(" + modelName + ")";
+    return "model_exists(" + modelName + ")";
   }
 
   @Override

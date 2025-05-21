@@ -40,4 +40,9 @@ public class OlsRegressionOperation extends LinearRegressionOperation {
   protected LinearModel generate(Formula formula, DataFrame dataFrame) {
     return OLS.fit(formula, dataFrame);
   }
+
+  @Override
+  protected String getName() {
+    return "ols";
+  }
 }

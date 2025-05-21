@@ -75,6 +75,6 @@ public class RandomForestOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "random_forest(" + operation.getName() + "," + super.toString() + ")";
+    return "random_forest (" + operation.getName() + ", " + super.toString() + ")";
   }
 }

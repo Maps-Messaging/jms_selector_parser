@@ -43,6 +43,6 @@ public class GMeansClusterOperation extends ClusteringOperation {
 
   @Override
   public String toString() {
-    return "g-means(" + kmeansFunction.getName() + ", " + super.toString() + ")";
+    return "g-means (" + kmeansFunction.getName() + ", " + super.toString() + ")";
   }
 }

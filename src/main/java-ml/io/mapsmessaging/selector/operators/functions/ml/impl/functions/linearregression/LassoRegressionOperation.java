@@ -40,4 +40,9 @@ public class LassoRegressionOperation extends LinearRegressionOperation {
   protected LinearModel generate(Formula formula, DataFrame dataFrame) {
     return LASSO.fit(formula, dataFrame);
   }
+
+  @Override
+  protected String getName() {
+    return "lasso";
+  }
 }

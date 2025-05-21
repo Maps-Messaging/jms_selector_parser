@@ -46,8 +46,6 @@ public class SelectorMLConformanceTest {
         "hierarchical (model_hier.arff, temp, humidity) = 1",
 
         // Regression
-        "linear_regression (predict, model_linreg.arff) < 30.0",
-        "linear_regression (predict, model_linreg.arff, temp, humidity) < 30.0",
         "ols (predict, model_ols.arff) < 30.0",
         "ols (predict, model_ols.arff, temp, humidity) < 30.0",
         "ridge (predict, model_ridge.arff) < 30.0",
@@ -63,15 +61,22 @@ public class SelectorMLConformanceTest {
         "random_forest (classify, model_rf.arff) = 1",
         "random_forest (classify, model_rf.arff, temp, humidity) = 1",
 
-        "isolation_forest (anomaly, model_iso.arff) = 1",
-        "isolation_forest (anomaly, model_iso.arff, temp, humidity) = 1",
+        "isolation_forest (score, model_iso.arff) = 1",
+        "isolation_forest (score, model_iso.arff, temp, humidity) = 1",
+        "isolation_forest (is_anomaly, model_iso.arff) = 1",
+        "isolation_forest (is_anomaly, model_iso.arff, temp, humidity) = 1",
 
-        "logistic_regression (score, model_logreg.arff) = 1",
-        "logistic_regression (is_anomaly, model_logreg.arff, temp, humidity) = 1",
+        "logistic_regression (classify, model_logreg.arff) = 1",
+        "logistic_regression (classify, model_logreg.arff, temp, humidity) = 1",
+        "logistic_regression (classifyprob, model_logreg.arff) = 1",
+        "logistic_regression (classifyprob, model_logreg.arff, temp, humidity) = 1",
+
+        "mlp (predict, model_mlp.arff) = 1",
+        "mlp (predict, model_mlp.arff, temp, humidity) = 1",
+        "mlp (predictprob, model_mlp.arff) = 1",
+        "mlp (predictprob, model_mlp.arff, temp, humidity) = 1",
         /*
 
-        "mlp (classify, model_mlp.arff) = 1",
-        "mlp (classify, model_mlp.arff, temp, humidity) = 1",
         "qda (classify, model_qda.arff) = 1",
         "qda (classify, model_qda.arff, temp, humidity) = 1",
         "lda (classify, model_lda.arff) = 1",
@@ -86,12 +91,10 @@ public class SelectorMLConformanceTest {
         "one_class_svm (anomaly, model_ocsvm.arff, temp, humidity) = 1",
 */
         // PCA
-        "pca (explainedvariance, model_pca.arff) > 0.7",
-        "pca (explainedvariance, model_pca.arff, temp, humidity) > 0.7",
-        "pca_fit (explainedvariance, model_pca_fit.arff) > 0.7",
-        "pca_fit (explainedvariance, model_pca_fit.arff, temp, humidity) > 0.7",
-        "pca_cor (explainedvariance, model_pca_cor.arff) > 0.7",
-        "pca_cor (explainedvariance, model_pca_cor.arff, temp, humidity) > 0.7"
+        "pca_fit (explainedvariance[1], model_pca_fit.arff) > 0.7",
+        "pca_fit (explainedvariance[2], model_pca_fit.arff, temp, humidity) > 0.7",
+        "pca_cor (explainedvariance[3], model_pca_cor.arff) > 0.7",
+        "pca_cor (explainedvariance[4], model_pca_cor.arff, temp, humidity) > 0.7"
     );
 
   }
@@ -115,8 +118,25 @@ public class SelectorMLConformanceTest {
       Object parser1 = SelectorParser.compile(selector);
       Object parser2 = SelectorParser.compile(selector);
       Assertions.assertEquals(parser1.toString(), parser2.toString());
+      String t = parser1.toString();
+      t = t.substring(1);
+      t = t.replace("(true)", "true");
+      t = t.replace("))", ")");
+      t = t.replace("==", "=");
+      t = stripTrailingParens(t);
+      Assertions.assertEquals(t, selector);
     } catch (ParseException|UnsupportedOperationException e) {
       Assertions.fail("Selector text failed: " + selector + " with exception: " + e.getMessage());
     }
   }
+
+  public static String stripTrailingParens(String input) {
+    int lastParenOpen = input.lastIndexOf('(');
+    int lastParenClose = input.lastIndexOf(')');
+    if (lastParenOpen >= 0 && lastParenClose == input.length() - 1 && lastParenOpen < lastParenClose) {
+      return input.substring(0, lastParenOpen) + input.substring(lastParenOpen + 1, lastParenClose);
+    }
+    return input;
+  }
+
 }

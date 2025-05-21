@@ -78,6 +78,6 @@ public class LogisticRegressionOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "random_forest(" + operation.getName() + "," + super.toString() + ")";
+    return "logistic_regression (" + operation.getName() + ", " + super.toString() + ")";
   }
 }

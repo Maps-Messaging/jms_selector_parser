@@ -81,6 +81,6 @@ public class IsolationForestOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "isolation_forest(" + operation.getName() + "," + super.toString() + ")";
+    return "isolation_forest (" + operation.getName() + ", " + super.toString() + ")";
   }
 }

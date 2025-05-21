@@ -41,4 +41,9 @@ public class RidgeRegressionOperation extends LinearRegressionOperation {
     double lambda = 1.0 / Math.sqrt(dataFrame.size());
     return RidgeRegression.fit(formula, dataFrame, lambda);
   }
+
+  @Override
+  protected String getName() {
+    return "ridge";
+  }
 }

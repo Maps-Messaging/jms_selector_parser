@@ -31,6 +31,7 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearreg
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.OlsRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.RidgeRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.logisticregression.LogisticRegressionOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.mlp.MLPOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCACorOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAFitOperation;
@@ -114,6 +115,11 @@ public class MLFunction extends Operation {
           return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         }
         case "hierarchical" -> {
+          if(!identifiers.isEmpty()) {
+            identifiers.addFirst(modelName);
+            modelName = operationName;
+          }
+
           return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
         }
         case "pca", "pca_fit" -> {
@@ -131,7 +137,10 @@ public class MLFunction extends Operation {
         case "isolation_forest" ->{
           return new IsolationForestOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         }
-        case "mlp", "qda", "lda", "one_class_svm", "svm", "knn" ->
+        case "mlp" ->{
+          return new MLPOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "qda", "lda", "one_class_svm", "svm", "knn" ->
             throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow" -> {
           return new TensorFlowOperation(modelName, identifiers);

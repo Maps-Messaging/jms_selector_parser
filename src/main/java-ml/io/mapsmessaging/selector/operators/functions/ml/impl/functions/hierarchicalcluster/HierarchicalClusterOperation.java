@@ -46,7 +46,7 @@ public class HierarchicalClusterOperation extends AbstractMLModelOperation  {
 
   @Override
   public String toString() {
-    return "hierarchical(" + super.toString() + ")";
+    return "hierarchical (" + super.toString() + ")";
   }
 
   @Override

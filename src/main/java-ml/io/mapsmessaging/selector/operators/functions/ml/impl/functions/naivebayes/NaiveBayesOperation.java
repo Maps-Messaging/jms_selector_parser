@@ -62,7 +62,7 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
 
   @Override
   public String toString() {
-    return "NaiveBayes(" + naiveBayesFunction.getName() + "," + super.toString() + ")";
+    return "naive_bayes (" + naiveBayesFunction.getName() + ", " + super.toString() + ")";
   }
 
   @Override

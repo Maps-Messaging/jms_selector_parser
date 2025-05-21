@@ -18,4 +18,10 @@ public class PCACorOperation extends PCAOperation {
     return PCA.cor(trainingData, trainingData.names()).getProjection(trainingData.names().length);
   }
 
+  @Override
+  public String toString() {
+    return "pca_cor (" + pcaFunction.getName() + ", " + getSubString() + ")";
+  }
+
+
 }

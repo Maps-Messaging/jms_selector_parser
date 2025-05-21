@@ -49,7 +49,7 @@ public abstract class LinearRegressionOperation extends AbstractMLModelOperation
 
   @Override
   public String toString() {
-    return "LinearRegression(" + linearRegressionFunction.getName() + "," + super.toString() + ")";
+    return getName() +" (" + linearRegressionFunction.getName() + ", " + super.toString() + ")";
   }
 
   @Override
@@ -61,6 +61,8 @@ public abstract class LinearRegressionOperation extends AbstractMLModelOperation
   }
 
   protected abstract LinearModel generate(Formula formula, DataFrame dataFrame);
+
+  protected abstract String getName();
 
   @Override
   public double applyModel(double[] data) {
