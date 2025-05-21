@@ -67,10 +67,10 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
     }
     // Ensure label column has nominal scale
     var field = dataFrame.schema().field(labelColumn);
-    if (!(field.measure() instanceof NominalScale scale)) {
+    if (!(field.measure() instanceof NominalScale )) {
       throw new IllegalArgumentException("Label column must be nominal.");
     }
-
+    NominalScale scale = (NominalScale) field.measure();
     int[] y = dataFrame.column(labelColumn).toIntArray();
     double[][] x = dataFrame.drop(labelColumn).toArray();
 
