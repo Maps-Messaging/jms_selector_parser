@@ -60,11 +60,16 @@ public class SelectorMLConformanceTest {
         "decision_tree (classify, model_dt.arff, temp, humidity) = 1",
         "naive_bayes (classify, model_nb.arff) = 1",
         "naive_bayes (classify, model_nb.arff, temp, humidity) = 1",
-        /*
         "random_forest (classify, model_rf.arff) = 1",
         "random_forest (classify, model_rf.arff, temp, humidity) = 1",
-        "logistic_regression (classify, model_logreg.arff) = 1",
-        "logistic_regression (classify, model_logreg.arff, temp, humidity) = 1",
+
+        "isolation_forest (anomaly, model_iso.arff) = 1",
+        "isolation_forest (anomaly, model_iso.arff, temp, humidity) = 1",
+
+        "logistic_regression (score, model_logreg.arff) = 1",
+        "logistic_regression (is_anomaly, model_logreg.arff, temp, humidity) = 1",
+        /*
+
         "mlp (classify, model_mlp.arff) = 1",
         "mlp (classify, model_mlp.arff, temp, humidity) = 1",
         "qda (classify, model_qda.arff) = 1",
@@ -77,8 +82,6 @@ public class SelectorMLConformanceTest {
         "knn (classify, model_knn.arff, temp, humidity) = 1",
 
         // Anomaly Detection
-        "isolation_forest (anomaly, model_iso.arff) = 1",
-        "isolation_forest (anomaly, model_iso.arff, temp, humidity) = 1",
         "one_class_svm (anomaly, model_ocsvm.arff) = 1",
         "one_class_svm (anomaly, model_ocsvm.arff, temp, humidity) = 1",
 */

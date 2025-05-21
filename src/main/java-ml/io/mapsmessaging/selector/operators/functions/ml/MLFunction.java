@@ -26,13 +26,16 @@ import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster.HierarchicalClusterOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.isolationforest.IsolationForestOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LassoRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.OlsRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.RidgeRegressionOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.logisticregression.LogisticRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCACorOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAFitOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.randomforest.RandomForestOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow.TensorFlowOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore;
 import java.util.ArrayList;
@@ -119,7 +122,16 @@ public class MLFunction extends Operation {
         case "pca_cor" -> {
           return new PCACorOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         }
-        case "random_forest", "logistic_regression", "mlp", "qda", "lda", "isolation_forest", "one_class_svm", "svm", "knn" ->
+        case "random_forest" -> {
+          return new RandomForestOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "logistic_regression"->{
+          return new LogisticRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "isolation_forest" ->{
+          return new IsolationForestOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "mlp", "qda", "lda", "one_class_svm", "svm", "knn" ->
             throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow" -> {
           return new TensorFlowOperation(modelName, identifiers);
