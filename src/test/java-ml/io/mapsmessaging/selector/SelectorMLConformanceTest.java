@@ -75,12 +75,17 @@ public class SelectorMLConformanceTest {
         "mlp (predict, model_mlp.arff, temp, humidity) = 1",
         "mlp (predictprob, model_mlp.arff) = 1",
         "mlp (predictprob, model_mlp.arff, temp, humidity) = 1",
+        "qda (predict, model_qda.arff) = 1",
+        "qda (predict, model_qda.arff, temp, humidity) = 1",
+        "qda (predictprob, model_qda.arff) = 1",
+        "qda (predictprob, model_qda.arff, temp, humidity) = 1",
+        "lda (predict, model_lda.arff) = 1",
+        "lda (predict, model_lda.arff, temp, humidity) = 1",
+        "lda (predictprob, model_lda.arff) = 1",
+        "lda (predictprob, model_lda.arff, temp, humidity) = 1",
+
         /*
 
-        "qda (classify, model_qda.arff) = 1",
-        "qda (classify, model_qda.arff, temp, humidity) = 1",
-        "lda (classify, model_lda.arff) = 1",
-        "lda (classify, model_lda.arff, temp, humidity) = 1",
         "svm (classify, model_svm.arff) = 1",
         "svm (classify, model_svm.arff, temp, humidity) = 1",
         "knn (classify, model_knn.arff) = 1",

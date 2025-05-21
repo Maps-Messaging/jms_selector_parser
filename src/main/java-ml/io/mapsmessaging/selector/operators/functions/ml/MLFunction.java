@@ -27,6 +27,7 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.functions.clusterin
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster.HierarchicalClusterOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.isolationforest.IsolationForestOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.lda.LDAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LassoRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.OlsRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.RidgeRegressionOperation;
@@ -36,6 +37,7 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebaye
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCACorOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAFitOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.qda.QDAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.randomforest.RandomForestOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow.TensorFlowOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore;
@@ -140,7 +142,14 @@ public class MLFunction extends Operation {
         case "mlp" ->{
           return new MLPOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         }
-        case "qda", "lda", "one_class_svm", "svm", "knn" ->
+        case "qda" ->{
+          return new QDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+        case "lda" ->{
+          return new LDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        }
+
+        case "one_class_svm", "svm", "knn" ->
             throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow" -> {
           return new TensorFlowOperation(modelName, identifiers);
