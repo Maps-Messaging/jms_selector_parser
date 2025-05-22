@@ -152,8 +152,6 @@ TOKEN [IGNORE_CASE]:
         | "qda"                  // Quadratic Discriminant Analysis
         | "lda"                  // Linear Discriminant Analysis
         | "isolation_forest"     // Unsupervised anomaly detection
-        | "one_class_svm"        // One-Class SVM for anomaly detection
-        | "svm"                  // Support Vector Machine classifier
         | "knn"                  // K-Nearest Neighbors classifier
         | "model_exists"         // Check if model exists (boolean)
     >

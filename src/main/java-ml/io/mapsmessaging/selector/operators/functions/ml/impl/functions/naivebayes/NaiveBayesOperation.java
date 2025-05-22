@@ -64,13 +64,13 @@ public class NaiveBayesOperation extends LabeledDataMLModelOperation {
     String labelColumn = prepareLabeledTrainingData(dataFrame);
     // Ensure label column has nominal scale
     var field = dataFrame.schema().field(labelColumn);
-    if (!(field.measure() instanceof NominalScale scale)) {
+    if (!(field.measure() instanceof NominalScale)) {
       throw new ModelException("Label column must be nominal.");
     }
     int[] y = dataFrame.column(labelColumn).toIntArray();
     double[][] x = dataFrame.drop(labelColumn).toArray();
 
-    int k = scale.size(); // number of classes
+    int k = ((NominalScale) field.measure()).size(); // number of classes
     int p = x[0].length; // number of features
 
     // Calculate priors

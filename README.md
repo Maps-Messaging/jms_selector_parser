@@ -40,6 +40,45 @@ For transparency and to enable users to verify performance in their own environm
 You can find the tests [ParallelStreamJMH](https://github.com/Maps-Messaging/jms_selector_parser/blob/main/src/test/java/io/mapsmessaging/selector/ParallelStreamJMH.java) and run them to see how the module performs in your specific setup.
 
 
+
+## ML Model Capabilities in Messaging Server Context
+
+This document outlines the supported machine learning models available for use within the MapsMessaging server, along with whether they can be trained from streaming data or require a pre-trained model.
+
+| Algorithm             | Learns From Stream | Requires Pre-trained Model | Description                                                                                                                                                                        |
+| --------------------- | ------------------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TensorFlow`          | ❌                  | ✅                          | External model (e.g., TensorFlow SavedModel) for classification or regression using external inference engines. Suitable for advanced filtering or prediction in stream pipelines. |
+| `k-means`             | ✅                  | ❌                          | Unsupervised clustering of messages based on feature similarity. Can be trained from raw stream data.                                                                              |
+| `g-means`             | ✅                  | ❌                          | Extended K-Means that automatically determines the number of clusters. Suitable for exploratory stream clustering.                                                                 |
+| `x-means`             | ✅                  | ❌                          | Advanced variant of K-Means that adjusts the cluster count based on BIC. Useful for dynamic topic-based message grouping.                                                          |
+| `k-means_lloyd`       | ✅                  | ❌                          | Traditional Lloyd's algorithm for K-Means. Best used when the number of clusters is known ahead of time.                                                                           |
+| `linear_regression`   | ❌                  | ✅                          | Predicts continuous values from labeled features in the stream. Requires labeled data and a pre-trained model.                                                                     |
+| `ols`                 | ❌                  | ✅                          | Ordinary Least Squares regression; a basic linear model for numerical prediction. Requires labeled data.                                                                           |
+| `ridge`               | ❌                  | ✅                          | Linear regression with L2 regularization, useful for avoiding overfitting in message trend prediction.                                                                             |
+| `lasso`               | ❌                  | ✅                          | Linear regression with L1 regularization, used for sparse feature selection in stream analysis.                                                                                    |
+| `decision_tree`       | ❌                  | ✅                          | Supervised classifier for routing or categorizing messages. Requires labeled training data and model.                                                                              |
+| `naive_bayes`         | ❌                  | ✅                          | Probabilistic classifier useful for low-latency message classification. Pre-trained on labeled data.                                                                               |
+| `hierarchical`        | ❌                  | ❌                          | Offline clustering only. Cannot be used in streaming. Generates static groupings for historical datasets.                                                                          |
+| `pca`                 | ✅                  | ❌                          | Principal Component Analysis for dimensionality reduction. Useful for pre-processing stream features.                                                                              |
+| `pca_fit`             | ✅                  | ❌                          | PCA using covariance matrix; more sensitive to scaling. Used for static feature extraction.                                                                                        |
+| `pca_cor`             | ✅                  | ❌                          | PCA using correlation matrix; better for mixed-scale data. Suitable for visualization and compression.                                                                             |
+| `random_forest`       | ❌                  | ✅                          | Ensemble classifier ideal for high-accuracy message filtering. Requires labeled training and model persistence.                                                                    |
+| `Logistic_regression` | ❌                  | ✅                          | Binary or multi-class classifier for event labeling in the stream. Requires pre-trained model.                                                                                     |
+| `mlp`                 | ❌                  | ✅                          | Multi-layer perceptron; a neural network classifier. Good for nonlinear message classification. Requires model.                                                                    |
+| `qda`                 | ❌                  | ✅                          | Quadratic Discriminant Analysis for classifying Gaussian-distributed message features. Requires training.                                                                          |
+| `lda`                 | ❌                  | ✅                          | Linear Discriminant Analysis; useful when message classes are linearly separable. Requires labels.                                                                                 |
+| `isolation_forest`    | ✅                  | ❌                          | Unsupervised anomaly detection for outlier detection in streams. Trains on normal data only.                                                                                       |
+| `knn`                 | ❌                  | ✅                          | K-Nearest Neighbors classifier. Stores raw labeled data for inference. Suitable for similarity-based classification.                                                               |
+| `model_exists`        | ❌                  | ✅                          | Returns `true` or `false` based on whether a model is available for use. Useful in selector expressions.                                                                           |
+
+**Notes:**
+
+* "Learns From Stream" ✅ means it can be trained directly from incoming feature data.
+* "Requires Pre-trained Model" ✅ means it must be trained offline and loaded at runtime.
+* This table helps guide filter logic, model preparation, and expression validation in streaming contexts.
+
+
+
 ## Usage and Examples
 ### General Filtering
 Here's how you can use the module in a general context:
@@ -213,6 +252,27 @@ class JsonFilteringTest {
   }
 }
 ```
+
+
+### Example: Filtering with a Trained ML Model
+
+This example demonstrates filtering a stream of events using a trained `random_forest` model to classify input features.
+
+```java
+@Test
+public void filterUsingMLModel() throws ParseException {
+  ParserExecutor executor = SelectorParser.compile("random_forest(classify, model.arff, CO₂, temperature, humidity) = 'High'");
+  long highRiskCount = messageStream.stream().filter(executor::evaluate).count();
+  System.out.println("High risk messages: " + highRiskCount);
+}
+```
+
+* The model (`model.arff`) must be pre-trained and available.
+* The fields `temperature`, `humidity`, and `CO₂` are input features used in classification.
+* The result is compared to `'High'` for thresholding or routing.
+
+This pattern supports real-time filtering and routing based on live data characteristics.
+
 
 ## Compatibility
 The module is designed for broad compatibility and can be seamlessly integrated into various systems, not limited to IoT messaging.
