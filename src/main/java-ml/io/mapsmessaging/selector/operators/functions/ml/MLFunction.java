@@ -26,6 +26,7 @@ import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.isolationforest.IsolationForestOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.knn.KNNOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.lda.LDAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LassoRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.OlsRegressionOperation;
@@ -123,9 +124,10 @@ public class MLFunction extends Operation {
           return new QDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "lda":
           return new LDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+        case "knn":
+          return new KNNOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "one_class_svm":
         case "svm":
-        case "knn":
           throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow":
           return new TensorFlowOperation(modelName, identifiers);
