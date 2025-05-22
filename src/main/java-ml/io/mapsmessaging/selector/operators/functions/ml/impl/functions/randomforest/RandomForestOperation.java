@@ -20,17 +20,16 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.randomforest;
 
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import smile.classification.RandomForest;
 import smile.data.DataFrame;
 import smile.data.formula.Formula;
 import smile.data.type.StructType;
 
-public class RandomForestOperation extends AbstractMLModelOperation {
+public class RandomForestOperation extends LabeledDataMLModelOperation {
   private final RandomForestFunction operation;
   private RandomForest randomForest;
   private StructType schema;
@@ -42,13 +41,14 @@ public class RandomForestOperation extends AbstractMLModelOperation {
     operation = computeFunction(operationName);
   }
 
-  private static RandomForestFunction computeFunction(String operation) {
+  private static RandomForestFunction computeFunction(String operation) throws ModelException {
     switch (operation.toLowerCase()) {
       case "classifyprob":
         return new ClassifyProbFunction();
       case "classify":
-      default:
         return new ClassifyInstanceFunction();
+      default:
+        throw new ModelException("Expected either <classifyprob> or <classify> received " +operation);
     }
   }
 
@@ -56,12 +56,8 @@ public class RandomForestOperation extends AbstractMLModelOperation {
   protected void initializeSpecificModel() {}
 
   @Override
-  public void buildModel(DataFrame data) {
-    String labelColumn = data.schema().field(data.columns().size() - 1).name();
-    String[] names = data.names();
-    if (identity.isEmpty()) {
-      identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
-    }
+  public void buildModel(DataFrame data) throws ModelException {
+    String labelColumn = prepareLabeledTrainingData(data);
     var formula = Formula.lhs(labelColumn);
     randomForest = RandomForest.fit(formula, data);
     schema = data.schema();

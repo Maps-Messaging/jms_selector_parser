@@ -20,7 +20,7 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression;
 
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +28,7 @@ import smile.data.DataFrame;
 import smile.data.formula.Formula;
 import smile.regression.LinearModel;
 
-public abstract class LinearRegressionOperation extends AbstractMLModelOperation {
+public abstract class LinearRegressionOperation extends LabeledDataMLModelOperation {
 
   private final LinearRegressionFunction linearRegressionFunction;
   private LinearModel linearModel;
@@ -40,11 +40,11 @@ public abstract class LinearRegressionOperation extends AbstractMLModelOperation
     linearRegressionFunction = computeFunction(operationName);
   }
 
-  private static LinearRegressionFunction computeFunction(String operation) {
+  private static LinearRegressionFunction computeFunction(String operation) throws ModelException {
     if (operation.equalsIgnoreCase("predict")) {
       return new PredictFunction();
     }
-    throw new UnsupportedOperationException("Unknown operation: " + operation);
+    throw new ModelException("Expected <predict> received [" + operation+"]");
   }
 
   @Override
@@ -53,8 +53,8 @@ public abstract class LinearRegressionOperation extends AbstractMLModelOperation
   }
 
   @Override
-  public void buildModel(DataFrame dataFrame) {
-    String labelColumn = dataFrame.schema().field(dataFrame.columns().size() - 1).name();
+  public void buildModel(DataFrame dataFrame) throws ModelException {
+    String labelColumn = prepareLabeledTrainingData(dataFrame);
     Formula formula = Formula.lhs(labelColumn);
     linearModel = generate(formula, dataFrame);
     isModelTrained = true;

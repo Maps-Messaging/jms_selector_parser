@@ -20,7 +20,7 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree;
 
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import smile.data.DataFrame;
 import smile.data.formula.Formula;
 import smile.data.type.StructType;
 
-public class DecisionTreeOperation extends AbstractMLModelOperation {
+public class DecisionTreeOperation extends LabeledDataMLModelOperation {
   private final DecisionTreeFunction decisionTreeFunction;
   private DecisionTree decisionTree;
   private StructType schema;
@@ -42,13 +42,14 @@ public class DecisionTreeOperation extends AbstractMLModelOperation {
     decisionTreeFunction = computeFunction(operationName);
   }
 
-  private static DecisionTreeFunction computeFunction(String operation) {
+  private static DecisionTreeFunction computeFunction(String operation) throws ModelException {
     switch (operation.toLowerCase()) {
       case "classifyprob":
         return new ClassifyProbFunction();
       case "classify":
-      default:
         return new ClassifyInstanceFunction();
+      default:
+        throw new ModelException("Expected <classify> or <classifyprob> received [" + operation+"]");
     }
   }
 
@@ -56,12 +57,8 @@ public class DecisionTreeOperation extends AbstractMLModelOperation {
   protected void initializeSpecificModel() {}
 
   @Override
-  public void buildModel(DataFrame data) {
-    String labelColumn = data.schema().field(data.columns().size() - 1).name();
-    String[] names = data.names();
-    if (identity.isEmpty()) {
-      identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
-    }
+  public void buildModel(DataFrame data) throws ModelException {
+    String labelColumn = prepareLabeledTrainingData(data);
     var formula = Formula.lhs(labelColumn);
     decisionTree = DecisionTree.fit(formula, data);
     schema = data.schema();

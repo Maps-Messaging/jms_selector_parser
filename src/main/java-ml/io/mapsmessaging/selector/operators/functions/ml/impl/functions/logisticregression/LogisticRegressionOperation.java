@@ -20,16 +20,15 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.logisticregression;
 
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import smile.classification.LogisticRegression;
 import smile.data.DataFrame;
 import smile.data.formula.Formula;
 
-public class LogisticRegressionOperation extends AbstractMLModelOperation {
+public class LogisticRegressionOperation extends LabeledDataMLModelOperation {
   private final LogisiticRegressionFunction operation;
   private LogisticRegression logisticRegression;
 
@@ -40,13 +39,14 @@ public class LogisticRegressionOperation extends AbstractMLModelOperation {
     operation = computeFunction(operationName);
   }
 
-  private static LogisiticRegressionFunction computeFunction(String operation) {
+  private static LogisiticRegressionFunction computeFunction(String operation) throws ModelException {
     switch (operation.toLowerCase()) {
       case "classifyprob":
         return new ClassifyProbFunction();
       case "classify":
-      default:
         return new ClassifyInstanceFunction();
+      default:
+        throw new ModelException("Expected either <classify> or <classifyprob> received " +operation);
     }
   }
 
@@ -54,12 +54,8 @@ public class LogisticRegressionOperation extends AbstractMLModelOperation {
   protected void initializeSpecificModel() {}
 
   @Override
-  public void buildModel(DataFrame data) {
-    String labelColumn = data.schema().field(data.columns().size() - 1).name();
-    String[] names = data.names();
-    if (identity.isEmpty()) {
-      identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
-    }
+  public void buildModel(DataFrame data) throws ModelException {
+    String labelColumn = prepareLabeledTrainingData(data);
 
     Formula formula = Formula.lhs(labelColumn);
     double[][] x = formula.x(data).toArray();

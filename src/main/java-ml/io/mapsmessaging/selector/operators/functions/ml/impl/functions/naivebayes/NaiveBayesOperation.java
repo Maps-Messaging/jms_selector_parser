@@ -20,7 +20,7 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes;
 
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.*;
@@ -29,7 +29,7 @@ import smile.data.DataFrame;
 import smile.data.measure.NominalScale;
 import smile.stat.distribution.Distribution;
 
-public class NaiveBayesOperation extends AbstractMLModelOperation {
+public class NaiveBayesOperation extends LabeledDataMLModelOperation {
   private final NaiveBayesFunction naiveBayesFunction;
   private NaiveBayes naiveBayes;
 
@@ -40,13 +40,14 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
     naiveBayesFunction = computeFunction(operationName);
   }
 
-  private static NaiveBayesFunction computeFunction(String operation) {
+  private static NaiveBayesFunction computeFunction(String operation) throws ModelException {
     switch (operation.toLowerCase()) {
       case "classifyprob":
         return new ClassifyProbFunction();
       case "classify":
-      default:
         return new ClassifyFunction();
+      default:
+        throw new ModelException("Expected either <classify> or <classifyprob> received " +operation);
     }
   }
 
@@ -59,18 +60,13 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
   }
 
   @Override
-  public void buildModel(DataFrame dataFrame) {
-    String labelColumn = dataFrame.schema().field(dataFrame.ncol() - 1).name();
-    String[] names = dataFrame.names();
-    if (identity.isEmpty()) {
-      identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
-    }
+  public void buildModel(DataFrame dataFrame) throws ModelException {
+    String labelColumn = prepareLabeledTrainingData(dataFrame);
     // Ensure label column has nominal scale
     var field = dataFrame.schema().field(labelColumn);
-    if (!(field.measure() instanceof NominalScale )) {
-      throw new IllegalArgumentException("Label column must be nominal.");
+    if (!(field.measure() instanceof NominalScale scale)) {
+      throw new ModelException("Label column must be nominal.");
     }
-    NominalScale scale = (NominalScale) field.measure();
     int[] y = dataFrame.column(labelColumn).toIntArray();
     double[][] x = dataFrame.drop(labelColumn).toArray();
 
@@ -96,12 +92,10 @@ public class NaiveBayesOperation extends AbstractMLModelOperation {
           column[i] = rows.get(i)[j];
         }
         double mean = Arrays.stream(column).average().orElse(0.0);
-        double std =
-            Math.sqrt(Arrays.stream(column).map(v -> Math.pow(v - mean, 2)).average().orElse(1e-6));
+        double std = Math.sqrt(Arrays.stream(column).map(v -> Math.pow(v - mean, 2)).average().orElse(1e-6));
         condprob[cls][j] = new smile.stat.distribution.GaussianDistribution(mean, std);
       }
     }
-
     naiveBayes = new NaiveBayes(priors, condprob);
   }
 

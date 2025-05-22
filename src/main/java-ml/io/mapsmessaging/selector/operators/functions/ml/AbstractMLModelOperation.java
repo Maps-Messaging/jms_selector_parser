@@ -43,8 +43,6 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     initializeModel();
   }
 
-  @SuppressWarnings(" java:S112") // This is thrown from the underlying library, nothing we can do here
-  // NOSONAR: This is thrown from the underlying library, nothing we can do here
   protected void initializeModel() throws IOException, ModelException {
     initializeSpecificModel();
     if (MLFunction.getModelStore().modelExists(modelName)) {
@@ -56,16 +54,15 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
       }
       isModelTrained = true;
     }
+    else if(requiresLabel() && identity.isEmpty()) {
+      throw new ModelException("This operation requires a trained model or labeled input data, but neither was provided.");
+    }
   }
 
   @Override
-  // NOSONAR: This is thrown from the underlying library, nothing we can do here
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     try {
       double[] data = evaluateList(resolver);
-
-      // Buffer the instance
-
       if (!isModelTrained){
         dataBuffer.add(data);
         if( ((dataBuffer.size() >= sampleSize) ||
@@ -106,9 +103,14 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
     return dataset;
   }
 
+
+
+
   protected abstract void initializeSpecificModel() throws ModelException;
 
   protected abstract double applyModel(double[] data);
 
-  protected abstract void buildModel(DataFrame dataFrame);
+  protected abstract void buildModel(DataFrame dataFrame) throws ModelException;
+
+  public abstract boolean requiresLabel();
 }

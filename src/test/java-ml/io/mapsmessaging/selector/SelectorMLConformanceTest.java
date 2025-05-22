@@ -42,23 +42,15 @@ public class SelectorMLConformanceTest {
         "x-means (distance, model_xmeans.arff, temp, humidity) > 1.0",
         "k-means_lloyd (distance, model_lloyd.arff) > 1.0",
         "k-means_lloyd (distance, model_lloyd.arff, temp, humidity) > 1.0",
-        "hierarchical (model_hier.arff) = 1",
-        "hierarchical (model_hier.arff, temp, humidity) = 1",
 
         // Regression
-        "ols (predict, model_ols.arff) < 30.0",
         "ols (predict, model_ols.arff, temp, humidity) < 30.0",
-        "ridge (predict, model_ridge.arff) < 30.0",
         "ridge (predict, model_ridge.arff, temp, humidity) < 30.0",
-        "lasso (predict, model_lasso.arff) < 30.0",
         "lasso (predict, model_lasso.arff, temp, humidity) < 30.0",
 
         // Classification
-        "decision_tree (classify, model_dt.arff) = 1",
         "decision_tree (classify, model_dt.arff, temp, humidity) = 1",
-        "naive_bayes (classify, model_nb.arff) = 1",
         "naive_bayes (classify, model_nb.arff, temp, humidity) = 1",
-        "random_forest (classify, model_rf.arff) = 1",
         "random_forest (classify, model_rf.arff, temp, humidity) = 1",
 
         "isolation_forest (score, model_iso.arff) = 1",
@@ -66,22 +58,14 @@ public class SelectorMLConformanceTest {
         "isolation_forest (is_anomaly, model_iso.arff) = 1",
         "isolation_forest (is_anomaly, model_iso.arff, temp, humidity) = 1",
 
-        "logistic_regression (classify, model_logreg.arff) = 1",
         "logistic_regression (classify, model_logreg.arff, temp, humidity) = 1",
-        "logistic_regression (classifyprob, model_logreg.arff) = 1",
         "logistic_regression (classifyprob, model_logreg.arff, temp, humidity) = 1",
 
-        "mlp (predict, model_mlp.arff) = 1",
         "mlp (predict, model_mlp.arff, temp, humidity) = 1",
-        "mlp (predictprob, model_mlp.arff) = 1",
         "mlp (predictprob, model_mlp.arff, temp, humidity) = 1",
-        "qda (predict, model_qda.arff) = 1",
         "qda (predict, model_qda.arff, temp, humidity) = 1",
-        "qda (predictprob, model_qda.arff) = 1",
         "qda (predictprob, model_qda.arff, temp, humidity) = 1",
-        "lda (predict, model_lda.arff) = 1",
         "lda (predict, model_lda.arff, temp, humidity) = 1",
-        "lda (predictprob, model_lda.arff) = 1",
         "lda (predictprob, model_lda.arff, temp, humidity) = 1",
 
         /*
@@ -131,6 +115,7 @@ public class SelectorMLConformanceTest {
       t = stripTrailingParens(t);
       Assertions.assertEquals(t, selector);
     } catch (ParseException|UnsupportedOperationException e) {
+      e.printStackTrace();
       Assertions.fail("Selector text failed: " + selector + " with exception: " + e.getMessage());
     }
   }

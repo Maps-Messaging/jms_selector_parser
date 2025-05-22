@@ -26,9 +26,7 @@ public class ClassifyFunction implements NaiveBayesFunction {
 
   @Override
   public double compute(NaiveBayes naiveBayes, double[] data) {
-    double d = naiveBayes.predict(data);
-    System.err.println(d);
-    return d;
+    return naiveBayes.predict(data);
   }
 
   @Override

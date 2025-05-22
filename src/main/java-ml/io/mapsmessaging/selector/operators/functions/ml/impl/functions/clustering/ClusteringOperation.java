@@ -20,14 +20,14 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.RawDataMLModelOperation;
 import java.io.IOException;
 import java.util.List;
 import smile.clustering.*;
 import smile.data.DataFrame;
 
-public abstract class ClusteringOperation extends AbstractMLModelOperation {
+public abstract class ClusteringOperation extends RawDataMLModelOperation {
   protected final KMeansFunction kmeansFunction;
   private CentroidClustering<double[], double[]> kmeans;
 
@@ -38,7 +38,7 @@ public abstract class ClusteringOperation extends AbstractMLModelOperation {
     this.kmeansFunction = computeFunction(operationName);
   }
 
-  private static KMeansFunction computeFunction(String operationName) {
+  private static KMeansFunction computeFunction(String operationName) throws ModelException {
     if (operationName.equalsIgnoreCase("distance")) {
       return new DistanceFunction();
     } else if (operationName.equalsIgnoreCase("clusterlabel")) {
@@ -54,7 +54,7 @@ public abstract class ClusteringOperation extends AbstractMLModelOperation {
     } else if (operationName.equalsIgnoreCase("totalclusters")) {
       return new TotalClustersFunction();
     }
-    return new DistanceFunction();
+    throw new ModelException("Expected <distance>, <clusterlabel>, <centroid>, <wcss>, <clustersizes> or <totalclusters> received [" + operationName+"]");
   }
 
   @Override

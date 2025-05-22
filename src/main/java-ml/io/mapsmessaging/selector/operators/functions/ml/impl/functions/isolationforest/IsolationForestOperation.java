@@ -20,15 +20,15 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.isolationforest;
 
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.RawDataMLModelOperation;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import smile.anomaly.IsolationForest;
 import smile.data.DataFrame;
 
-public class IsolationForestOperation extends AbstractMLModelOperation {
+public class IsolationForestOperation extends RawDataMLModelOperation {
   private final IsolationForestFunction operation;
   private IsolationForest isolationForest;
   private double threshold;
@@ -40,13 +40,14 @@ public class IsolationForestOperation extends AbstractMLModelOperation {
     operation = computeFunction(operationName);
   }
 
-  private static IsolationForestFunction computeFunction(String operation) {
+  private static IsolationForestFunction computeFunction(String operation) throws ModelException {
     switch (operation.toLowerCase()) {
       case "is_anomaly":
         return new IsAnomalyFunction();
       case "score":
-      default:
         return new ScoreFunction();
+      default:
+        throw new ModelException("Expected <score> or <is_anomaly> received [" + operation+"]");
     }
   }
 
@@ -55,10 +56,6 @@ public class IsolationForestOperation extends AbstractMLModelOperation {
 
   @Override
   public void buildModel(DataFrame data) {
-    String[] names = data.names();
-    if (identity.isEmpty()) {
-      identity.addAll(Arrays.asList(names).subList(0, names.length - 1));
-    }
     isolationForest = IsolationForest.fit(data.toArray());
     computeThreshold(data);
     isModelTrained = true;

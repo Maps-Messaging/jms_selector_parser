@@ -18,12 +18,19 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.functions.lda;
+package io.mapsmessaging.selector.operators.functions.ml;
 
-import smile.classification.LDA;
+import java.io.IOException;
+import java.util.List;
 
-public interface LDAFunction {
-  double compute(LDA lda, double[] data);
+public abstract class RawDataMLModelOperation extends AbstractMLModelOperation {
 
-  String getName();
+  protected RawDataMLModelOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
+    super(modelName, identity, time, samples);
+  }
+
+  @Override
+  public boolean requiresLabel() {
+    return false;
+  }
 }

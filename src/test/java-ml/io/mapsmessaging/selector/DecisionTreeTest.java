@@ -31,8 +31,8 @@ class DecisionTreeTest {
 
 
   private final static String[] SELECTORS ={
-      "decision_tree (classify, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level) > 0 OR NOT model_exists(scd41_alt.arff)",
-      "decision_tree (classifyprob, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level) > 0 OR NOT model_exists(scd41_alt.arff)",
+      "decision_tree (classify, scd41_alt.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41_alt.arff)",
+      "decision_tree (classifyprob, scd41_alt.arff , CO₂,  temperature, humidity) > 0 OR NOT model_exists(scd41_alt.arff)",
 
   } ;
 
@@ -58,9 +58,9 @@ class DecisionTreeTest {
     ModelStore previous = MLFunction.getModelStore();
     try {
       MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
-      ParserExecutor executor = SelectorParser.compile("decision_tree (classify, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level)< 50");
+      ParserExecutor executor = SelectorParser.compile("decision_tree (classify, scd41_alt.arff , CO₂,  temperature, humidity)< 50");
       Assertions.assertTrue(executor.evaluate(new TestIdentityResolver2(566,20.9,55.6, 0)));
-      executor = SelectorParser.compile("decision_tree (classifyprob, scd41_alt.arff , CO₂,  temperature, humidity, CO₂_level)< 50");
+      executor = SelectorParser.compile("decision_tree (classifyprob, scd41_alt.arff , CO₂,  temperature, humidity)< 1");
       Assertions.assertTrue(executor.evaluate(new TestIdentityResolver2(566,20.9,55.6, 0)));
     } finally {
       MLFunction.setModelStore(previous);

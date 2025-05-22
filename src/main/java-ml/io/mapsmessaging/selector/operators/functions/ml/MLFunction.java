@@ -25,7 +25,6 @@ import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
-import io.mapsmessaging.selector.operators.functions.ml.impl.functions.hierarchicalcluster.HierarchicalClusterOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.isolationforest.IsolationForestOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.lda.LDAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression.LassoRegressionOperation;
@@ -36,7 +35,6 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.functions.mlp.MLPOp
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCACorOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAFitOperation;
-import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.qda.QDAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.randomforest.RandomForestOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow.TensorFlowOperation;
@@ -108,13 +106,6 @@ public class MLFunction extends Operation {
           return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "naive_bayes":
           return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "hierarchical":
-          if (!identifiers.isEmpty()) {
-            identifiers.addFirst(modelName);
-            modelName = operationName;
-          }
-
-          return new HierarchicalClusterOperation(modelName, identifiers, sampleTime, sampleSize);
         case "pca":
         case "pca_fit":
           return new PCAFitOperation(modelName, operationName, identifiers, sampleTime, sampleSize);

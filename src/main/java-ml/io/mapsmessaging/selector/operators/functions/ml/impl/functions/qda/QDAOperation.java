@@ -1,14 +1,33 @@
+/*
+ *
+ *  Copyright [ 2020 - 2024 ] Matthew Buckton
+ *  Copyright [ 2024 - 2025 ] MapsMessaging B.V.
+ *
+ *  Licensed under the Apache License, Version 2.0 with the Commons Clause
+ *  (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://commonsclause.com/
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.qda;
 
-import io.mapsmessaging.selector.operators.functions.ml.AbstractMLModelOperation;
+import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import smile.classification.QDA;
 import smile.data.DataFrame;
 
-public class QDAOperation extends AbstractMLModelOperation {
+public class QDAOperation extends LabeledDataMLModelOperation {
   private final QDAFunction operation;
   private QDA qda;
 
@@ -19,13 +38,14 @@ public class QDAOperation extends AbstractMLModelOperation {
     this.operation = computeFunction(operationName);
   }
 
-  private static QDAFunction computeFunction(String op) {
+  private static QDAFunction computeFunction(String op) throws ModelException {
     switch (op.toLowerCase()) {
       case "predictprob":
         return new PredictProbFunction();
       case "predict":
-      default:
         return new PredictFunction();
+      default:
+        throw new ModelException("Expected either <predictprob> or <predict> received " +op);
     }
   }
 
@@ -33,14 +53,14 @@ public class QDAOperation extends AbstractMLModelOperation {
   protected void initializeSpecificModel() {}
 
   @Override
-  public void buildModel(DataFrame data) {
-    String labelColumn = data.schema().field(data.ncol() - 1).name();
+  public void buildModel(DataFrame data) throws ModelException {
+    String labelColumn = prepareLabeledTrainingData(data);
+    if (!data.column(labelColumn).dtype().isNumeric()) {
+      throw new ModelException("Label column must be convertible to int for QDA.");
+    }
     int[] labels = data.column(labelColumn).toIntArray();
     DataFrame x = data.drop(labelColumn);
 
-    if (identity.isEmpty()) {
-      identity.addAll(Arrays.asList(x.names()));
-    }
     qda = QDA.fit(x.toArray(), labels);
     isModelTrained = true;
   }
