@@ -128,6 +128,7 @@
       </activation>
       <properties>
         <test.profile>standard</test.profile>
+        <java.version>13</java.version>
       </properties>
       <build>
         <plugins>
@@ -195,6 +196,7 @@
       <id>ml</id>
       <properties>
         <test.profile>ml</test.profile>
+        <java.version>21</java.version>
       </properties>
       <build>
         <resources>
@@ -430,8 +432,8 @@
         <version>3.14.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
-          <source>21</source>
-          <target>21</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
           <compilerArgs>
             <arg>-h</arg>
             <arg>src/main/cpp/</arg>
