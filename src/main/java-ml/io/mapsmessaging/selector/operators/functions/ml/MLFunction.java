@@ -47,11 +47,17 @@ import lombok.Setter;
 
 public class MLFunction extends Operation {
 
-  @Getter @Setter private static int defaultSampleSize = 100;
+  @Getter
+  @Setter
+  private static int defaultSampleSize = 100;
 
-  @Getter @Setter private static int defaultSampleTime = 0;
+  @Getter
+  @Setter
+  private static int defaultSampleTime = 0;
 
-  @Getter @Setter private static ModelStore modelStore = new MapModelStore();
+  @Getter
+  @Setter
+  private static ModelStore modelStore = new MapModelStore();
 
   private final String functionName;
   private final String operationName;
@@ -129,8 +135,7 @@ public class MLFunction extends Operation {
         case "tensorflow":
           return new TensorFlowOperation(modelName, identifiers);
         case "model_exists":
-          return new io.mapsmessaging.selector.operators.functions.ml.impl.functions
-              .ModelExistFunction(modelName);
+          return new io.mapsmessaging.selector.operators.functions.ml.impl.functions.ModelExistFunction(modelName, modelStore);
         default:
           throw new UnsupportedOperationException("Unknown ML function: " + functionName);
       }

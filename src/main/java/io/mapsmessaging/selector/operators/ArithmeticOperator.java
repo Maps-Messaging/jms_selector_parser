@@ -21,10 +21,11 @@
 package io.mapsmessaging.selector.operators;
 
 import io.mapsmessaging.selector.IdentifierResolver;
+import io.mapsmessaging.selector.NumericOperator;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.validators.NumericValidator;
 
-public abstract class ArithmeticOperator extends ComputableOperator {
+public abstract class ArithmeticOperator extends ComputableOperator implements NumericOperator {
 
   protected Object lhs;
   protected Object rhs;

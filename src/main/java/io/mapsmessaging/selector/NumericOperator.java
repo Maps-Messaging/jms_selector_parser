@@ -18,20 +18,6 @@
  *
  */
 
-package io.mapsmessaging.selector.validators;
+package io.mapsmessaging.selector;
 
-import io.mapsmessaging.selector.Identifier;
-import io.mapsmessaging.selector.NumericOperator;
-import io.mapsmessaging.selector.operators.arithmetic.NegateOperator;
-
-public class NumericValidator implements Validator {
-
-  private NumericValidator() {}
-
-  public static boolean isValid(Object parameter) {
-    return (parameter instanceof Identifier)
-        || (parameter instanceof NumericOperator)
-        || (parameter instanceof Number)
-        || (parameter instanceof NegateOperator);
-  }
-}
+public interface NumericOperator {}

@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
-@SuppressWarnings("java:S6548") // yes it is a singleton
+@SuppressWarnings({"java:S6548", "javaarchitecture:S7027"}) // yes it is a singleton
 public class ParserFactory {
 
   private static class Holder {

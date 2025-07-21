@@ -26,6 +26,7 @@ import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.FunctionOperator;
 import java.util.List;
 
+@SuppressWarnings("javaarchitecture:S7027")
 public class IdentityLoadParser extends FunctionOperator {
 
   private final Identifier parserIdentifier;
