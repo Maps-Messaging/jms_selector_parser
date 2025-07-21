@@ -63,9 +63,8 @@ public class IdentityLoadParser extends FunctionOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof IdentityLoadParser) {
-      return (parserIdentifier.equals(((IdentityLoadParser) test).parserIdentifier)
-          && arguments.equals(((IdentityLoadParser) test).arguments));
+    if (test instanceof IdentityLoadParser operator) {
+      return (parserIdentifier.equals(operator.parserIdentifier) && arguments.equals(operator.arguments));
     }
     return false;
   }

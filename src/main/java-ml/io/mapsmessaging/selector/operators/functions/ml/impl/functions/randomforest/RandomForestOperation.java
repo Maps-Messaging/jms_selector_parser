@@ -42,18 +42,18 @@ public class RandomForestOperation extends LabeledDataMLModelOperation {
   }
 
   private static RandomForestFunction computeFunction(String operation) throws ModelException {
-    switch (operation.toLowerCase()) {
-      case "classifyprob":
-        return new ClassifyProbFunction();
-      case "classify":
-        return new ClassifyInstanceFunction();
-      default:
-        throw new ModelException("Expected either <classifyprob> or <classify> received " +operation);
+    if (operation.equalsIgnoreCase("classifyprob")) {
+      return new ClassifyProbFunction();
+    } else if (operation.equalsIgnoreCase("classify")) {
+      return new ClassifyInstanceFunction();
     }
+    throw new ModelException("Expected either <classifyprob> or <classify> received " + operation);
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // No model to initialise
+  }
 
   @Override
   public void buildModel(DataFrame data) throws ModelException {

@@ -53,9 +53,9 @@ public class ParserFactory {
         if (parser.getName().equalsIgnoreCase(parserName.toString())) {
           return new ParserProxy(parser.createInstance(arguments));
         }
-      } else if (parserName instanceof Identifier) {
+      } else if (parserName instanceof Identifier identifier) {
         // We need to lazy load on each resolver here
-        return new IdentityLoadParser((Identifier) parserName, arguments);
+        return new IdentityLoadParser(identifier, arguments);
       }
     }
     return null;

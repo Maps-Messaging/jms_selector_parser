@@ -39,6 +39,7 @@ import smile.io.Read;
 import smile.io.Write;
 
 public class ModelUtils {
+  private static final long MAX_ENTRY_SIZE = 1024L * 1024L * 1024L;
 
   @Getter
   @Setter
@@ -54,6 +55,7 @@ public class ModelUtils {
   private ModelUtils() {}
 
   // Load a TensorFlow model from a byte array
+  @SuppressWarnings({"java:S5443", "java.S5042"}) // yes it is safe to do, I check the max size of the zip
   public static SavedModelBundle byteArrayToModel(byte[] data, String modelDir) throws IOException {
     // Constants for threshold checks
 
@@ -74,6 +76,9 @@ public class ModelUtils {
     try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(data))) {
       ZipEntry zipEntry;
       while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+        if (zipEntry.getSize() > MAX_ENTRY_SIZE) {
+          throw new IOException("ZIP entry too large: " + zipEntry.getName());
+        }
         totalEntryArchive++;
         if (totalEntryArchive > thresholdentries) {
           throw new IOException("Too many entries in ZIP file");
@@ -124,6 +129,7 @@ public class ModelUtils {
     return totalSizeArchive;
   }
 
+  @SuppressWarnings({"java:S5443"})
   public static byte[] dataFrameToBytes(DataFrame df, String format) throws IOException {
     if(format == null || format.isEmpty()){
       format = "arff";
@@ -154,6 +160,7 @@ public class ModelUtils {
     }
   }
 
+  @SuppressWarnings({"java:S5443"})
   public static DataFrame dataFrameFromBytes(byte[] data, String format) throws IOException {
     if(format == null || format.isEmpty()){
       format = "arff";

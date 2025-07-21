@@ -65,9 +65,8 @@ public class DifferentOperator extends ComparisonOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof DifferentOperator) {
-      return (lhs.equals(((DifferentOperator) test).lhs)
-          && rhs.equals(((DifferentOperator) test).rhs));
+    if (test instanceof DifferentOperator operator) {
+      return (lhs.equals(operator.lhs) && rhs.equals(operator.rhs));
     }
     return false;
   }

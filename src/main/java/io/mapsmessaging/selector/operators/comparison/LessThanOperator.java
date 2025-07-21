@@ -55,9 +55,8 @@ public class LessThanOperator extends ComparisonOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof LessThanOperator) {
-      return (lhs.equals(((LessThanOperator) test).lhs)
-          && rhs.equals(((LessThanOperator) test).rhs));
+    if (test instanceof LessThanOperator operator) {
+      return (lhs.equals(operator.lhs) && rhs.equals(operator.rhs));
     }
     return false;
   }

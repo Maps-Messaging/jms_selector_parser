@@ -41,11 +41,11 @@ public class NotOperator extends LogicalOperator {
   }
 
   public Object compile(){
-    if(lhs instanceof Operation){
-      lhs = ((Operation)lhs).compile();
+    if(lhs instanceof Operation operation){
+      lhs = operation.compile();
     }
-    if(lhs instanceof Boolean){
-      return !((Boolean)lhs);
+    if(lhs instanceof Boolean bool){
+      return !(bool);
     }
     return this;
   }
@@ -57,8 +57,8 @@ public class NotOperator extends LogicalOperator {
 
   @Override
   public boolean equals(Object test){
-    if(test instanceof NotOperator){
-      return (lhs.equals(((NotOperator) test).lhs));
+    if(test instanceof NotOperator operator){
+      return (lhs.equals(operator.lhs));
     }
     return false;
   }

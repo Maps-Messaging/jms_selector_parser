@@ -41,32 +41,32 @@ public class NegateOperator extends Operation {
   }
 
   private Object compute(Object result) {
-    if (result instanceof Double) {
-      return -1.0 * ((Double) result);
-    } else if (result instanceof Float) {
-      return -1.0 * ((Float) result);
-    } else if (result instanceof Number) {
-      return -1L * ((Number) result).longValue();
+    if (result instanceof Double dResult) {
+      return -1.0 * (dResult);
+    } else if (result instanceof Float fResult) {
+      return -1.0 * fResult;
+    } else if (result instanceof Number nResult) {
+      return -1L * nResult.longValue();
     }
     return result;
   }
 
   @Override
   public Object compile() {
-    if (lhs instanceof Operation) {
-      lhs = ((Operation) lhs).compile();
+    if (lhs instanceof Operation operation) {
+      lhs = operation.compile();
     }
     // If its a number lets just compute it and return it
-    if (lhs instanceof Number) {
-      return compute(lhs);
+    if (lhs instanceof Number lhsNumber) {
+      return compute(lhsNumber);
     }
     return this;
   }
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof NegateOperator) {
-      return (lhs.equals(((NegateOperator) test).lhs));
+    if (test instanceof NegateOperator operator) {
+      return (lhs.equals(operator.lhs));
     }
     return false;
   }

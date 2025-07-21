@@ -75,7 +75,7 @@ public class TensorFlowOperation extends AbstractModelOperations {
 
       // Retrieve the output tensor and extract the result
       try (Tensor outputTensor = outputs.get(0)) {
-        double[] result = new double[(int) outputTensor.shape().size(1)];
+        double[] result = new double[(int) outputTensor.shape().size()];
         outputTensor.asRawTensor().data().asDoubles().read(result);
         return result[0]; // Adjust this based on your model's output
       }
@@ -97,16 +97,16 @@ public class TensorFlowOperation extends AbstractModelOperations {
 
     for (int i = 0; i < features.length; i++) {
       Object feature = features[i];
-      if (feature instanceof Number) {
-        doubleFeatures[i] = ((Number) feature).doubleValue();
-      } else if (feature instanceof String) {
-        try {
-          doubleFeatures[i] = Double.parseDouble((String) feature);
-        } catch (NumberFormatException e) {
-          throw new IllegalArgumentException("Invalid string input: " + feature, e);
+      switch (feature) {
+        case Number featureNumber -> doubleFeatures[i] = (featureNumber).doubleValue();
+        case String featureString -> {
+          try {
+            doubleFeatures[i] = Double.parseDouble(featureString);
+          } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid string input: " + feature, e);
+          }
         }
-      } else {
-        throw new IllegalArgumentException(
+        default -> throw new IllegalArgumentException(
             "Unsupported input type: " + feature.getClass().getName());
       }
     }

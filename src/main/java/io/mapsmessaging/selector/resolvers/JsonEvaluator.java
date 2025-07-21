@@ -83,8 +83,8 @@ public class JsonEvaluator extends IdentifierMutator {
           System.arraycopy(searchPath, x+1, sub, 0, sub.length);
           return arrayLookup(json.getAsJsonArray(path), sub);
         }
-        else if(jsonLookup instanceof JsonObject){
-          json = (JsonObject) jsonLookup;
+        else if(jsonLookup instanceof JsonObject jsonObject){
+          json = jsonObject;
         }
         else{
           return jsonLookup;
@@ -98,15 +98,15 @@ public class JsonEvaluator extends IdentifierMutator {
     // We have an array, so the next element in the path must be an index ( ie number)
     var idx = Integer.parseInt(path[0]);
     Object lookup = array.get(idx);
-    if(lookup instanceof JsonObject){
+    if(lookup instanceof JsonObject jsonObject){
       var sub = new String[path.length-1];
       System.arraycopy(path, 1, sub, 0, sub.length);
-      return locateObject( (JsonObject) lookup, sub);
+      return locateObject( jsonObject, sub);
     }
-    else if(lookup instanceof JsonArray){
+    else if(lookup instanceof JsonArray jsonArray){
       var sub = new String[path.length-1];
       System.arraycopy(path, 1, sub, 0, sub.length);
-      return arrayLookup( (JsonArray) lookup, sub);
+      return arrayLookup( jsonArray, sub);
     }
     return lookup;
   }
@@ -121,8 +121,8 @@ public class JsonEvaluator extends IdentifierMutator {
         lookup instanceof Long) {
       return lookup;
     }
-    else if(lookup instanceof BigDecimal){
-      return ((BigDecimal)lookup).doubleValue();
+    else if(lookup instanceof BigDecimal bigDecimal){
+      return bigDecimal.doubleValue();
     }
     return null;
   }

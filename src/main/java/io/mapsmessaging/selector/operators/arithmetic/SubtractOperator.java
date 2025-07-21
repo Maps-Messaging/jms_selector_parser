@@ -56,9 +56,8 @@ public class SubtractOperator extends ArithmeticOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof SubtractOperator) {
-      return (lhs.equals(((SubtractOperator) test).lhs)
-          && rhs.equals(((SubtractOperator) test).rhs));
+    if (test instanceof SubtractOperator operator) {
+      return (lhs.equals(operator.lhs) && rhs.equals(operator.rhs));
     }
     return false;
   }

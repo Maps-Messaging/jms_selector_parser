@@ -103,8 +103,8 @@ public class JsonParserExtension implements ParserExtension {
           var sub = new String[searchPath.length - (x + 1)];
           System.arraycopy(searchPath, x + 1, sub, 0, sub.length);
           return arrayLookup(json.getAsJsonArray(path), sub);
-        } else if (jsonObject instanceof JsonObject) {
-          json = (JsonObject) jsonObject;
+        } else if (jsonObject instanceof JsonObject jsonObject1) {
+          json = jsonObject1;
         } else {
           return jsonObject;
         }
@@ -117,21 +117,20 @@ public class JsonParserExtension implements ParserExtension {
     // We have an array, so the next element in the path must be an index ( ie number)
     var idx = Integer.parseInt(path[0]);
     Object lookup = array.get(idx);
-    if (lookup instanceof JsonObject) {
+    if (lookup instanceof JsonObject jsonObject) {
       var sub = new String[path.length - 1];
       System.arraycopy(path, 1, sub, 0, sub.length);
-      return locateObject((JsonObject) lookup, sub);
-    } else if (lookup instanceof JsonArray) {
+      return locateObject(jsonObject, sub);
+    } else if (lookup instanceof JsonArray jsonArray) {
       var sub = new String[path.length - 1];
       System.arraycopy(path, 1, sub, 0, sub.length);
-      return arrayLookup((JsonArray) lookup, sub);
+      return arrayLookup(jsonArray, sub);
     }
     return lookup;
   }
 
   private Object parseJSON(Object lookup) {
-    if (lookup instanceof JsonPrimitive) {
-      JsonPrimitive primitive = (JsonPrimitive) lookup;
+    if (lookup instanceof JsonPrimitive primitive) {
       if (primitive.isBoolean()) {
         return primitive.getAsBoolean();
       } else if (primitive.isNumber()) {
@@ -152,8 +151,8 @@ public class JsonParserExtension implements ParserExtension {
         || lookup instanceof Integer
         || lookup instanceof Long) {
       return lookup;
-    } else if (lookup instanceof BigDecimal) {
-      return ((BigDecimal) lookup).doubleValue();
+    } else if (lookup instanceof BigDecimal bigDecimal) {
+      return bigDecimal.doubleValue();
     }
     return null;
   }
@@ -169,16 +168,13 @@ public class JsonParserExtension implements ParserExtension {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof JsonParserExtension) {
-      var rhs = (JsonParserExtension) test;
-      if (keyPath.length == rhs.keyPath.length) {
-        for (var x = 0; x < keyPath.length; x++) {
-          if (!keyPath[x].equals(rhs.keyPath[x])) {
-            return false;
-          }
+    if (test instanceof JsonParserExtension rhs && keyPath.length == rhs.keyPath.length) {
+      for (var x = 0; x < keyPath.length; x++) {
+        if (!keyPath[x].equals(rhs.keyPath[x])) {
+          return false;
         }
-        return true;
       }
+      return true;
     }
     return false;
   }

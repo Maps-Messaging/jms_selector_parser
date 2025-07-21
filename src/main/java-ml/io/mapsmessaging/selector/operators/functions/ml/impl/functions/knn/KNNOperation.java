@@ -24,39 +24,37 @@ import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperat
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.*;
-
 import smile.classification.KNN;
-import smile.classification.NaiveBayes;
 import smile.data.DataFrame;
-import smile.data.measure.NominalScale;
-import smile.stat.distribution.Distribution;
+
 
 public class KNNOperation extends LabeledDataMLModelOperation {
-  private final KNNFunction KNNFunction;
+
+  private final KNNFunction knnFunction;
   private KNN<double[]> knn;
 
   public KNNOperation(
       String modelName, String operationName, List<String> identity, long time, long samples)
       throws ModelException, IOException {
     super(modelName, identity, time, samples);
-    KNNFunction = computeFunction(operationName);
+    knnFunction = computeFunction(operationName);
   }
 
   private static KNNFunction computeFunction(String operation) throws ModelException {
-    switch (operation.toLowerCase()) {
-      case "classify":
-        return new ClassifyFunction();
-      default:
-        throw new ModelException("Expected either <classify> received " +operation);
+    if (operation.equalsIgnoreCase("classify")) {
+      return new ClassifyFunction();
     }
+    throw new ModelException("Expected either <classify> received " + operation);
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // Is no model to initialise
+  }
 
   @Override
   public String toString() {
-    return "knn (" + KNNFunction.getName() + ", " + super.toString() + ")";
+    return "knn (" + knnFunction.getName() + ", " + super.toString() + ")";
   }
 
   @Override
@@ -80,6 +78,6 @@ public class KNNOperation extends LabeledDataMLModelOperation {
 
   @Override
   public double applyModel(double[] data) {
-    return KNNFunction.compute(knn, data);
+    return knnFunction.compute(knn, data);
   }
 }

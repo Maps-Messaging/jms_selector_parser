@@ -44,11 +44,11 @@ public abstract class ArithmeticOperator extends ComputableOperator {
   }
 
   public Object compile() {
-    if (lhs instanceof Operation) {
-      lhs = ((Operation) lhs).compile();
+    if (lhs instanceof Operation operation) {
+      lhs = operation.compile();
     }
-    if (rhs instanceof Operation) {
-      rhs = ((Operation) rhs).compile();
+    if (rhs instanceof Operation operation) {
+      rhs = operation.compile();
     }
     return compile(lhs, rhs);
   }
@@ -59,8 +59,8 @@ public abstract class ArithmeticOperator extends ComputableOperator {
     if (lhsNumber == null || rhsNumber == null) {
       return false;
     }
-    if (lhsNumber instanceof Double) {
-      return processDouble((Double) lhsNumber, rhsNumber);
+    if (lhsNumber instanceof Double doubleLhs) {
+      return processDouble(doubleLhs, rhsNumber);
     } else {
       return processInteger((Long) lhsNumber, rhsNumber);
     }

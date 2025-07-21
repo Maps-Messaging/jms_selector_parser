@@ -35,11 +35,11 @@ public class BetweenOperator extends FunctionOperator {
   private final ComparisonOperator topOperator;
 
   public BetweenOperator(Object lhs, Object lowest, Object highest){
-    if(lowest instanceof Operation){
-      lowest = ((Operation)lowest).compile();
+    if(lowest instanceof Operation operation){
+      lowest = operation.compile();
     }
-    if(highest instanceof Operation){
-      highest = ((Operation)highest).compile();
+    if(highest instanceof Operation operation){
+      highest = operation.compile();
     }
 
     this.lhs = lhs;
@@ -75,10 +75,10 @@ public class BetweenOperator extends FunctionOperator {
 
   @Override
   public boolean equals(Object test){
-    if(test instanceof BetweenOperator){
-      return (lhs.equals(((BetweenOperator) test).lhs) &&
-          bottomOperator.equals(((BetweenOperator) test).bottomOperator) &&
-          topOperator.equals(((BetweenOperator) test).topOperator));
+    if(test instanceof BetweenOperator between){
+      return (lhs.equals(between.lhs) &&
+          bottomOperator.equals(between.bottomOperator) &&
+          topOperator.equals(between.topOperator));
     }
     return false;
   }

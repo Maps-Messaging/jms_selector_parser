@@ -32,7 +32,7 @@ public abstract class PCAOperation extends RawDataMLModelOperation {
   protected int index;
   private PCA pca;
 
-  public PCAOperation(
+  protected PCAOperation(
       String modelName, String operationName, List<String> identity, long time, long samples)
       throws ModelException, IOException {
     super(modelName, identity, time, samples);

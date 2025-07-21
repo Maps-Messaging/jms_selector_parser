@@ -56,9 +56,8 @@ public class MultiplyOperator extends ArithmeticOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof MultiplyOperator) {
-      return (lhs.equals(((MultiplyOperator) test).lhs)
-          && rhs.equals(((MultiplyOperator) test).rhs));
+    if (test instanceof MultiplyOperator operator) {
+      return (lhs.equals(operator.lhs) && rhs.equals(operator.rhs));
     }
     return false;
   }

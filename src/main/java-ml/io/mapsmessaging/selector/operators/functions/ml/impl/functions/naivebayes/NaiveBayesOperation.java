@@ -41,18 +41,18 @@ public class NaiveBayesOperation extends LabeledDataMLModelOperation {
   }
 
   private static NaiveBayesFunction computeFunction(String operation) throws ModelException {
-    switch (operation.toLowerCase()) {
-      case "classifyprob":
-        return new ClassifyProbFunction();
-      case "classify":
-        return new ClassifyFunction();
-      default:
-        throw new ModelException("Expected either <classify> or <classifyprob> received " +operation);
+    if (operation.equalsIgnoreCase("classifyprob")) {
+      return new ClassifyProbFunction();
+    } else if (operation.equalsIgnoreCase("classify")) {
+      return new ClassifyFunction();
     }
+    throw new ModelException("Expected either <classify> or <classifyprob> received " + operation);
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // no model to intialise
+  }
 
   @Override
   public String toString() {

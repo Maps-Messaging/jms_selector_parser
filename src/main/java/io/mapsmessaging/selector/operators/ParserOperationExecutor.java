@@ -34,8 +34,8 @@ public class ParserOperationExecutor implements ParserExecutor {
   public boolean evaluate(Object obj) {
     try {
       Object result = parser.evaluate(EvaluatorFactory.create(obj));
-      if (result instanceof Boolean) {
-        return (Boolean) result;
+      if (result instanceof Boolean bResult) {
+        return bResult;
       }
     } catch (ParseException e) {
 
@@ -51,8 +51,8 @@ public class ParserOperationExecutor implements ParserExecutor {
 
   @Override
   public boolean equals(Object rhs) {
-    if (rhs instanceof ParserOperationExecutor) {
-      return parser.equals(((ParserOperationExecutor) rhs).parser);
+    if (rhs instanceof ParserOperationExecutor operator) {
+      return parser.equals(operator.parser);
     }
     return false;
   }

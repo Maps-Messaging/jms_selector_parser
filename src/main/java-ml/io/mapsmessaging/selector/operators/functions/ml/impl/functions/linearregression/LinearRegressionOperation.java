@@ -33,7 +33,7 @@ public abstract class LinearRegressionOperation extends LabeledDataMLModelOperat
   private final LinearRegressionFunction linearRegressionFunction;
   private LinearModel linearModel;
 
-  public LinearRegressionOperation(
+  protected LinearRegressionOperation(
       String modelName, String operationName, List<String> identity, long time, long samples)
       throws ModelException, IOException {
     super(modelName, identity, time, samples);

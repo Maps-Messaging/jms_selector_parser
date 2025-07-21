@@ -55,9 +55,8 @@ public class GreaterOrEqualOperator extends ComparisonOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof GreaterOrEqualOperator) {
-      return (lhs.equals(((GreaterOrEqualOperator) test).lhs)
-          && rhs.equals(((GreaterOrEqualOperator) test).rhs));
+    if (test instanceof GreaterOrEqualOperator operator) {
+      return (lhs.equals(operator.lhs) && rhs.equals(operator.rhs));
     }
     return false;
   }

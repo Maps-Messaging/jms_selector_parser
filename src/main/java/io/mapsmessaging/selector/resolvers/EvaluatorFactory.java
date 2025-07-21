@@ -28,14 +28,14 @@ public class EvaluatorFactory {
 
   @SuppressWarnings("unchecked")
   public static IdentifierResolver create(Object obj){
-    if (obj instanceof IdentifierResolver) {
-      return (IdentifierResolver) obj;
+    if (obj instanceof IdentifierResolver identifierResolver) {
+      return identifierResolver;
     }
     if (obj instanceof Map) {
       return new MapEvaluator((Map<String, Object>) obj);
     }
-    if(obj instanceof JsonObject){
-      return new JsonEvaluator((JsonObject) obj);
+    if(obj instanceof JsonObject jsonObject){
+      return new JsonEvaluator(jsonObject);
     }
     return new BeanEvaluator(obj);
   }

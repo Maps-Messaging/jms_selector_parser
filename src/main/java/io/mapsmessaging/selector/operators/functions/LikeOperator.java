@@ -89,8 +89,8 @@ public class LikeOperator extends FunctionOperator {
   }
 
   public Object compile() {
-    if (lhs instanceof String) {
-      return compare((String) lhs, searchPattern);
+    if (lhs instanceof String lhsString) {
+      return compare(lhsString, searchPattern);
     }
     return this;
   }
@@ -150,7 +150,7 @@ public class LikeOperator extends FunctionOperator {
 
     // We have detected the escape character, so we need to test the next char as a literal and not
     // a wild card element
-    if (hasEscape && (wildcard.length() > 0 && wildcard.charAt(0) == escape)) {
+    if (hasEscape && (!wildcard.isEmpty() && wildcard.charAt(0) == escape)) {
       // skip the escape char and now we do a direct test
       wildcard = wildcard.substring(1);
       if (wildcard.charAt(0) != sourceString.charAt(0)) { // Doesn't match
@@ -160,26 +160,26 @@ public class LikeOperator extends FunctionOperator {
     }
 
     // This is the end of the strings, we have matched to here
-    if (wildcard.length() == 0 && sourceString.length() == 0) {
+    if (wildcard.isEmpty() && sourceString.isEmpty()) {
       return true;
     }
 
     // Check for multiple character wild cards and see if we have run off the end of the string
     if (wildcard.length() > 1
         && wildcard.charAt(0) == MULTI_CHARACTER
-        && sourceString.length() == 0) return false;
+        && sourceString.isEmpty()) return false;
 
     // Check both the first and last entry in the wildcard and see if we can handle a single
     // character
-    if ((wildcard.length() > 0 && wildcard.charAt(0) == SINGLE_CHARACTER)
-        || (wildcard.length() > 0
-            && sourceString.length() > 0
+    if ((!wildcard.isEmpty() && wildcard.charAt(0) == SINGLE_CHARACTER)
+        || (!wildcard.isEmpty()
+            && !sourceString.isEmpty()
             && wildcard.charAt(0) == sourceString.charAt(0))) {
       return compare(sourceString.substring(1), wildcard.substring(1));
     }
 
     // We are either at the end of the wild card and its a multiple wildcard or there is more to go
-    if (wildcard.length() > 0 && wildcard.charAt(0) == MULTI_CHARACTER) {
+    if (!wildcard.isEmpty() && wildcard.charAt(0) == MULTI_CHARACTER) {
       return compare(sourceString, wildcard.substring(1))
           || compare(sourceString.substring(1), wildcard);
     }
@@ -199,10 +199,10 @@ public class LikeOperator extends FunctionOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof LikeOperator) {
-      return (lhs.equals(((LikeOperator) test).lhs)
-          && searchPattern.equals(((LikeOperator) test).searchPattern)
-          && escape == (((LikeOperator) test).escape));
+    if (test instanceof LikeOperator operator) {
+      return (lhs.equals(operator.lhs)
+          && searchPattern.equals(operator.searchPattern)
+          && escape == (operator.escape));
     }
     return false;
   }

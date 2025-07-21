@@ -37,14 +37,14 @@ public class Identifier extends Operation {
     }
     Object response = resolver.get(key);
     if (response != null) {
-      if (response instanceof Number) {
+      if (response instanceof Number number) {
         if (response instanceof Double) {
-          return ((Number) response).doubleValue();
+          return number.doubleValue();
         }
         if (response instanceof Float) {
-          return ((Number) response).floatValue();
+          return number.floatValue();
         }
-        return ((Number) response).longValue();
+        return number.longValue();
       }
       return response;
     }
@@ -53,8 +53,8 @@ public class Identifier extends Operation {
 
   @Override
   public boolean equals(Object rhs) {
-    if (rhs instanceof Identifier) {
-      return key.equals(((Identifier) rhs).key);
+    if (rhs instanceof Identifier identifier) {
+      return key.equals(identifier.key);
     }
     return false;
   }

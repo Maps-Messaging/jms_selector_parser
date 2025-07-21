@@ -41,18 +41,18 @@ public class IsolationForestOperation extends RawDataMLModelOperation {
   }
 
   private static IsolationForestFunction computeFunction(String operation) throws ModelException {
-    switch (operation.toLowerCase()) {
-      case "is_anomaly":
-        return new IsAnomalyFunction();
-      case "score":
-        return new ScoreFunction();
-      default:
-        throw new ModelException("Expected <score> or <is_anomaly> received [" + operation+"]");
+    if (operation.equalsIgnoreCase("is_anomaly")) {
+      return new IsAnomalyFunction();
+    } else if (operation.equalsIgnoreCase("score")) {
+      return new ScoreFunction();
     }
+    throw new ModelException("Expected <score> or <is_anomaly> received [" + operation + "]");
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // no model to initialise
+  }
 
   @Override
   public void buildModel(DataFrame data) {

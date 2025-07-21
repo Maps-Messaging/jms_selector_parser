@@ -41,8 +41,8 @@ public class SetAction extends Action {
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object lhsLookup = evaluate(lhs, resolver);
     Object rhsLookup = evaluate(rhs, resolver);
-    if (lhsLookup != null && resolver instanceof IdentifierMutator) {
-      return ((IdentifierMutator) resolver).set(lhsLookup.toString(), rhsLookup);
+    if (lhsLookup != null && resolver instanceof IdentifierMutator identifierMutator) {
+      return identifierMutator.set(lhsLookup.toString(), rhsLookup);
     }
     return false;
   }
@@ -53,8 +53,8 @@ public class SetAction extends Action {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof SetAction) {
-      return (lhs.equals(((SetAction) test).lhs));
+    if (test instanceof SetAction operation) {
+      return (lhs.equals(operation.lhs));
     }
     return false;
   }

@@ -50,8 +50,8 @@ public abstract class ComputableOperator extends Operation {
     lhs = compile(lhs);
     rhs = compile(rhs);
     if (lhs instanceof Number && rhs instanceof Number) {
-      if (lhs instanceof Double) {
-        return processDouble((Double) lhs, (Number) rhs);
+      if (lhs instanceof Double lhsDouble) {
+        return processDouble(lhsDouble, (Number) rhs);
       }
       return processInteger((Long) lhs, (Number) rhs);
     }

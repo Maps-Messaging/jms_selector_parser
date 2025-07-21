@@ -68,8 +68,8 @@ public class DivideOperator extends ArithmeticOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof DivideOperator) {
-      return (lhs.equals(((DivideOperator) test).lhs) && rhs.equals(((DivideOperator) test).rhs));
+    if (test instanceof DivideOperator operator) {
+      return (lhs.equals(operator.lhs) && rhs.equals(operator.rhs));
     }
     return false;
   }

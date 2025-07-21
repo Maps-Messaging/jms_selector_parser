@@ -38,11 +38,11 @@ public class RemoveAction extends Action {
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object lookup = evaluate(lhs, resolver);
-    if (resolver instanceof IdentifierMutator && lookup != null) {
-      if (lookup instanceof String) {
-        return ((IdentifierMutator) resolver).remove((String) lookup);
+    if (resolver instanceof IdentifierMutator identifierMutator&& lookup != null) {
+      if (lookup instanceof String lookupString) {
+        return identifierMutator.remove(lookupString);
       }
-      return ((IdentifierMutator) resolver).remove(lookup.toString());
+      return identifierMutator.remove(lookup.toString());
     }
     return false;
   }
@@ -53,8 +53,8 @@ public class RemoveAction extends Action {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof RemoveAction) {
-      return (lhs.equals(((RemoveAction) test).lhs));
+    if (test instanceof RemoveAction operation) {
+      return (lhs.equals(operation.lhs));
     }
     return false;
   }

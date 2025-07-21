@@ -23,7 +23,6 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.lda;
 import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import smile.classification.LDA;
 import smile.data.DataFrame;
@@ -40,18 +39,18 @@ public class LDAOperation extends LabeledDataMLModelOperation {
   }
 
   private static LDAFunction computeFunction(String op) throws ModelException {
-    switch (op.toLowerCase()) {
-      case "predictprob":
-        return new PredictProbFunction();
-      case "predict":
-        return new PredictFunction();
-      default:
-        throw new ModelException("Expected <predictprob> or <predictprob> received [" + op+"]");
+    if (op.equalsIgnoreCase("predictprob")) {
+      return new PredictProbFunction();
+    } else if (op.equalsIgnoreCase("predict")) {
+      return new PredictFunction();
     }
+    throw new ModelException("Expected <predictprob> or <predictprob> received [" + op + "]");
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // no model to initialise
+  }
 
   @Override
   public void buildModel(DataFrame data) throws ModelException {

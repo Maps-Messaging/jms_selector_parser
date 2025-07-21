@@ -98,8 +98,7 @@ public class MLFunction extends Operation {
           return new KMeansLloydClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "ridge":
           return new RidgeRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "ols":
-        case "linear_regression":
+        case "ols","linear_regression":
           return new OlsRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "lasso":
           return new LassoRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
@@ -107,8 +106,7 @@ public class MLFunction extends Operation {
           return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "naive_bayes":
           return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "pca":
-        case "pca_fit":
+        case "pca","pca_fit":
           return new PCAFitOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "pca_cor":
           return new PCACorOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
@@ -126,8 +124,7 @@ public class MLFunction extends Operation {
           return new LDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
         case "knn":
           return new KNNOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
-        case "one_class_svm":
-        case "svm":
+        case "svm", "one_class_svm":
           throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow":
           return new TensorFlowOperation(modelName, identifiers);

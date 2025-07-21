@@ -56,8 +56,8 @@ public class AddOperator extends ArithmeticOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof AddOperator) {
-      return (lhs.equals(((AddOperator) test).lhs) && rhs.equals(((AddOperator) test).rhs));
+    if (test instanceof AddOperator addOperator) {
+      return (lhs.equals(addOperator.lhs) && rhs.equals(addOperator.rhs));
     }
     return false;
   }

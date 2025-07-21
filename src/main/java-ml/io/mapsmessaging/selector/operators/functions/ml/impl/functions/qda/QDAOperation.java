@@ -39,18 +39,18 @@ public class QDAOperation extends LabeledDataMLModelOperation {
   }
 
   private static QDAFunction computeFunction(String op) throws ModelException {
-    switch (op.toLowerCase()) {
-      case "predictprob":
-        return new PredictProbFunction();
-      case "predict":
-        return new PredictFunction();
-      default:
-        throw new ModelException("Expected either <predictprob> or <predict> received " +op);
+    if (op.equalsIgnoreCase("predictprob")) {
+      return new PredictProbFunction();
+    } else if (op.equalsIgnoreCase("predict")) {
+      return new PredictFunction();
     }
+    throw new ModelException("Expected either <predictprob> or <predict> received " + op);
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // No model to initialise
+  }
 
   @Override
   public void buildModel(DataFrame data) throws ModelException {

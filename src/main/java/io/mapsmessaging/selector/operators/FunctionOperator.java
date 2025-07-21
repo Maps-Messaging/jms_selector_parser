@@ -33,10 +33,10 @@ public abstract class FunctionOperator extends Operation {
       if (result instanceof Double) {
         return result;
       }
-      if (result instanceof Float) {
-        return ((Float) result).doubleValue();
-      } else if (result instanceof Number) {
-        return ((Number) result).longValue(); // Forces byte, short, int all to long
+      if (result instanceof Float floatResult) {
+        return floatResult.doubleValue();
+      } else if (result instanceof Number numberResult) {
+        return numberResult.longValue(); // Forces byte, short, int all to long
       }
       return result;
     }

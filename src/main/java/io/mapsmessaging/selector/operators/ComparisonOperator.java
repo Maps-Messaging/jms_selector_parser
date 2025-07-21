@@ -44,11 +44,11 @@ public abstract class ComparisonOperator extends ComputableOperator {
   }
 
   public Object compile() {
-    if (lhs instanceof Operation) {
-      lhs = ((Operation) lhs).compile();
+    if (lhs instanceof Operation operation) {
+      lhs = operation.compile();
     }
-    if (rhs instanceof Operation) {
-      rhs = ((Operation) rhs).compile();
+    if (rhs instanceof Operation operation) {
+      rhs = operation.compile();
     }
     if ((lhs instanceof Number && rhs instanceof Number)
         || (lhs instanceof Boolean && rhs instanceof Boolean)
@@ -65,25 +65,25 @@ public abstract class ComparisonOperator extends ComputableOperator {
   }
 
   public Object evaluate(Object lhsValue, Object rhsValue) {
-    if (lhsValue instanceof String && rhsValue instanceof String) {
-      return compute((String) lhsValue, (String) rhsValue);
+    if (lhsValue instanceof String  lhsString && rhsValue instanceof String rhsString) {
+      return compute(lhsString, rhsString);
     }
 
-    if (lhsValue instanceof Boolean && rhsValue instanceof Boolean) {
-      return compute((Boolean) lhsValue, (Boolean) rhsValue);
+    if (lhsValue instanceof Boolean lhsBoolean && rhsValue instanceof Boolean rhsBoolean) {
+      return compute(lhsBoolean,rhsBoolean);
     }
 
-    if (lhsValue instanceof Number && rhsValue instanceof Number) {
-      return processNumber((Number) lhsValue, (Number) rhsValue);
+    if (lhsValue instanceof Number lhsNumber && rhsValue instanceof Number rhsNumber) {
+      return processNumber(lhsNumber, rhsNumber);
     }
 
-    if (lhsValue instanceof String && rhsValue != null) {
-      var lhsNumber = parseStringToNumber((String) lhsValue);
+    if (lhsValue instanceof String lhsString && rhsValue != null) {
+      var lhsNumber = parseStringToNumber(lhsString);
       if (lhsNumber != null) {
         return evaluate(lhsNumber, rhsValue);
       }
-    } else if (rhsValue instanceof String && lhsValue != null) {
-      var rhsNumber = parseStringToNumber((String) rhsValue);
+    } else if (rhsValue instanceof String rhsString && lhsValue != null) {
+      var rhsNumber = parseStringToNumber(rhsString);
       if (rhsNumber != null) {
         return evaluate(lhsValue, rhsNumber);
       }
@@ -92,14 +92,11 @@ public abstract class ComparisonOperator extends ComputableOperator {
   }
 
   private Object processNumber(Number lhsNumber, Number rhsNumber) {
-    if (lhsNumber instanceof Double) {
-      return processDouble((Double) lhsNumber, rhsNumber);
-    } else if (lhsNumber instanceof Float) {
-      return processFloat((Float) lhsNumber, rhsNumber);
-
-    } else {
-      return processInteger((Long) lhsNumber, rhsNumber);
-    }
+    return switch (lhsNumber) {
+      case Double lhsDouble -> processDouble(lhsDouble, rhsNumber);
+      case Float lhsFloat -> processFloat(lhsFloat, rhsNumber);
+      case null, default -> processInteger((Long) lhsNumber, rhsNumber);
+    };
   }
 
   // Regardless of the arguments we can not compare strings by default

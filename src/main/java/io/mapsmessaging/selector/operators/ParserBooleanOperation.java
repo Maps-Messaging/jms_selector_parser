@@ -40,8 +40,8 @@ public class ParserBooleanOperation implements ParserExecutor {
 
   @Override
   public boolean equals(Object rhs) {
-    if (rhs instanceof ParserBooleanOperation) {
-      return result.equals(((ParserBooleanOperation) rhs).result);
+    if (rhs instanceof ParserBooleanOperation operation) {
+      return result.equals(operation.result);
     }
     return false;
   }

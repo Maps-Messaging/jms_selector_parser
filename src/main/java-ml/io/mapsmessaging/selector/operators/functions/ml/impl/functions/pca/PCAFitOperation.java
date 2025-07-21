@@ -26,6 +26,7 @@ import java.util.List;
 import smile.data.DataFrame;
 import smile.feature.extraction.PCA;
 
+@SuppressWarnings("java:S110") // Yes we go to 6 deep, but this can not be helped when integrating ML
 public class PCAFitOperation extends PCAOperation {
 
   public PCAFitOperation(

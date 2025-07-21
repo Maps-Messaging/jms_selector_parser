@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.List;
 import smile.data.DataFrame;
 
-
 public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected final List<double[]> dataBuffer = new ArrayList<>();
 

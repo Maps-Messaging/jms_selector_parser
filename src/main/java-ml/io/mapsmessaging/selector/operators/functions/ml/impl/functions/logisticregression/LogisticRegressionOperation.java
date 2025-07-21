@@ -51,7 +51,9 @@ public class LogisticRegressionOperation extends LabeledDataMLModelOperation {
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // No model to initialise
+  }
 
   @Override
   public void buildModel(DataFrame data) throws ModelException {

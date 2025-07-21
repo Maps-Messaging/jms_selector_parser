@@ -28,6 +28,7 @@ import smile.data.formula.Formula;
 import smile.regression.LinearModel;
 import smile.regression.OLS;
 
+@SuppressWarnings("java:S110") // Yes we go to 6 deep, but this can not be helped when integrating ML
 public class OlsRegressionOperation extends LinearRegressionOperation {
 
   public OlsRegressionOperation(

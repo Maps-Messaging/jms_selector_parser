@@ -49,8 +49,8 @@ public class ParserProxy extends FunctionOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof ParserProxy) {
-      return parser.equals(((ParserProxy) test).parser);
+    if (test instanceof ParserProxy parserProxy) {
+      return parser.equals(parserProxy.parser);
     }
     return false;
   }

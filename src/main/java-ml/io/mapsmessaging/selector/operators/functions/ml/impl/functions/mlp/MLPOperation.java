@@ -40,18 +40,18 @@ public class MLPOperation extends LabeledDataMLModelOperation {
   }
 
   private static MLPFunction computeFunction(String op) throws ModelException {
-    switch (op.toLowerCase()) {
-      case "predictprob":
-        return new PredictProbFunction();
-      case "predict":
-        return new PredictFunction();
-      default:
-        throw new ModelException("Expected either <predict> or <predictprob> received " +op);
+    if (op.equalsIgnoreCase("predictprob")) {
+      return new PredictProbFunction();
+    } else if (op.equalsIgnoreCase("predict")) {
+      return new PredictFunction();
     }
+    throw new ModelException("Expected either <predict> or <predictprob> received " + op);
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // no model to create
+  }
 
   @Override
   public void buildModel(DataFrame data) throws ModelException {

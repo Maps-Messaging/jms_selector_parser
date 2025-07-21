@@ -27,6 +27,7 @@ import smile.clustering.CentroidClustering;
 import smile.clustering.Clustering;
 import smile.clustering.XMeans;
 
+@SuppressWarnings("java:S110") // Yes we go to 6 deep, but this can not be helped when integrating ML
 public class XMeansClusterOperation extends ClusteringOperation {
 
   public XMeansClusterOperation(

@@ -30,16 +30,16 @@ public abstract class Operation {
   public abstract Object compile();
 
   protected Object compile(Object test) {
-    if (test instanceof Operation) {
-      return ((Operation) test).compile();
+    if (test instanceof Operation operation) {
+      return operation.compile();
     }
     return test;
   }
 
   protected static Object evaluate(Object parameter, IdentifierResolver resolver)
       throws ParseException {
-    if (parameter instanceof Operation) {
-      return ((Operation) parameter).evaluate(resolver);
+    if (parameter instanceof Operation operation) {
+      return operation.evaluate(resolver);
     } else {
       return parameter;
     }
@@ -48,10 +48,10 @@ public abstract class Operation {
   protected static Number evaluateToNumber(Object parameter, IdentifierResolver resolver)
       throws ParseException {
     Object result = evaluate(parameter, resolver);
-    if (result instanceof Number) {
-      return (Number) result;
-    } else if (result instanceof String) {
-      return parseStringToNumber((String) result);
+    if (result instanceof Number nResult) {
+      return nResult;
+    } else if (result instanceof String sResult) {
+      return parseStringToNumber(sResult);
     } else if (result == null) {
       return null;
     }

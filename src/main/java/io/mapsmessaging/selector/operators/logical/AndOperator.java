@@ -42,14 +42,14 @@ public class AndOperator extends LogicalOperator {
   }
 
   public Object compile() {
-    if (lhs instanceof Operation) {
-      lhs = ((Operation) lhs).compile();
+    if (lhs instanceof Operation operation) {
+      lhs = operation.compile();
     }
-    if (rhs instanceof Operation) {
-      rhs = ((Operation) rhs).compile();
+    if (rhs instanceof Operation operation) {
+      rhs = operation.compile();
     }
-    if (lhs instanceof Boolean && rhs instanceof Boolean) {
-      return ((Boolean) lhs) && ((Boolean) rhs);
+    if (lhs instanceof Boolean lhsBoolean && rhs instanceof Boolean rhsBoolean) {
+      return (lhsBoolean  && rhsBoolean);
     }
     if (rhs instanceof Boolean) {
       if (Boolean.TRUE.equals(rhs)) {
@@ -68,8 +68,8 @@ public class AndOperator extends LogicalOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof AndOperator) {
-      return (lhs.equals(((AndOperator) test).lhs) && rhs.equals(((AndOperator) test).rhs));
+    if (test instanceof AndOperator andOperator) {
+      return (lhs.equals(andOperator.lhs) && rhs.equals(andOperator.rhs));
     }
     return false;
   }

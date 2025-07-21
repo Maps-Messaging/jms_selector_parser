@@ -37,8 +37,8 @@ public class InOperator extends FunctionOperator {
   }
 
   public Object compile(){
-    if(lhs instanceof String){
-      return evaluate((String)lhs);
+    if(lhs instanceof String lhsString){
+      return evaluate(lhsString);
     }
     return this;
   }
@@ -47,8 +47,8 @@ public class InOperator extends FunctionOperator {
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object lookup = evaluate(lhs, resolver);
     if(lookup != null) {
-      if(lookup instanceof String){
-        return evaluate((String)lookup);
+      if(lookup instanceof String lookupString){
+        return evaluate(lookupString);
       }
       return evaluate(lookup.toString());
     }
@@ -74,9 +74,8 @@ public class InOperator extends FunctionOperator {
 
   @Override
   public boolean equals(Object test){
-    if(test instanceof InOperator){
-      return (lhs.equals(((InOperator) test).lhs) &&
-          set.equals(((InOperator) test).set));
+    if(test instanceof InOperator operator){
+      return (lhs.equals(operator.lhs) && set.equals(operator.set));
     }
     return false;
   }

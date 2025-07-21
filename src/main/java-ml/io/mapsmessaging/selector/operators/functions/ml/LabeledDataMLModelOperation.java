@@ -20,11 +20,10 @@
 
 package io.mapsmessaging.selector.operators.functions.ml;
 
-import smile.data.DataFrame;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import smile.data.DataFrame;
 
 public abstract class LabeledDataMLModelOperation extends AbstractMLModelOperation {
 

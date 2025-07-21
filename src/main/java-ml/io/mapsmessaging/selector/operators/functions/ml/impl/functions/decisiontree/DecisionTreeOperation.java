@@ -23,7 +23,6 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.decision
 import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import smile.classification.DecisionTree;
 import smile.data.DataFrame;
@@ -43,18 +42,18 @@ public class DecisionTreeOperation extends LabeledDataMLModelOperation {
   }
 
   private static DecisionTreeFunction computeFunction(String operation) throws ModelException {
-    switch (operation.toLowerCase()) {
-      case "classifyprob":
-        return new ClassifyProbFunction();
-      case "classify":
-        return new ClassifyInstanceFunction();
-      default:
-        throw new ModelException("Expected <classify> or <classifyprob> received [" + operation+"]");
+    if (operation.equalsIgnoreCase("classifyprob")) {
+      return new ClassifyProbFunction();
+    } else if (operation.equalsIgnoreCase("classify")) {
+      return new ClassifyInstanceFunction();
     }
+    throw new ModelException("Expected <classify> or <classifyprob> received [" + operation + "]");
   }
 
   @Override
-  protected void initializeSpecificModel() {}
+  protected void initializeSpecificModel() {
+    // There is no model to initialise
+  }
 
   @Override
   public void buildModel(DataFrame data) throws ModelException {

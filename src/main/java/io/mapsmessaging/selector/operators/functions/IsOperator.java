@@ -58,8 +58,8 @@ public class IsOperator extends FunctionOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof IsOperator) {
-      return (lhs.equals(((IsOperator) test).lhs) && not == ((IsOperator) test).not);
+    if (test instanceof IsOperator operator) {
+      return (lhs.equals(operator.lhs) && not == operator.not);
     }
     return false;
   }

@@ -46,15 +46,13 @@ public class OrOperator extends LogicalOperator {
   }
 
   public Object compile() {
-    if (lhs instanceof Operation) {
-      lhs = ((Operation) lhs).compile();
+    if (lhs instanceof Operation operation) {
+      lhs = operation.compile();
     }
-    if (rhs instanceof Operation) {
-      rhs = ((Operation) rhs).compile();
+    if (rhs instanceof Operation operation) {
+      rhs = operation.compile();
     }
-    if (lhs instanceof Boolean && rhs instanceof Boolean) {
-      boolean bLhs = (Boolean) lhs;
-      boolean bRhs = (Boolean) rhs;
+    if (lhs instanceof Boolean bLhs && rhs instanceof Boolean bRhs) {
       return bLhs || bRhs;
     }
     if (lhs instanceof Boolean && Boolean.TRUE.equals(lhs)) {
@@ -73,8 +71,8 @@ public class OrOperator extends LogicalOperator {
 
   @Override
   public boolean equals(Object test) {
-    if (test instanceof OrOperator) {
-      return (lhs.equals(((OrOperator) test).lhs) && rhs.equals(((OrOperator) test).rhs));
+    if (test instanceof OrOperator operator) {
+      return (lhs.equals(operator.lhs) && rhs.equals(operator.rhs));
     }
     return false;
   }
