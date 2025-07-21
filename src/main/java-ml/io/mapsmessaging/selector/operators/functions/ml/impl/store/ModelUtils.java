@@ -39,8 +39,6 @@ import smile.io.Read;
 import smile.io.Write;
 
 public class ModelUtils {
-  private static final long MAX_ENTRY_SIZE = 1024L * 1024L * 1024L;
-
   @Getter
   @Setter
   private static long thresholdsize = 100_000_000L; // Maximum allowed uncompressed size (adjust as needed)
@@ -55,7 +53,7 @@ public class ModelUtils {
   private ModelUtils() {}
 
   // Load a TensorFlow model from a byte array
-  @SuppressWarnings({"java:S5443", "java.S5042"}) // yes it is safe to do, I check the max size of the zip
+  @SuppressWarnings({"java:S5443", "java:S5042"}) // yes it is safe to do, I check the max size of the zip
   public static SavedModelBundle byteArrayToModel(byte[] data, String modelDir) throws IOException {
     // Constants for threshold checks
 
@@ -76,9 +74,6 @@ public class ModelUtils {
     try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(data))) {
       ZipEntry zipEntry;
       while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-        if (zipEntry.getSize() > MAX_ENTRY_SIZE) {
-          throw new IOException("ZIP entry too large: " + zipEntry.getName());
-        }
         totalEntryArchive++;
         if (totalEntryArchive > thresholdentries) {
           throw new IOException("Too many entries in ZIP file");
@@ -92,6 +87,7 @@ public class ModelUtils {
     return SavedModelBundle.load(tempDir.toString(), "serve");
   }
 
+  @SuppressWarnings({"java:S5443", "java.S5042"}) // yes it is safe to do, I check the max size of the zip
   private static long processEntry(Path tempDir, ZipInputStream zipInputStream, ZipEntry zipEntry, long totalSizeArchive) throws IOException {
     // Check number of entries to prevent Zip Bomb attack
 
