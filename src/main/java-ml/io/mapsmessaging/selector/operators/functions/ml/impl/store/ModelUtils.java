@@ -24,6 +24,8 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +33,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.tensorflow.SavedModelBundle;
 import smile.data.DataFrame;
@@ -38,6 +41,7 @@ import smile.data.Tuple;
 import smile.io.Read;
 import smile.io.Write;
 
+@Slf4j
 public class ModelUtils {
   @Getter
   @Setter
@@ -78,7 +82,11 @@ public class ModelUtils {
         if (totalEntryArchive > thresholdentries) {
           throw new IOException("Too many entries in ZIP file");
         }
-        totalSizeArchive = processEntry(tempDir, zipInputStream, zipEntry, totalSizeArchive);
+        try {
+          totalSizeArchive = processEntry(tempDir, zipInputStream, zipEntry, totalSizeArchive);
+        } catch (IOException e) {
+          log.atDebug().log("Error processing entry: " + zipEntry.getName()+", entry ignored");
+        }
         zipInputStream.closeEntry();
       }
     }
@@ -90,8 +98,8 @@ public class ModelUtils {
   @SuppressWarnings({"java:S5443", "java.S5042"}) // yes it is safe to do, I check the max size of the zip
   private static long processEntry(Path tempDir, ZipInputStream zipInputStream, ZipEntry zipEntry, long totalSizeArchive) throws IOException {
     // Check number of entries to prevent Zip Bomb attack
+    Path filePath = parseAndValidatePath(zipEntry.getName(), tempDir);
 
-    Path filePath = tempDir.resolve(zipEntry.getName());
     if (zipEntry.isDirectory()) {
       Files.createDirectories(filePath);
     } else {
@@ -123,6 +131,40 @@ public class ModelUtils {
       totalSizeArchive += uncompressedSize;
     }
     return totalSizeArchive;
+  }
+
+  private static Path parseAndValidatePath(String entryName,Path tempDir ) throws IOException {
+    entryName = Normalizer.normalize(entryName, Normalizer.Form.NFC);
+    String lowerName = entryName.toLowerCase(Locale.ROOT);
+     //
+     // Validate the filename and loo for obvious issues
+     //
+    if (lowerName.endsWith(".sh") || lowerName.endsWith(".exe") || lowerName.endsWith(".bat") || lowerName.endsWith(".dll")) {
+      throw new IOException("Executable content not allowed in ZIP: " + entryName);
+    }
+    if (entryName.startsWith(".") || entryName.contains("/.") || entryName.contains("\\.")) {
+      throw new IOException("Hidden or dotfile entry not allowed: " + entryName);
+    }
+    if (Paths.get(entryName).isAbsolute()) {
+      throw new IOException("Absolute paths not allowed in ZIP: " + entryName);
+    }
+    if (entryName.chars().anyMatch(c -> c < 0x20 && c != '\t')) {
+      throw new IOException("Invalid control characters in ZIP entry: " + entryName);
+    }
+
+    //
+    // Now check locations of files and types
+    //
+    Path normalizedPath = tempDir.resolve(entryName).normalize();
+    if (!normalizedPath.startsWith(tempDir)) {
+      throw new IOException("Invalid ZIP entry: potential path traversal attack: " + entryName);
+    }
+
+    if (Files.isSymbolicLink(normalizedPath)) {
+      throw new IOException("ZIP entry is a symlink, not allowed: " + entryName);
+    }
+
+    return normalizedPath;
   }
 
   @SuppressWarnings({"java:S5443"})
