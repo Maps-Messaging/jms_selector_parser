@@ -28,6 +28,8 @@ import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import java.io.IOException;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
@@ -37,6 +39,7 @@ import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.types.TFloat64;
 
+@Slf4j
 public class TensorFlowOperation extends AbstractModelOperations {
   private SavedModelBundle model;
 
@@ -45,7 +48,7 @@ public class TensorFlowOperation extends AbstractModelOperations {
     try {
       initializeModel();
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      log.error(e.getMessage());
     }
   }
 
