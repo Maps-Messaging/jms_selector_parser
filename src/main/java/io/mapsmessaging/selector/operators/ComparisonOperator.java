@@ -92,11 +92,14 @@ public abstract class ComparisonOperator extends ComputableOperator {
   }
 
   private Object processNumber(Number lhsNumber, Number rhsNumber) {
-    return switch (lhsNumber) {
-      case Double lhsDouble -> processDouble(lhsDouble, rhsNumber);
-      case Float lhsFloat -> processFloat(lhsFloat, rhsNumber);
-      case null, default -> processInteger((Long) lhsNumber, rhsNumber);
-    };
+    if (lhsNumber instanceof Double lhsDouble) {
+      return processDouble(lhsDouble, rhsNumber);
+    } else if (lhsNumber instanceof Float lhsFloat) {
+      return processFloat(lhsFloat, rhsNumber);
+
+    } else {
+      return processInteger((Long) lhsNumber, rhsNumber);
+    }
   }
 
   // Regardless of the arguments we can not compare strings by default

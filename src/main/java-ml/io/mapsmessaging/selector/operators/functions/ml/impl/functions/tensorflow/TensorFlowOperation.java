@@ -97,17 +97,16 @@ public class TensorFlowOperation extends AbstractModelOperations {
 
     for (int i = 0; i < features.length; i++) {
       Object feature = features[i];
-      switch (feature) {
-        case Number featureNumber -> doubleFeatures[i] = (featureNumber).doubleValue();
-        case String featureString -> {
-          try {
-            doubleFeatures[i] = Double.parseDouble(featureString);
-          } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid string input: " + feature, e);
-          }
+      if (feature instanceof Number featureNumber) {
+        doubleFeatures[i] = featureNumber.doubleValue();
+      } else if (feature instanceof String featureString) {
+        try {
+          doubleFeatures[i] = Double.parseDouble(featureString);
+        } catch (NumberFormatException e) {
+          throw new IllegalArgumentException("Invalid string input: " + feature, e);
         }
-        default -> throw new IllegalArgumentException(
-            "Unsupported input type: " + feature.getClass().getName());
+      } else {
+        throw new IllegalArgumentException("Unsupported input type: " + feature.getClass().getName());
       }
     }
 
