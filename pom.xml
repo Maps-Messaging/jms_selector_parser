@@ -133,7 +133,7 @@
       </activation>
       <properties>
         <test.profile>standard</test.profile>
-        <java.version>13</java.version>
+        <java.version>17</java.version>
       </properties>
       <build>
         <plugins>
