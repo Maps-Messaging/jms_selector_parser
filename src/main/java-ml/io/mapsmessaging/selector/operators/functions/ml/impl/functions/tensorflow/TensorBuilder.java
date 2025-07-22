@@ -64,5 +64,6 @@ public class TensorBuilder {
 
     throw new IllegalArgumentException("Unsupported tensor type: " + dtype.name());
   }
+  private TensorBuilder() {}
 }
 

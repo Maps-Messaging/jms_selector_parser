@@ -70,10 +70,6 @@ public class TensorFlowOperation extends AbstractModelOperations {
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object[] features = evaluateList(resolver);
-    System.out.println("Running model with input:");
-    for (int i = 0; i < features.length; i++) {
-      System.out.println("  [" + i + "] = " + features[i]);
-    }
     // Validate feature count
     if (features.length != modelEntry.getFeatureCount()) {
       throw new IllegalArgumentException("Model expects " + modelEntry.getFeatureCount() + " features, but got " + features.length);
@@ -95,11 +91,8 @@ public class TensorFlowOperation extends AbstractModelOperations {
           .run();
 
       try (Tensor outputTensor = outputs.get(0)) {
-        Shape shape = outputTensor.shape();
-        System.out.println("Output shape: " + Arrays.toString(shape.asArray()));
         float[] result = new float[1];
         outputTensor.asRawTensor().data().asFloats().read(result);
-        System.out.println(Arrays.toString(result));
         return result[0];
       }
     }
@@ -110,31 +103,7 @@ public class TensorFlowOperation extends AbstractModelOperations {
     isModelTrained = modelEntry != null;
   }
 
-  private Tensor createTensor(Object[] features) {
-    double[] doubleFeatures = new double[features.length];
-
-    for (int i = 0; i < features.length; i++) {
-      Object feature = features[i];
-      if (feature instanceof Number featureNumber) {
-        doubleFeatures[i] = featureNumber.doubleValue();
-      } else if (feature instanceof String featureString) {
-        try {
-          doubleFeatures[i] = Double.parseDouble(featureString);
-        } catch (NumberFormatException e) {
-          throw new IllegalArgumentException("Invalid string input: " + feature, e);
-        }
-      } else {
-        throw new IllegalArgumentException("Unsupported input type: " + feature.getClass().getName());
-      }
-    }
-
-    // Create DoubleDataBuffer
-    DoubleDataBuffer buffer = DataBuffers.of(doubleFeatures);
-
-    // Create the tensor using the buffer
-    return TFloat64.tensorOf(Shape.of(1, doubleFeatures.length), buffer);
-  }
-
+  @Override
   public String toString() {
     return "tensorflow ("+ super.toString() + ")";
   }
