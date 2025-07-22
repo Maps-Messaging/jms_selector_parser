@@ -20,7 +20,6 @@
 package io.mapsmessaging.selector.resolvers;
 
 import io.mapsmessaging.selector.IdentifierMutator;
-
 import java.util.Map;
 
 class MapEvaluator extends IdentifierMutator {

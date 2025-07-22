@@ -22,10 +22,9 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.qda;
 
 import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import java.io.IOException;
 import java.util.List;
-
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.classification.QDA;
 import smile.data.DataFrame;
 

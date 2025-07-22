@@ -21,10 +21,9 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import java.io.IOException;
 import java.util.List;
-
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.clustering.CentroidClustering;
 import smile.clustering.Clustering;
 import smile.clustering.GMeans;

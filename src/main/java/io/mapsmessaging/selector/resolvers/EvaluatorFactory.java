@@ -23,7 +23,6 @@ import com.google.gson.JsonObject;
 import io.mapsmessaging.selector.IdentifierResolver;
 import java.util.Map;
 
-
 public class EvaluatorFactory {
 
   @SuppressWarnings("unchecked")

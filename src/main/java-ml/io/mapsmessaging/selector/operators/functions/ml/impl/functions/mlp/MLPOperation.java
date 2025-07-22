@@ -22,11 +22,10 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.mlp;
 
 import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
-
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.classification.MLP;
 import smile.data.DataFrame;
 

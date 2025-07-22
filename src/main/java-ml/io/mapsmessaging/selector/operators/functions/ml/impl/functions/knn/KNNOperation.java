@@ -22,13 +22,11 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.knn;
 
 import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import java.io.IOException;
 import java.util.*;
-
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.classification.KNN;
 import smile.data.DataFrame;
-
 
 public class KNNOperation extends LabeledDataMLModelOperation {
 

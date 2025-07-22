@@ -23,12 +23,11 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorfl
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
-import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import java.io.IOException;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.tensorflow.Result;
 import org.tensorflow.SavedModelBundle;
@@ -41,10 +40,13 @@ import org.tensorflow.types.TFloat64;
 
 @Slf4j
 public class TensorFlowOperation extends AbstractModelOperations {
+  private final ModelStore store;
   private SavedModelBundle model;
+  
 
-  public TensorFlowOperation(String modelName, List<String> identity) {
+  public TensorFlowOperation(String modelName, List<String> identity, ModelStore modelStore) {
     super(modelName, identity);
+    store = modelStore;
     try {
       initializeModel();
     } catch (Exception e) {
@@ -87,7 +89,7 @@ public class TensorFlowOperation extends AbstractModelOperations {
 
   protected void loadModel() throws ModelException {
     try {
-      byte[] modelData = MLFunction.getModelStore().loadModel(modelName + "_data");
+      byte[] modelData = store.loadModel(modelName + "_data");
       model = ModelUtils.byteArrayToModel(modelData, "");
       isModelTrained = true;
     } catch (IOException e) {

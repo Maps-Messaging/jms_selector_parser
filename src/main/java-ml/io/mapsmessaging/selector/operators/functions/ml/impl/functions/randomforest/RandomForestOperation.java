@@ -22,10 +22,9 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.randomfo
 
 import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import java.io.IOException;
 import java.util.List;
-
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.classification.RandomForest;
 import smile.data.DataFrame;
 import smile.data.formula.Formula;

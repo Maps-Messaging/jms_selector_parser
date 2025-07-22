@@ -20,10 +20,10 @@
 
 package io.mapsmessaging.selector.operators.logical;
 
-import io.mapsmessaging.selector.operators.Operation;
-import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.IdentifierResolver;
+import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.LogicalOperator;
+import io.mapsmessaging.selector.operators.Operation;
 
 public class OrOperator extends LogicalOperator {
 

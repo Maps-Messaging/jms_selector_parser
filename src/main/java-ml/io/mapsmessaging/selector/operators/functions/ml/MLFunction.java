@@ -133,7 +133,7 @@ public class MLFunction extends Operation {
         case "svm", "one_class_svm":
           throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow":
-          return new TensorFlowOperation(modelName, identifiers);
+          return new TensorFlowOperation(modelName, identifiers, modelStore);
         case "model_exists":
           return new io.mapsmessaging.selector.operators.functions.ml.impl.functions.ModelExistFunction(modelName, modelStore);
         default:
