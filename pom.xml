@@ -380,7 +380,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.5.3</version>
         <configuration>
-          <forkCount>0</forkCount> <!-- run in main JVM -->
           <argLine>-Xmx8G -Dfile.encoding=UTF-8 @{argLine}</argLine>
           <includes>
             <include>**/*Test.java</include>
