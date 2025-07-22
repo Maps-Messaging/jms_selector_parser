@@ -20,50 +20,123 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow;
 
-import static org.tensorflow.proto.DataType.*;
 
 import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.*;
 
-public class TensorBuilder {
+import java.nio.charset.StandardCharsets;
 
-  public static Tensor createTensor(Object[] values, DataType dtype, Shape shape) {
-    if (dtype.equals(DT_FLOAT)) {
-      TFloat32 tensor = TFloat32.tensorOf(shape);
-      for (int i = 0; i < values.length; i++) {
-        tensor.setFloat(((Number) values[i]).floatValue(), 0, i);
-      }
-      return tensor;
-    }
+public final class TensorBuilder {
 
-    if (dtype.equals(DT_INT32)) {
-      TInt32 tensor = TInt32.tensorOf(shape);
-      for (int i = 0; i < values.length; i++) {
-        tensor.setInt(((Number) values[i]).intValue(), 0, i);
-      }
-      return tensor;
-    }
+  public static Tensor createTensor(Object values, DataType dtype, Shape shape) {
+    if (values == null) throw new IllegalArgumentException("Values cannot be null");
 
-    if (dtype.equals(DT_INT64)) {
-      TInt64 tensor = TInt64.tensorOf(shape);
-      for (int i = 0; i < values.length; i++) {
-        tensor.setLong(((Number) values[i]).longValue(), 0, i);
-      }
-      return tensor;
-    }
-
-    if (dtype.equals(DT_BOOL)) {
-      TBool tensor = TBool.tensorOf(shape);
-      for (int i = 0; i < values.length; i++) {
-        tensor.setBoolean((Boolean) values[i], 0, i);
-      }
-      return tensor;
-    }
-
-    throw new IllegalArgumentException("Unsupported tensor type: " + dtype.name());
+    return switch (dtype) {
+      case DT_FLOAT -> createFloatTensor(values, shape);
+      case DT_DOUBLE -> createDoubleTensor(values, shape);
+      case DT_INT32 -> createInt32Tensor(values, shape);
+      case DT_INT64 -> createInt64Tensor(values, shape);
+      case DT_BOOL -> createBoolTensor(values, shape);
+      case DT_STRING -> createStringTensor(values, shape);
+      default -> throw new IllegalArgumentException("Unsupported tensor type: " + dtype.name());
+    };
   }
+
+  private static Tensor createFloatTensor(Object values, Shape shape) {
+    TFloat32 tensor = TFloat32.tensorOf(shape);
+
+
+    if (values instanceof float[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setFloat(arr[i], i);
+    } else if (values instanceof double[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setFloat((float) arr[i], i);
+    } else if (values instanceof Number[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setFloat(arr[i].floatValue(), i);
+    } else {
+      throw new IllegalArgumentException("Unsupported float tensor source: " + values.getClass());
+    }
+
+    return tensor;
+  }
+
+  private static Tensor createInt32Tensor(Object values, Shape shape) {
+    TInt32 tensor = TInt32.tensorOf(shape);
+
+    if (values instanceof int[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i], i);
+    } else if (values instanceof short[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i], i);
+    } else if (values instanceof Number[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i].intValue(), i);
+    } else {
+      throw new IllegalArgumentException("Unsupported int32 tensor source: " + values.getClass());
+    }
+
+    return tensor;
+  }
+
+  private static Tensor createInt64Tensor(Object values, Shape shape) {
+    TInt64 tensor = TInt64.tensorOf(shape);
+
+    if (values instanceof long[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setLong(arr[i], i);
+    } else if (values instanceof Number[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setLong(arr[i].longValue(), i);
+    } else {
+      throw new IllegalArgumentException("Unsupported int64 tensor source: " + values.getClass());
+    }
+
+    return tensor;
+  }
+
+  private static Tensor createBoolTensor(Object values, Shape shape) {
+    TBool tensor = TBool.tensorOf(shape);
+
+    if (values instanceof boolean[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setBoolean(arr[i], i);
+    } else if (values instanceof Boolean[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setBoolean(arr[i], i);
+    } else {
+      throw new IllegalArgumentException("Unsupported bool tensor source: " + values.getClass());
+    }
+
+    return tensor;
+  }
+
+  private static Tensor createDoubleTensor(Object values, Shape shape) {
+    TFloat64 tensor = TFloat64.tensorOf(shape);
+
+    if (values instanceof double[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i], i);
+    } else if (values instanceof float[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i], i);
+    } else if (values instanceof Number[] arr) {
+      for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i].doubleValue(), i);
+    } else {
+      throw new IllegalArgumentException("Unsupported double tensor source: " + values.getClass());
+    }
+
+    return tensor;
+  }
+
+
+  private static Tensor createStringTensor(Object values, Shape shape) {
+    var strings = NdArrays.ofObjects(String.class, shape);
+    if (values instanceof String[] arr) {
+      for (int i = 0; i < arr.length; i++) strings.setObject(arr[i], i);
+    } else if (values instanceof byte[][] arr) {
+      for (int i = 0; i < arr.length; i++) {
+        strings.setObject(new String(arr[i], StandardCharsets.UTF_8), i);
+      }
+    } else {
+      throw new IllegalArgumentException("Unsupported string tensor source: " + values.getClass());
+    }
+    return TString.tensorOf(strings);
+  }
+
+
   private TensorBuilder() {}
 }
-
