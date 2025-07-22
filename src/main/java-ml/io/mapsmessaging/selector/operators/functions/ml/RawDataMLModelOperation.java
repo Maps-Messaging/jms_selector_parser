@@ -25,8 +25,8 @@ import java.util.List;
 
 public abstract class RawDataMLModelOperation extends AbstractMLModelOperation {
 
-  protected RawDataMLModelOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+  protected RawDataMLModelOperation(String modelName, List<String> identity, long time, long samples,  ModelStore modelStore) throws ModelException, IOException {
+    super(modelName, identity, time, samples, modelStore);
   }
 
   @Override

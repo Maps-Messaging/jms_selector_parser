@@ -21,6 +21,7 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.isolationforest;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.RawDataMLModelOperation;
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,9 +35,9 @@ public class IsolationForestOperation extends RawDataMLModelOperation {
   private double threshold;
 
   public IsolationForestOperation(
-      String modelName, String operationName, List<String> identity, long time, long samples)
+      String modelName, String operationName, List<String> identity, long time, long samples, ModelStore modelStore)
       throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+    super(modelName, identity, time, samples, modelStore);
     operation = computeFunction(operationName);
   }
 

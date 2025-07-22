@@ -31,21 +31,22 @@ import smile.data.DataFrame;
 
 public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected final List<double[]> dataBuffer = new ArrayList<>();
-
+  private final  ModelStore modelStore;
   protected final long sampleSize;
   protected final long sampleTime;
 
-  protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
+  protected AbstractMLModelOperation(String modelName, List<String> identity, long time, long samples, ModelStore modelStore) throws ModelException, IOException {
     super(modelName, identity);
     this.sampleSize = samples;
     this.sampleTime = (time > 0) ? System.currentTimeMillis() + time : 0;
+    this.modelStore = modelStore;
     initializeModel();
   }
 
   protected void initializeModel() throws IOException, ModelException {
     initializeSpecificModel();
-    if (MLFunction.getModelStore().modelExists(modelName)) {
-      byte[] loadedModel = MLFunction.getModelStore().loadModel(modelName);
+    if (modelStore.modelExists(modelName)) {
+      byte[] loadedModel = modelStore.loadModel(modelName);
       DataFrame dataFrame = ModelUtils.dataFrameFromBytes(loadedModel, null);
       buildModel(dataFrame);
       if(identity.isEmpty()) {
@@ -69,7 +70,7 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
           DataFrame df = ModelUtils.dataFrameFromBuffer(dataBuffer, identity);
           buildModel(df);
           if (isModelTrained) {
-            MLFunction.getModelStore().saveModel(modelName, ModelUtils.dataFrameToBytes(df, null));
+            modelStore.saveModel(modelName, ModelUtils.dataFrameToBytes(df, null));
           }
           dataBuffer.clear();
         }

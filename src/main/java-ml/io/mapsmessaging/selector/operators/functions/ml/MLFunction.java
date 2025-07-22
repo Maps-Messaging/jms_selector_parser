@@ -64,7 +64,7 @@ public class MLFunction extends Operation {
   private final long sampleSize;
   private final long sampleTime;
   private final List<String> identifiers;
-  private String modelName;
+  private final String modelName;
 
   public MLFunction(String functionName, List<String> list) {
     this.functionName = functionName;
@@ -95,41 +95,41 @@ public class MLFunction extends Operation {
     try {
       switch (functionName.toLowerCase()) {
         case "k-means":
-          return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new KMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "g-means":
-          return new GMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new GMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "x-means":
-          return new XMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new XMeansClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "k-means_lloyd":
-          return new KMeansLloydClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new KMeansLloydClusterOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "ridge":
-          return new RidgeRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new RidgeRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "ols","linear_regression":
-          return new OlsRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new OlsRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "lasso":
-          return new LassoRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new LassoRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "decision_tree":
-          return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new DecisionTreeOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "naive_bayes":
-          return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new NaiveBayesOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "pca","pca_fit":
-          return new PCAFitOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new PCAFitOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "pca_cor":
-          return new PCACorOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new PCACorOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "random_forest":
-          return new RandomForestOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new RandomForestOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "logistic_regression":
-          return new LogisticRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new LogisticRegressionOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "isolation_forest":
-          return new IsolationForestOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new IsolationForestOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "mlp":
-          return new MLPOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new MLPOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "qda":
-          return new QDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new QDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "lda":
-          return new LDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new LDAOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "knn":
-          return new KNNOperation(modelName, operationName, identifiers, sampleTime, sampleSize);
+          return new KNNOperation(modelName, operationName, identifiers, sampleTime, sampleSize, modelStore);
         case "svm", "one_class_svm":
           throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow":

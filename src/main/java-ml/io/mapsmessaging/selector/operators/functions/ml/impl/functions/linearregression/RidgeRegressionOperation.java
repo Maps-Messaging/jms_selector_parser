@@ -23,6 +23,8 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearre
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.List;
+
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.data.DataFrame;
 import smile.data.formula.Formula;
 import smile.regression.LinearModel;
@@ -32,9 +34,9 @@ import smile.regression.RidgeRegression;
 public class RidgeRegressionOperation extends LinearRegressionOperation {
 
   public RidgeRegressionOperation(
-      String modelName, String operationName, List<String> identity, long time, long samples)
+      String modelName, String operationName, List<String> identity, long time, long samples, ModelStore modelStore)
       throws ModelException, IOException {
-    super(modelName, operationName, identity, time, samples);
+    super(modelName, operationName, identity, time, samples, modelStore);
   }
 
   @Override

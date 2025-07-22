@@ -27,8 +27,8 @@ import smile.data.DataFrame;
 
 public abstract class LabeledDataMLModelOperation extends AbstractMLModelOperation {
 
-  protected LabeledDataMLModelOperation(String modelName, List<String> identity, long time, long samples) throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+  protected LabeledDataMLModelOperation(String modelName, List<String> identity, long time, long samples, ModelStore modelStore) throws ModelException, IOException {
+    super(modelName, identity, time, samples, modelStore);
   }
 
   @Override

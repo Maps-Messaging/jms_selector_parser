@@ -21,6 +21,7 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.RawDataMLModelOperation;
 import java.io.IOException;
 import java.util.List;
@@ -33,9 +34,9 @@ public abstract class PCAOperation extends RawDataMLModelOperation {
   private PCA pca;
 
   protected PCAOperation(
-      String modelName, String operationName, List<String> identity, long time, long samples)
+      String modelName, String operationName, List<String> identity, long time, long samples, ModelStore modelStore)
       throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+    super(modelName, identity, time, samples, modelStore);
     pcaFunction = computeFunction(operationName);
   }
 

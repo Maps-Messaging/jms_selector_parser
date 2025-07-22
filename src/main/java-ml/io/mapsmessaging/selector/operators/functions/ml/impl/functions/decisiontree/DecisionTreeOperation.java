@@ -24,6 +24,8 @@ import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperat
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.List;
+
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.classification.DecisionTree;
 import smile.data.DataFrame;
 import smile.data.formula.Formula;
@@ -35,9 +37,9 @@ public class DecisionTreeOperation extends LabeledDataMLModelOperation {
   private StructType schema;
 
   public DecisionTreeOperation(
-      String modelName, String operationName, List<String> identity, long time, long samples)
+      String modelName, String operationName, List<String> identity, long time, long samples, ModelStore modelStore)
       throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+    super(modelName, identity, time, samples, modelStore);
     decisionTreeFunction = computeFunction(operationName);
   }
 

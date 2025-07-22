@@ -25,6 +25,8 @@ import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.classification.MLP;
 import smile.data.DataFrame;
 
@@ -33,9 +35,9 @@ public class MLPOperation extends LabeledDataMLModelOperation {
   private MLP mlp;
 
   public MLPOperation(
-      String modelName, String operationName, List<String> identity, long time, long samples)
+      String modelName, String operationName, List<String> identity, long time, long samples, ModelStore modelStore)
       throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+    super(modelName, identity, time, samples, modelStore);
     this.operation = computeFunction(operationName);
   }
 

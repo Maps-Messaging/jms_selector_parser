@@ -24,6 +24,8 @@ import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperat
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.*;
+
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.classification.KNN;
 import smile.data.DataFrame;
 
@@ -34,9 +36,9 @@ public class KNNOperation extends LabeledDataMLModelOperation {
   private KNN<double[]> knn;
 
   public KNNOperation(
-      String modelName, String operationName, List<String> identity, long time, long samples)
+      String modelName, String operationName, List<String> identity, long time, long samples, ModelStore modelStore)
       throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+    super(modelName, identity, time, samples, modelStore);
     knnFunction = computeFunction(operationName);
   }
 

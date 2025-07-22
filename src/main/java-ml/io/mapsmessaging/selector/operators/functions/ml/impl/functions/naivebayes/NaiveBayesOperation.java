@@ -24,6 +24,8 @@ import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperat
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import java.io.IOException;
 import java.util.*;
+
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import smile.classification.NaiveBayes;
 import smile.data.DataFrame;
 import smile.data.measure.NominalScale;
@@ -34,9 +36,9 @@ public class NaiveBayesOperation extends LabeledDataMLModelOperation {
   private NaiveBayes naiveBayes;
 
   public NaiveBayesOperation(
-      String modelName, String operationName, List<String> identity, long time, long samples)
+      String modelName, String operationName, List<String> identity, long time, long samples, ModelStore modelStore)
       throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+    super(modelName, identity, time, samples, modelStore);
     naiveBayesFunction = computeFunction(operationName);
   }
 

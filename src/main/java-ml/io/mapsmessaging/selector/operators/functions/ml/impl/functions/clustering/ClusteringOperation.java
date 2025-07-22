@@ -21,6 +21,7 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
+import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.RawDataMLModelOperation;
 import java.io.IOException;
 import java.util.List;
@@ -32,9 +33,9 @@ public abstract class ClusteringOperation extends RawDataMLModelOperation {
   private CentroidClustering<double[], double[]> kmeans;
 
   protected ClusteringOperation(
-      String modelName, String operationName, List<String> identity, long time, long samples)
+      String modelName, String operationName, List<String> identity, long time, long samples,  ModelStore modelStore)
       throws ModelException, IOException {
-    super(modelName, identity, time, samples);
+    super(modelName, identity, time, samples, modelStore);
     this.kmeansFunction = computeFunction(operationName);
   }
 
