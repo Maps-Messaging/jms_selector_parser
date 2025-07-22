@@ -20,12 +20,12 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow;
 
+import static org.tensorflow.proto.DataType.*;
+
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.*;
-
-import static org.tensorflow.proto.DataType.*;
 
 public class TensorBuilder {
 

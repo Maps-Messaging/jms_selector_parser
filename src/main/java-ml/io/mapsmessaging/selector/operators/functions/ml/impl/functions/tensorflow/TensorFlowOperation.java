@@ -25,17 +25,10 @@ import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
-import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.tensorflow.*;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.DataBuffers;
-import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
-import org.tensorflow.proto.DataType;
-import org.tensorflow.types.TFloat64;
 
 @Slf4j
 public class TensorFlowOperation extends AbstractModelOperations {
@@ -49,7 +42,6 @@ public class TensorFlowOperation extends AbstractModelOperations {
     try {
       initializeModel();
     } catch (Exception e) {
-      e.printStackTrace();
       log.error(e.getMessage());
     }
   }

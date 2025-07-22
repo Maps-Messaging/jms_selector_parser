@@ -20,6 +20,8 @@
 
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow;
 
+import java.io.IOException;
+import java.util.Iterator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.tensorflow.Graph;
@@ -27,9 +29,6 @@ import org.tensorflow.GraphOperation;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.DataType;
-
-import java.io.IOException;
-import java.util.Iterator;
 
 @Data
 @AllArgsConstructor

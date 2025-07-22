@@ -23,11 +23,10 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorfl
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
-import org.tensorflow.SavedModelBundle;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.tensorflow.SavedModelBundle;
 
 public class TensorFlowModelRegistry {
 
