@@ -82,7 +82,8 @@ public class SelectorMLConformanceTest {
         "pca_fit (explainedvariance[1], model_pca_fit.arff) > 0.7",
         "pca_fit (explainedvariance[2], model_pca_fit.arff, temp, humidity) > 0.7",
         "pca_cor (explainedvariance[3], model_pca_cor.arff) > 0.7",
-        "pca_cor (explainedvariance[4], model_pca_cor.arff, temp, humidity) > 0.7"
+        "pca_cor (explainedvariance[4], model_pca_cor.arff, temp, humidity) > 0.7",
+        "tensorflow (sensor_safety_model, temp, humidity, co2) < 10"
     );
 
   }

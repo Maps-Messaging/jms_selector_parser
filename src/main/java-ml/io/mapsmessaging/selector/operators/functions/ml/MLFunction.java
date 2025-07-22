@@ -66,23 +66,35 @@ public class MLFunction extends Operation {
   private final List<String> identifiers;
   private final String modelName;
 
-  public MLFunction(String functionName, List<String> list) {
+  protected MLFunction(String functionName, String operationName, String modelName, List<String> identifiers, long sampleSize, long sampleTime) {
     this.functionName = functionName;
-    identifiers = new ArrayList<>();
-    int startIdx = 1;
-    if (list.size() > 1) {
-      this.operationName = list.get(0);
-      this.modelName = list.get(1);
-      startIdx = 2;
+    this.operationName = operationName;
+    this.modelName = modelName;
+    this.identifiers = identifiers;
+    this.sampleSize = sampleSize;
+    this.sampleTime = sampleTime;
+  }
+
+  public static MLFunction parse(String functionName, List<String> list) {
+    String operationName = "";
+    String modelName;
+    List<String> identifiers = new ArrayList<>();
+    int startIdx;
+
+    if ("tensorFlow".equalsIgnoreCase(functionName) || list.size() <=1) {
+      modelName = list.getFirst();
+      startIdx = 1;
     } else {
-      this.modelName = list.getFirst();
-      this.operationName = "";
+      operationName = list.get(0);
+      modelName = list.get(1);
+      startIdx = 2;
     }
+
     for (int i = startIdx; i < list.size(); i++) {
       identifiers.add(list.get(i).trim());
     }
-    sampleSize = defaultSampleSize;
-    sampleTime = defaultSampleTime;
+
+    return new MLFunction(functionName, operationName, modelName, identifiers, defaultSampleSize, defaultSampleTime);
   }
 
   @Override

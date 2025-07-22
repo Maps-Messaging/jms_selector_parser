@@ -27,21 +27,20 @@ import io.mapsmessaging.selector.operators.functions.ml.ModelException;
 import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.tensorflow.Result;
-import org.tensorflow.SavedModelBundle;
-import org.tensorflow.Session;
-import org.tensorflow.Tensor;
+import org.tensorflow.*;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat64;
 
 @Slf4j
 public class TensorFlowOperation extends AbstractModelOperations {
   private final ModelStore store;
-  private SavedModelBundle model;
+  private TensorFlowModelEntry modelEntry;
   
 
   public TensorFlowOperation(String modelName, List<String> identity, ModelStore modelStore) {
@@ -50,6 +49,7 @@ public class TensorFlowOperation extends AbstractModelOperations {
     try {
       initializeModel();
     } catch (Exception e) {
+      e.printStackTrace();
       log.error(e.getMessage());
     }
   }
@@ -70,31 +70,44 @@ public class TensorFlowOperation extends AbstractModelOperations {
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object[] features = evaluateList(resolver);
+    System.out.println("Running model with input:");
+    for (int i = 0; i < features.length; i++) {
+      System.out.println("  [" + i + "] = " + features[i]);
+    }
+    // Validate feature count
+    if (features.length != modelEntry.getFeatureCount()) {
+      throw new IllegalArgumentException("Model expects " + modelEntry.getFeatureCount() + " features, but got " + features.length);
+    }
 
-    Tensor inputTensor = createTensor(features);
+    // Create the input tensor
+    Tensor inputTensor = TensorBuilder.createTensor(
+        features,
+        modelEntry.getInputDataType(),
+        Shape.of(1, modelEntry.getFeatureCount())
+    );
 
     // Run the model and fetch the result
-    try (Session session = model.session()) {
-      Result outputs =
-          session.runner().feed("input_tensor_name", inputTensor).fetch("output_tensor_name").run();
+    try (Session session = modelEntry.getModel().session()) {
+      Result outputs = session
+          .runner()
+          .feed(modelEntry.getInputTensorName(), inputTensor)
+          .fetch(modelEntry.getOutputTensorName())
+          .run();
 
-      // Retrieve the output tensor and extract the result
       try (Tensor outputTensor = outputs.get(0)) {
-        double[] result = new double[(int) outputTensor.shape().size()];
-        outputTensor.asRawTensor().data().asDoubles().read(result);
-        return result[0]; // Adjust this based on your model's output
+        Shape shape = outputTensor.shape();
+        System.out.println("Output shape: " + Arrays.toString(shape.asArray()));
+        float[] result = new float[1];
+        outputTensor.asRawTensor().data().asFloats().read(result);
+        System.out.println(Arrays.toString(result));
+        return result[0];
       }
     }
   }
 
   protected void loadModel() throws ModelException {
-    try {
-      byte[] modelData = store.loadModel(modelName + "_data");
-      model = ModelUtils.byteArrayToModel(modelData, "");
-      isModelTrained = true;
-    } catch (IOException e) {
-      throw new ModelException(e);
-    }
+    modelEntry = TensorFlowModelRegistry.getOrLoad(modelName, store);
+    isModelTrained = modelEntry != null;
   }
 
   private Tensor createTensor(Object[] features) {
@@ -121,4 +134,9 @@ public class TensorFlowOperation extends AbstractModelOperations {
     // Create the tensor using the buffer
     return TFloat64.tensorOf(Shape.of(1, doubleFeatures.length), buffer);
   }
+
+  public String toString() {
+    return "tensorflow ("+ super.toString() + ")";
+  }
+
 }

@@ -58,11 +58,8 @@ public class ModelUtils {
 
   // Load a TensorFlow model from a byte array
   @SuppressWarnings({"java:S5443", "java:S5042"}) // yes it is safe to do, I check the max size of the zip
-  public static SavedModelBundle byteArrayToModel(byte[] data, String modelDir) throws IOException {
-    // Constants for threshold checks
-
-    // Create a temporary directory
-    Path tempDir = Files.createTempDirectory(modelDir + File.separator + "tf_model");
+  public static SavedModelBundle byteArrayToModel(byte[] data, String modelName) throws IOException {
+    Path tempDir = Files.createTempDirectory(modelName);
     if(!tempDir.toFile().setReadable(true, true) &&
         !tempDir.toFile().setWritable(true, true) &&
         !tempDir.toFile().setExecutable(true, true)){
@@ -92,7 +89,7 @@ public class ModelUtils {
     }
 
     // Load the model from the temporary directory
-    return SavedModelBundle.load(tempDir.toString(), "serve");
+    return SavedModelBundle.load(tempDir.toFile().getAbsolutePath()+File.separator+modelName, "serve");
   }
 
   @SuppressWarnings({"java:S5443", "java.S5042"}) // yes it is safe to do, I check the max size of the zip

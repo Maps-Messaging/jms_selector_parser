@@ -65,6 +65,10 @@ public class FileModelStore implements ModelStore {
   @Override
   public boolean modelExists(String s) {
     File file = new File(rootDirectory, s);
+    if(file.exists()){
+      return true;
+    }
+    file = new File(rootDirectory, s+".zip");
     return file.exists();
   }
 

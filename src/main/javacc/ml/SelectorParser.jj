@@ -452,7 +452,7 @@ Object unaryExpressionNotPlusMinus() :
       }
     | t=<ML_FUNCTION> <LPAREN> {list=new ArrayList<>();} tokenList(list)  <RPAREN>
        {
-   MLFunction func = new MLFunction(t.image, list);
+   MLFunction func = MLFunction.parse(t.image, list);
    return func.compile();
 }
    | t=<STRING>  { return stripQuotes(t.image); }
