@@ -33,57 +33,39 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class IsolationForestTest {
+class KnnModelTest {
   private static ModelStore previous;
   private static final double[][] testData = {
-      {1.0, 1.0},    // expected normal
-      {130.0, 100.0},  // expected outlier
-      {0.9,1.1},   // expected normal
-      {15.0, 15.0}   // expected outlier
+      {1.0, 1.0},     // expected label 0
+      {10.0, 10.0},   // expected label 1
+      {1.1, 0.9},     // expected label 0
+      {9.8, 10.2}     // expected label 1
   };
-  boolean[] expected = {false, true, false, true};
+  private static final int[] expected = {0, 1, 0, 1};
 
-  private static final String[] scoreSelectors={
-      "isolation_forest(score, isoTest.arff, a0, a1 ) > 0.35",
-      "isolation_forest(score, isoTest.arff, a0, a1 ) > 0.55",
-      "isolation_forest(score, isoTest.arff, a0, a1 ) > 0.35",
-      "isolation_forest(score, isoTest.arff, a0, a1 ) > 0.55"
-  };
+  private static final String selectorTemplate = "knn(classify, knnTest.arff, a0, a1) = %d";
 
   @BeforeAll
   static void setupStore() {
     previous = MLFunction.getModelStore();
     MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
   }
+
   @AfterAll
   static void restoreStore() {
     MLFunction.setModelStore(previous);
   }
 
   @Test
-  void testIsolationForestModel() throws ParseException {
-    ParserExecutor executor;
-    ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(testData);
-    executor = SelectorParser.compile("isolation_forest(is_anomaly, isoTest.arff, a0, a1 ) > 0");
-    for (int i = 0; i < expected.length; i++) {
-      boolean result = executor.evaluate(resolver);
-      boolean expectedResult = expected[i];
-      Assertions.assertEquals(expectedResult, result, "Failed at index " + i);
-      resolver.index++;
-    }
-  }
-
-  @Test
-  void testIsolationForestModelScore() throws ParseException {
+  void testKnnClassification() throws ParseException {
     ParserExecutor executor;
     ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(testData);
     for (int i = 0; i < expected.length; i++) {
-      executor = SelectorParser.compile(scoreSelectors[i]);
+      executor = SelectorParser.compile(String.format(selectorTemplate, expected[i]));
       Assertions.assertTrue(executor.evaluate(resolver), "Failed at index " + i);
       resolver.index++;
     }
   }
-
 
   static class ArrayIdentifierResolver implements IdentifierResolver {
     private final double[][] data;
