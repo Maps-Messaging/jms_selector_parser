@@ -1,0 +1,12 @@
+@relation isotest
+
+@attribute a0 numeric
+@attribute a1 numeric
+
+@data
+1.0,1.0
+1.1,1.0
+0.9,1.1
+1.0,0.9
+1.05,1.05
+1.0,1.0
