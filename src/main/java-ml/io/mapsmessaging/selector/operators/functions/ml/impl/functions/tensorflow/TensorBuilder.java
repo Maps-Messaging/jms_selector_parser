@@ -30,6 +30,7 @@ import org.tensorflow.types.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+@SuppressWarnings("java:S3776") // yes I know there are a lot of if/else but it should be simple to follow the logic since they are conversion functions
 public final class TensorBuilder {
 
   public static Tensor createTensor(Object values, DataType dtype, Shape shape) {
@@ -163,7 +164,6 @@ public final class TensorBuilder {
       }
       throw new IllegalArgumentException("Unsupported float tensor source: " + values.getClass());
     }
-
     return tensor;
   }
 
