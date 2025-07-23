@@ -65,6 +65,19 @@ class LdaModelTest {
     }
   }
 
+  @Test
+  void testLdaPredictProb() throws ParseException {
+    ParserExecutor executor;
+    ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(testData);
+    double[] thresholds = {0.86, 0.84, 0.86, 0.84}; // Expected probability for class 1
+
+    for (int i = 0; i < expected.length; i++) {
+      executor = SelectorParser.compile("lda(predictprob, ldaTest.arff, a0, a1) > " + thresholds[i]);
+      Assertions.assertTrue(executor.evaluate(resolver), "Failed at index " + i);
+      resolver.index++;
+    }
+  }
+
   static class ArrayIdentifierResolver implements IdentifierResolver {
     private final double[][] data;
     protected int index = 0;
