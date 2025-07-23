@@ -38,10 +38,17 @@ class IsolationForestTest {
   private static final double[][] testData = {
       {1.0, 1.0},    // expected normal
       {130.0, 100.0},  // expected outlier
-      {0.95, 1.0},   // expected normal
+      {0.9,1.1},   // expected normal
       {15.0, 15.0}   // expected outlier
   };
   boolean[] expected = {false, true, false, true};
+
+  private static final String[] scoreSelectors={
+      "isolation_forest(score, isoTest.arff, a0, a1 ) > 0.35",
+      "isolation_forest(score, isoTest.arff, a0, a1 ) > 0.55",
+      "isolation_forest(score, isoTest.arff, a0, a1 ) > 0.35",
+      "isolation_forest(score, isoTest.arff, a0, a1 ) > 0.55"
+  };
 
   @BeforeAll
   static void setupStore() {
@@ -65,6 +72,19 @@ class IsolationForestTest {
       resolver.index++;
     }
   }
+
+  @Test
+  void testIsolationForestModelScore() throws ParseException {
+    ParserExecutor executor;
+    ArrayIdentifierResolver resolver = new ArrayIdentifierResolver(testData);
+    for (int i = 0; i < expected.length; i++) {
+      executor = SelectorParser.compile(scoreSelectors[i]);
+      boolean expectedResult = expected[i];
+      Assertions.assertTrue(executor.evaluate(resolver), "Failed at index " + i);
+      resolver.index++;
+    }
+  }
+
 
   static class ArrayIdentifierResolver implements IdentifierResolver {
     private final double[][] data;
