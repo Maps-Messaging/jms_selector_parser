@@ -73,11 +73,11 @@ public class TensorFlowModelEntry {
     this.inputDataType = inputOp.output(0).dataType();
     this.inputShape = inputOp.output(0).shape();
 
-    if (inputShape.numDimensions() != 2 || inputShape.size(1) < 1) {
+    if (inputShape.numDimensions() != 2 || inputShape.get(1) < 1) {
       throw new IOException("Unsupported input shape: " + inputShape);
     }
 
-    this.featureCount = (int) inputShape.size(1);
+    this.featureCount = (int) inputShape.get(1);
   }
 }
 

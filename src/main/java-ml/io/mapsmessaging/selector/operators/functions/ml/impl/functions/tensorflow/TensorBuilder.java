@@ -48,15 +48,29 @@ public final class TensorBuilder {
   private static Tensor createFloatTensor(Object values, Shape shape) {
     TFloat32 tensor = TFloat32.tensorOf(shape);
 
-
-    if (values instanceof float[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setFloat(arr[i], i);
-    } else if (values instanceof double[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setFloat((float) arr[i], i);
-    } else if (values instanceof Number[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setFloat(arr[i].floatValue(), i);
-    } else {
-      throw new IllegalArgumentException("Unsupported float tensor source: " + values.getClass());
+    switch (values) {
+      case float[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setFloat(arr[i], 0, i);
+      }
+      case double[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setFloat((float) arr[i], 0, i);
+      }
+      case Number[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setFloat(arr[i].floatValue(), 0, i);
+      }
+      case String[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setFloat(Float.parseFloat(arr[i]), 0, i);
+      }
+      default -> {
+        if (values instanceof Object[] arr && arr.length > 0 && arr[0] instanceof Number) {
+          for (int i = 0; i < arr.length; i++) {
+            float fValue = ((Number) arr[i]).floatValue();
+            tensor.setFloat(fValue, 0, i);
+          }
+          return tensor;
+        }
+        throw new IllegalArgumentException("Unsupported float tensor source: " + values.getClass());
+      }
     }
 
     return tensor;
@@ -65,14 +79,31 @@ public final class TensorBuilder {
   private static Tensor createInt32Tensor(Object values, Shape shape) {
     TInt32 tensor = TInt32.tensorOf(shape);
 
-    if (values instanceof int[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i], i);
-    } else if (values instanceof short[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i], i);
-    } else if (values instanceof Number[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i].intValue(), i);
-    } else {
-      throw new IllegalArgumentException("Unsupported int32 tensor source: " + values.getClass());
+    switch (values) {
+      case int[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i], 0, i);
+      }
+      case short[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i], 0, i);
+      }
+      case Number[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i].intValue(), 0, i);
+      }
+      case String[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setInt(Integer.parseInt(arr[i]), 0, i);
+      }
+      case byte[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setInt(arr[i], 0, i);
+      }
+      default -> {
+        if (values instanceof Object[] arr && arr.length > 0 && arr[0] instanceof Number) {
+          for (int i = 0; i < arr.length; i++) {
+            tensor.setInt(((Number) arr[i]).intValue(), 0, i);
+          }
+          return tensor;
+        }
+        throw new IllegalArgumentException("Unsupported float tensor source: " + values.getClass());
+      }
     }
 
     return tensor;
@@ -81,12 +112,29 @@ public final class TensorBuilder {
   private static Tensor createInt64Tensor(Object values, Shape shape) {
     TInt64 tensor = TInt64.tensorOf(shape);
 
-    if (values instanceof long[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setLong(arr[i], i);
-    } else if (values instanceof Number[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setLong(arr[i].longValue(), i);
-    } else {
-      throw new IllegalArgumentException("Unsupported int64 tensor source: " + values.getClass());
+    switch (values) {
+      case long[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setLong(arr[i], 0, i);
+      }
+      case Number[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setLong(arr[i].longValue(), 0, i);
+      }
+      case String[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setLong(Long.parseLong(arr[i]), 0, i);
+      }
+      case byte[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setLong(arr[i], 0, i);
+      }
+
+      default -> {
+        if (values instanceof Object[] arr && arr.length > 0 && arr[0] instanceof Number) {
+          for (int i = 0; i < arr.length; i++) {
+            tensor.setLong(((Number) arr[i]).longValue(), 0, i);
+          }
+          return tensor;
+        }
+        throw new IllegalArgumentException("Unsupported float tensor source: " + values.getClass());
+      }
     }
 
     return tensor;
@@ -95,12 +143,28 @@ public final class TensorBuilder {
   private static Tensor createBoolTensor(Object values, Shape shape) {
     TBool tensor = TBool.tensorOf(shape);
 
-    if (values instanceof boolean[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setBoolean(arr[i], i);
-    } else if (values instanceof Boolean[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setBoolean(arr[i], i);
-    } else {
-      throw new IllegalArgumentException("Unsupported bool tensor source: " + values.getClass());
+    switch (values) {
+      case boolean[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setBoolean(arr[i], 0, i);
+      }
+      case Boolean[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setBoolean(arr[i], 0, i);
+      }
+      case String[] arr -> {
+        for (int i = 0; i < arr.length; i++) {
+          tensor.setBoolean(Boolean.parseBoolean(arr[i]), 0, i);
+        }
+      }
+      case byte[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setBoolean(arr[i] != 0, 0, i);
+      }
+      case Byte[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setBoolean(arr[i] != 0, 0, i);
+      }
+
+      default -> {
+        throw new IllegalArgumentException("Unsupported float tensor source: " + values.getClass());
+      }
     }
 
     return tensor;
@@ -109,14 +173,29 @@ public final class TensorBuilder {
   private static Tensor createDoubleTensor(Object values, Shape shape) {
     TFloat64 tensor = TFloat64.tensorOf(shape);
 
-    if (values instanceof double[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i], i);
-    } else if (values instanceof float[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i], i);
-    } else if (values instanceof Number[] arr) {
-      for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i].doubleValue(), i);
-    } else {
-      throw new IllegalArgumentException("Unsupported double tensor source: " + values.getClass());
+    switch (values) {
+      case double[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i], 0, i);
+      }
+      case float[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i], 0, i);
+      }
+      case Number[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setDouble(arr[i].doubleValue(), 0, i);
+      }
+      case String[] arr -> {
+        for (int i = 0; i < arr.length; i++) tensor.setDouble(Double.parseDouble(arr[i]), 0, i);
+      }
+
+      default -> {
+        if (values instanceof Object[] arr && arr.length > 0 && arr[0] instanceof Number) {
+          for (int i = 0; i < arr.length; i++) {
+            tensor.setDouble(((Number) arr[i]).doubleValue(), 0, i);
+          }
+          return tensor;
+        }
+        throw new IllegalArgumentException("Unsupported float tensor source: " + values.getClass());
+      }
     }
 
     return tensor;
@@ -125,14 +204,20 @@ public final class TensorBuilder {
 
   private static Tensor createStringTensor(Object values, Shape shape) {
     var strings = NdArrays.ofObjects(String.class, shape);
-    if (values instanceof String[] arr) {
-      for (int i = 0; i < arr.length; i++) strings.setObject(arr[i], i);
-    } else if (values instanceof byte[][] arr) {
-      for (int i = 0; i < arr.length; i++) {
-        strings.setObject(new String(arr[i], StandardCharsets.UTF_8), i);
+    switch (values) {
+      case String[] arr -> {
+        for (int i = 0; i < arr.length; i++) strings.setObject(arr[i], 0, i);
       }
-    } else {
-      throw new IllegalArgumentException("Unsupported string tensor source: " + values.getClass());
+      case byte[][] arr -> {
+        for (int i = 0; i < arr.length; i++) {
+          strings.setObject(new String(arr[i], StandardCharsets.UTF_8), 0, i);
+        }
+      }
+      case Object[] arr -> {
+        for (int i = 0; i < arr.length; i++) strings.setObject(String.valueOf(arr[i]), 0, i);
+      }
+      default -> throw new IllegalArgumentException(
+          "Unsupported string tensor source: " + values.getClass());
     }
     return TString.tensorOf(strings);
   }
