@@ -18,8 +18,8 @@ public class NexusModelStoreTest {
 
   @BeforeAll
   void setup() {
-    String user = System.getProperty("model.user");
-    String pass = System.getProperty("model.pass");
+    String user = System.getenv("MODEL_USER");
+    String pass = System.getenv("MODEL_PASSWORD");
     assertNotNull(user, "Missing model.user system property");
     assertNotNull(pass, "Missing model.pass system property");
 
