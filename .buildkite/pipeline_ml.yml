@@ -5,7 +5,7 @@ steps:
       - export NVD_API_KEY=$(buildkite-agent secret get nvd_api_key)
       - export MODEL_USER=$(buildkite-agent secret get NEXUS_USER)
       - export MODEL_PASSWORD=$(buildkite-agent secret get NEXUS_PASSWORD)
-      - mvn -Dgpg.skip=true clean deploy -Pml -Dnexus.user=${MODEL_USER} -Dnexus.pass=${MODEL_PASSWORD}
+      - mvn -Dgpg.skip=true clean deploy -Pml -DnexusUser=${MODEL_USER} -DnexusPass=${MODEL_PASSWORD}
       - mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}
     plugins:
       - test-collector#v1.0.0:
