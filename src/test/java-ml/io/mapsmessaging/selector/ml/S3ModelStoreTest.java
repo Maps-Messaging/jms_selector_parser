@@ -35,16 +35,16 @@ public class S3ModelStoreTest extends BaseModelStoreTest {
 
   @BeforeAll
   void setup() {
-    String accessKey = System.getenv("AWS_ACCESS_KEY");
-    String secretKey = System.getenv("AWS_SECRET_KEY");
-    String regionName = System.getenv("AWS_REGION");
+    String accessKey = System.getenv("S3_ACCESS_KEY");
+    String secretKey = System.getenv("S3_SECRET_KEY");
+    String regionName = System.getenv("S3_REGION");
 
     assertNotNull(accessKey, "Missing AWS_ACCESS_KEY environment variable");
     assertNotNull(secretKey, "Missing AWS_SECRET_KEY environment variable");
     assertNotNull(regionName, "Missing AWS_REGION environment variable");
 
     Region region = Region.of(regionName);
-    modelStore = new S3ModelStore("modelstoretest", "modelStoreTest",region, accessKey, secretKey);
+    modelStore = new S3ModelStore("modelstoretest", "test",region, accessKey, secretKey);
   }
 
   @Override
