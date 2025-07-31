@@ -36,6 +36,8 @@ import java.util.List;
 
 public class S3ModelStore implements ModelStore {
 
+  private static final String OCTET_STREAM_MIME ="application/octet-stream";
+
   private static final int PART_SIZE = 5 * 1024 * 1024; // 5MB
 
   private final S3Client s3;
@@ -54,28 +56,11 @@ public class S3ModelStore implements ModelStore {
   // Allows the endpoint (url) to be changed to support MinIO
   public S3ModelStore(String bucket, String prefix, Region region, String accessKey, String secretKey, String endpoint) {
     this.bucket = bucket;
-    this.prefix = (prefix == null || prefix.isEmpty()) ? "" : (prefix.endsWith("/") ? prefix : prefix + "/");
+    this.prefix = normalizePrefix(prefix);
     this.accessKey = accessKey;
     this.secretKey = secretKey;
     this.endpoint = endpoint;
     this.s3 = buildS3Client(region);
-  }
-
-  protected S3Client buildS3Client(Region region) {
-    S3ClientBuilder builder = S3Client.builder()
-        .region(region)
-        .credentialsProvider(StaticCredentialsProvider.create(
-            AwsBasicCredentials.create(accessKey, secretKey)));
-
-    if (endpoint != null) {
-      builder.endpointOverride(URI.create(endpoint));
-    }
-
-    return builder.build();
-  }
-
-  protected String resolveKey(String modelId) {
-    return prefix + modelId;
   }
 
   @Override
@@ -169,15 +154,34 @@ public class S3ModelStore implements ModelStore {
     }
   }
 
+  private String resolveKey(String modelId) {
+    return prefix + modelId;
+  }
+
+  private S3Client buildS3Client(Region region) {
+    S3ClientBuilder builder = S3Client.builder()
+        .region(region)
+        .credentialsProvider(StaticCredentialsProvider.create(
+            AwsBasicCredentials.create(accessKey, secretKey)));
+
+    if (endpoint != null) {
+      builder.endpointOverride(URI.create(endpoint));
+    }
+
+    return builder.build();
+  }
+
   private String contentType(String modelId) {
     if (modelId.endsWith(".zip")) return "application/zip";
     if (modelId.endsWith(".arff")) return "text/plain";
-    if (modelId.endsWith(".pb")) return "application/octet-stream"; // TensorFlow graph
-    if (modelId.endsWith(".h5")) return "application/octet-stream"; // Keras model
-    if (modelId.endsWith(".tflite")) return "application/octet-stream"; // TF Lite
-    if (modelId.endsWith(".onnx")) return "application/octet-stream"; // ONNX model
-    return "application/octet-stream";
+    return OCTET_STREAM_MIME;
   }
+
+  private String normalizePrefix(String prefix) {
+    if (prefix == null || prefix.isEmpty()) return "";
+    return prefix.endsWith("/") ? prefix : prefix + "/";
+  }
+
 
 }
 
