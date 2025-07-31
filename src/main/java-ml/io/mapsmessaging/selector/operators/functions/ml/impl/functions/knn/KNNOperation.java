@@ -22,7 +22,7 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.knn;
 
 import io.mapsmessaging.selector.operators.functions.ml.LabeledDataMLModelOperation;
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
+import io.mapsmessaging.selector.ml.ModelStore;
 import java.io.IOException;
 import java.util.*;
 import smile.classification.KNN;

@@ -5,6 +5,9 @@ steps:
       - export NVD_API_KEY=$(buildkite-agent secret get nvd_api_key)
       - export MODEL_USER=$(buildkite-agent secret get NEXUS_USER)
       - export MODEL_PASSWORD=$(buildkite-agent secret get NEXUS_PASSWORD)
+      - export AWS_ACCESS_KEY=$(buildkite-agent secret get cognito_accessKeyId)
+      - export AWS_SECRET_KEY=$(buildkite-agent secret get cognito_secretAccessKey)
+      - export AWS_REGION="ap-southeast-2"
       - mvn -Dgpg.skip=true clean deploy -Pml
       - mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}
     plugins:

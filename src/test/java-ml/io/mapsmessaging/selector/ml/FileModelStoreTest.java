@@ -18,21 +18,14 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.ml;
 
-import io.mapsmessaging.selector.ml.ModelStore;
+import io.mapsmessaging.selector.ml.impl.store.FileModelStore;
 
-import java.io.IOException;
-import java.util.List;
-
-public abstract class RawDataMLModelOperation extends AbstractMLModelOperation {
-
-  protected RawDataMLModelOperation(String modelName, List<String> identity, long time, long samples,  ModelStore modelStore) throws ModelException, IOException {
-    super(modelName, identity, time, samples, modelStore);
-  }
+public class FileModelStoreTest extends BaseModelStoreTest{
 
   @Override
-  public boolean requiresLabel() {
-    return false;
+  ModelStore getModelStore() {
+    return new FileModelStore("./testModelStore/");
   }
 }

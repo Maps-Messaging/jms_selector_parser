@@ -21,7 +21,7 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
+import io.mapsmessaging.selector.ml.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.RawDataMLModelOperation;
 import java.io.IOException;
 import java.util.List;

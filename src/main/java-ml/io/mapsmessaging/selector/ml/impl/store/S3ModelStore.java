@@ -1,13 +1,36 @@
-package io.mapsmessaging.selector.operators.functions.ml.impl.store;
+/*
+ *
+ *  Copyright [ 2020 - 2024 ] Matthew Buckton
+ *  Copyright [ 2024 - 2025 ] MapsMessaging B.V.
+ *
+ *  Licensed under the Apache License, Version 2.0 with the Commons Clause
+ *  (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://commonsclause.com/
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+package io.mapsmessaging.selector.ml.impl.store;
+
+import io.mapsmessaging.selector.ml.ModelStore;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,21 +39,39 @@ public class S3ModelStore implements ModelStore {
   private static final int PART_SIZE = 5 * 1024 * 1024; // 5MB
 
   private final S3Client s3;
-  private final String bucket;
-  private final String prefix;
+  protected final String bucket;
+  protected final String prefix;
+  private final String endpoint;
+  protected final String accessKey;
+  protected final String secretKey;
 
 
-  public S3ModelStore(String bucket, String prefix, Region region) {
+  // No overrides uses AWS S3
+  public S3ModelStore(String bucket, String prefix, Region region, String accessKey, String secretKey) {
+    this(bucket, prefix, region, accessKey, secretKey, null);
+  }
+
+  // Allows the endpoint (url) to be changed to support MinIO
+  public S3ModelStore(String bucket, String prefix, Region region, String accessKey, String secretKey, String endpoint) {
     this.bucket = bucket;
     this.prefix = (prefix == null || prefix.isEmpty()) ? "" : (prefix.endsWith("/") ? prefix : prefix + "/");
+    this.accessKey = accessKey;
+    this.secretKey = secretKey;
+    this.endpoint = endpoint;
     this.s3 = buildS3Client(region);
   }
 
   protected S3Client buildS3Client(Region region) {
-    return S3Client.builder()
+    S3ClientBuilder builder = S3Client.builder()
         .region(region)
-        .credentialsProvider(DefaultCredentialsProvider.create())
-        .build();
+        .credentialsProvider(StaticCredentialsProvider.create(
+            AwsBasicCredentials.create(accessKey, secretKey)));
+
+    if (endpoint != null) {
+      builder.endpointOverride(URI.create(endpoint));
+    }
+
+    return builder.build();
   }
 
   protected String resolveKey(String modelId) {

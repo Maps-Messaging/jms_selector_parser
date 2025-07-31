@@ -18,21 +18,16 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;
-
-import io.mapsmessaging.selector.ml.ModelStore;
+package io.mapsmessaging.selector.ml;
 
 import java.io.IOException;
-import java.util.List;
 
-public abstract class RawDataMLModelOperation extends AbstractMLModelOperation {
+public interface ModelStore {
+  void saveModel(String modelId, byte[] modelData) throws IOException;
 
-  protected RawDataMLModelOperation(String modelName, List<String> identity, long time, long samples,  ModelStore modelStore) throws ModelException, IOException {
-    super(modelName, identity, time, samples, modelStore);
-  }
+  byte[] loadModel(String modelId) throws IOException;
 
-  @Override
-  public boolean requiresLabel() {
-    return false;
-  }
+  boolean modelExists(String modelId) throws IOException;
+
+  boolean deleteModel(String modelId) throws IOException;
 }

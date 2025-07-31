@@ -20,7 +20,7 @@
 
 package io.mapsmessaging.selector;
 
-import io.mapsmessaging.selector.operators.functions.ml.impl.store.FileModelStore;
+import io.mapsmessaging.selector.ml.impl.store.FileModelStore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

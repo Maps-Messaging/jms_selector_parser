@@ -18,7 +18,7 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.store;
+package io.mapsmessaging.selector.ml.impl.store;
 
 import java.io.*;
 import java.net.URISyntaxException;

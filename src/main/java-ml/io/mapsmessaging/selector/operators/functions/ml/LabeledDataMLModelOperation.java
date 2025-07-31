@@ -23,6 +23,8 @@ package io.mapsmessaging.selector.operators.functions.ml;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import io.mapsmessaging.selector.ml.ModelStore;
 import smile.data.DataFrame;
 
 public abstract class LabeledDataMLModelOperation extends AbstractMLModelOperation {

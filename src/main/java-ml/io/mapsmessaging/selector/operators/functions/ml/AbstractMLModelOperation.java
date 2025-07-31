@@ -22,7 +22,8 @@ package io.mapsmessaging.selector.operators.functions.ml;
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
-import io.mapsmessaging.selector.operators.functions.ml.impl.store.ModelUtils;
+import io.mapsmessaging.selector.ml.ModelStore;
+import io.mapsmessaging.selector.ml.impl.store.ModelUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +32,7 @@ import smile.data.DataFrame;
 
 public abstract class AbstractMLModelOperation extends AbstractModelOperations {
   protected final List<double[]> dataBuffer = new ArrayList<>();
-  private final  ModelStore modelStore;
+  private final ModelStore modelStore;
   protected final long sampleSize;
   protected final long sampleTime;
 

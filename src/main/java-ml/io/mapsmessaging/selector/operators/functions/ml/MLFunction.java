@@ -22,6 +22,7 @@ package io.mapsmessaging.selector.operators.functions.ml;
 
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
+import io.mapsmessaging.selector.ml.ModelStore;
 import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.clustering.*;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.decisiontree.DecisionTreeOperation;
@@ -39,7 +40,7 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAFi
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.qda.QDAOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.randomforest.RandomForestOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.tensorflow.TensorFlowOperation;
-import io.mapsmessaging.selector.operators.functions.ml.impl.store.MapModelStore;
+import io.mapsmessaging.selector.ml.impl.store.MapModelStore;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;

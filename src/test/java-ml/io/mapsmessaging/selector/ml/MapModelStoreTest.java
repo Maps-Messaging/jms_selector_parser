@@ -18,16 +18,14 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml;
+package io.mapsmessaging.selector.ml;
 
-import java.io.IOException;
+import io.mapsmessaging.selector.ml.impl.store.MapModelStore;
 
-public interface ModelStore {
-  void saveModel(String modelId, byte[] modelData) throws IOException;
+public class MapModelStoreTest extends BaseModelStoreTest {
 
-  byte[] loadModel(String modelId) throws IOException;
-
-  boolean modelExists(String modelId) throws IOException;
-
-  boolean deleteModel(String modelId) throws IOException;
+  @Override
+  ModelStore getModelStore() {
+    return new MapModelStore();
+  }
 }

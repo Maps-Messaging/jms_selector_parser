@@ -18,9 +18,9 @@
  *
  */
 
-package io.mapsmessaging.selector.operators.functions.ml.impl.store;
+package io.mapsmessaging.selector.ml.impl.store;
 
-import io.mapsmessaging.selector.operators.functions.ml.ModelStore;
+import io.mapsmessaging.selector.ml.ModelStore;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
