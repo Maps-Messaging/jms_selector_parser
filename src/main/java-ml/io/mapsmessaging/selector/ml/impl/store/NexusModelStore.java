@@ -20,6 +20,9 @@
 
 package io.mapsmessaging.selector.ml.impl.store;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.mapsmessaging.selector.model.ModelStore;
 
 import java.io.FileNotFoundException;
@@ -97,34 +100,41 @@ public class NexusModelStore implements ModelStore {
 
   @Override
   public List<String> listModels() throws IOException {
+    String searchUrl = baseUrl.replaceFirst("/repository/[^/]+/?$", "") +
+        "/service/rest/v1/search/assets?repository=" + getRepositoryName();
+
+
     HttpRequest.Builder builder = HttpRequest.newBuilder()
-        .uri(URI.create(baseUrl))
+        .uri(URI.create(searchUrl))
         .GET();
     applyAuth(builder);
+
     HttpResponse<String> response = sendTextRequest(builder.build());
     if (response.statusCode() != 200) {
       throw new IOException("Failed to list models (status " + response.statusCode() + ")");
     }
 
-    // Simple HTML parsing or directory listing support
-    // Example assumes Nexus raw repo returns basic HTML with hrefs
-    List<String> models = new ArrayList<>();
-    String body = response.body();
-    for (String line : body.split("\n")) {
-      int hrefIdx = line.indexOf("href=\"");
-      if (hrefIdx != -1) {
-        int start = hrefIdx + 6;
-        int end = line.indexOf("\"", start);
-        if (end > start) {
-          String path = line.substring(start, end);
-          if (!path.endsWith("/")) { // ignore directories
-            models.add(path.replace('/', '.'));
-          }
-        }
-      }
+    List<String> result = new ArrayList<>();
+    JsonObject root = JsonParser.parseString(response.body()).getAsJsonObject();
+    for (JsonElement item : root.getAsJsonArray("items")) {
+      JsonObject asset = item.getAsJsonObject();
+      String path = asset.get("path").getAsString();
+      result.add(path.replace('/', '.'));
     }
-    return models;
+    return result;
   }
+
+  private String getRepositoryName() {
+    try {
+      URI uri = URI.create(baseUrl);
+      String path = uri.getPath(); // e.g., /repository/maps_ml_store/
+      String[] parts = path.split("/");
+      return parts[parts.length - 1].isEmpty() ? parts[parts.length - 2] : parts[parts.length - 1];
+    } catch (Exception e) {
+      throw new IllegalStateException("Failed to extract repository name from baseUrl: " + baseUrl, e);
+    }
+  }
+
 
   private void applyAuth(HttpRequest.Builder builder) {
     if (authHeader != null) {
