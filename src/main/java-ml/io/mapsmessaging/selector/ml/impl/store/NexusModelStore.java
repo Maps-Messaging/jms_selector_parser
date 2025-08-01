@@ -20,7 +20,7 @@
 
 package io.mapsmessaging.selector.ml.impl.store;
 
-import io.mapsmessaging.selector.ml.ModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,7 +29,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 public class NexusModelStore implements ModelStore {
 
@@ -50,7 +52,7 @@ public class NexusModelStore implements ModelStore {
   @Override
   public void saveModel(String modelId, byte[] modelData) throws IOException {
     HttpRequest.Builder builder = HttpRequest.newBuilder()
-        .uri(URI.create(baseUrl + modelId))
+        .uri(URI.create(baseUrl + toPath(modelId)))
         .header("Content-Type", "application/zip")
         .PUT(HttpRequest.BodyPublishers.ofByteArray(modelData));
 
@@ -61,7 +63,7 @@ public class NexusModelStore implements ModelStore {
   @Override
   public byte[] loadModel(String modelId) throws IOException {
     HttpRequest.Builder builder = HttpRequest.newBuilder()
-        .uri(URI.create(baseUrl + modelId))
+        .uri(URI.create(baseUrl + toPath(modelId)))
         .GET();
 
     applyAuth(builder);
@@ -73,7 +75,7 @@ public class NexusModelStore implements ModelStore {
   @Override
   public boolean modelExists(String modelId) throws IOException {
     HttpRequest.Builder builder = HttpRequest.newBuilder()
-        .uri(URI.create(baseUrl + modelId))
+        .uri(URI.create(baseUrl + toPath(modelId)))
         .method("HEAD", HttpRequest.BodyPublishers.noBody());
 
     applyAuth(builder);
@@ -84,12 +86,44 @@ public class NexusModelStore implements ModelStore {
   @Override
   public boolean deleteModel(String modelId) throws IOException {
     HttpRequest.Builder builder = HttpRequest.newBuilder()
-        .uri(URI.create(baseUrl + modelId))
+        .uri(URI.create(baseUrl + toPath(modelId)))
         .DELETE();
 
     applyAuth(builder);
     HttpResponse<Void> response = sendVoidRequest(builder.build());
     return response != null && response.statusCode() == 204;
+  }
+
+
+  @Override
+  public List<String> listModels() throws IOException {
+    HttpRequest.Builder builder = HttpRequest.newBuilder()
+        .uri(URI.create(baseUrl))
+        .GET();
+    applyAuth(builder);
+    HttpResponse<String> response = sendTextRequest(builder.build());
+    if (response.statusCode() != 200) {
+      throw new IOException("Failed to list models (status " + response.statusCode() + ")");
+    }
+
+    // Simple HTML parsing or directory listing support
+    // Example assumes Nexus raw repo returns basic HTML with hrefs
+    List<String> models = new ArrayList<>();
+    String body = response.body();
+    for (String line : body.split("\n")) {
+      int hrefIdx = line.indexOf("href=\"");
+      if (hrefIdx != -1) {
+        int start = hrefIdx + 6;
+        int end = line.indexOf("\"", start);
+        if (end > start) {
+          String path = line.substring(start, end);
+          if (!path.endsWith("/")) { // ignore directories
+            models.add(path.replace('/', '.'));
+          }
+        }
+      }
+    }
+    return models;
   }
 
   private void applyAuth(HttpRequest.Builder builder) {
@@ -116,10 +150,26 @@ public class NexusModelStore implements ModelStore {
     }
   }
 
+  private HttpResponse<String> sendTextRequest(HttpRequest request) throws IOException {
+    try {
+      return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new IOException("Interrupted during request", e);
+    }
+  }
+
   private void sendRequest(HttpRequest request, String errorMessage) throws IOException {
     HttpResponse<Void> response = sendVoidRequest(request);
     if (response.statusCode() >= 300) {
       throw new IOException(errorMessage + " (status " + response.statusCode() + ")");
     }
   }
+
+  private String toPath(String modelId) {
+    int lastDot = modelId.lastIndexOf('.');
+    if (lastDot <= 0) return modelId.replace('.', '/');
+    return modelId.substring(0, lastDot).replace('.', '/') + modelId.substring(lastDot);
+  }
+
 }

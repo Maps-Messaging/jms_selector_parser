@@ -21,7 +21,7 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearregression;
 
 import io.mapsmessaging.selector.operators.functions.ml.ModelException;
-import io.mapsmessaging.selector.ml.ModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
 import java.io.IOException;
 import java.util.List;
 import smile.data.DataFrame;

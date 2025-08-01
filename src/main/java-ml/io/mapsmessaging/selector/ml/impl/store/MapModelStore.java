@@ -20,7 +20,11 @@
 
 package io.mapsmessaging.selector.ml.impl.store;
 
-import io.mapsmessaging.selector.ml.ModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,4 +54,10 @@ public class MapModelStore implements ModelStore {
   public boolean deleteModel(String modelId) {
     return modelStore.remove(modelId) != null;
   }
+
+  @Override
+  public List<String> listModels() {
+    return new ArrayList<>(modelStore.keySet());
+  }
+
 }

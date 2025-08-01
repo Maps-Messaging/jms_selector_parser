@@ -21,6 +21,7 @@
 package io.mapsmessaging.selector.ml;
 
 import io.mapsmessaging.selector.ml.impl.store.FileModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
 
 public class FileModelStoreTest extends BaseModelStoreTest{
 

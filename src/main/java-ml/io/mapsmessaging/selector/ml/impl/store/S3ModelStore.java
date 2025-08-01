@@ -20,7 +20,7 @@
 
 package io.mapsmessaging.selector.ml.impl.store;
 
-import io.mapsmessaging.selector.ml.ModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -142,7 +142,7 @@ public class S3ModelStore implements ModelStore {
   }
 
   @Override
-  public boolean deleteModel(String modelId) throws IOException {
+  public boolean deleteModel(String modelId) {
     try {
       s3.deleteObject(DeleteObjectRequest.builder()
           .bucket(bucket)
@@ -154,8 +154,33 @@ public class S3ModelStore implements ModelStore {
     }
   }
 
+  @Override
+  public List<String> listModels() throws IOException {
+    List<String> result = new ArrayList<>();
+    try {
+      ListObjectsV2Request request = ListObjectsV2Request.builder()
+          .bucket(bucket)
+          .prefix(prefix)
+          .build();
+
+      ListObjectsV2Response response = s3.listObjectsV2(request);
+      for (S3Object obj : response.contents()) {
+        String key = obj.key();
+        if (key.endsWith("/")) continue; // skip pseudo-folders
+        String relative = key.substring(prefix.length());
+        result.add(relative.replace('/', '.'));
+      }
+      return result;
+    } catch (S3Exception e) {
+      throw new IOException("Failed to list models", e);
+    }
+  }
+
+
   private String resolveKey(String modelId) {
-    return prefix + modelId;
+    int lastDot = modelId.lastIndexOf('.');
+    if (lastDot <= 0) return prefix + modelId.replace('.', '/');
+    return prefix + modelId.substring(0, lastDot).replace('.', '/') + modelId.substring(lastDot);
   }
 
   private S3Client buildS3Client(Region region) {
@@ -181,7 +206,6 @@ public class S3ModelStore implements ModelStore {
     if (prefix == null || prefix.isEmpty()) return "";
     return prefix.endsWith("/") ? prefix : prefix + "/";
   }
-
 
 }
 

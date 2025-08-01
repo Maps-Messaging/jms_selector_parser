@@ -21,13 +21,9 @@
 package io.mapsmessaging.selector.ml;
 
 import io.mapsmessaging.selector.ml.impl.store.NexusModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -20,7 +20,7 @@
 
 package io.mapsmessaging.selector.operators.functions.ml;
 
-import io.mapsmessaging.selector.ml.ModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
 
 import java.io.IOException;
 import java.util.List;

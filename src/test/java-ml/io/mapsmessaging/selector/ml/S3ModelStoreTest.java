@@ -22,6 +22,7 @@ package io.mapsmessaging.selector.ml;
 
 import io.mapsmessaging.selector.ml.impl.store.S3ModelStore;
 
+import io.mapsmessaging.selector.model.ModelStore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import software.amazon.awssdk.regions.Region;

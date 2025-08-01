@@ -20,11 +20,13 @@
 
 package io.mapsmessaging.selector.ml;
 
+import io.mapsmessaging.selector.model.ModelStore;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,11 +39,19 @@ abstract class BaseModelStoreTest {
   void testPushListDeleteModels() throws Exception {
     ModelStore modelStore = getModelStore();
 
-    uploadAndVerify(modelStore,"isoTest.arff");
-    uploadAndVerify(modelStore,"sensor_safety_model.zip");
+    uploadAndVerify(modelStore, "isoTest.arff");
+    uploadAndVerify(modelStore, "sensor_safety_model.zip");
 
-    deleteAndVerify(modelStore,"isoTest.arff");
-    deleteAndVerify(modelStore,"sensor_safety_model.zip");
+    List<String> models = modelStore.listModels();
+    assertTrue(models.contains("isoTest.arff"));
+    assertTrue(models.contains("sensor_safety_model.zip"));
+
+    deleteAndVerify(modelStore, "isoTest.arff");
+    deleteAndVerify(modelStore, "sensor_safety_model.zip");
+
+    models = modelStore.listModels();
+    assertFalse(models.contains("isoTest.arff"));
+    assertFalse(models.contains("sensor_safety_model.zip"));
   }
 
   private void uploadAndVerify(ModelStore modelStore, String name) throws IOException {

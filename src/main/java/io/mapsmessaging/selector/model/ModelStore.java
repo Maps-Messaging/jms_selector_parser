@@ -18,9 +18,10 @@
  *
  */
 
-package io.mapsmessaging.selector.ml;
+package io.mapsmessaging.selector.model;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface ModelStore {
   void saveModel(String modelId, byte[] modelData) throws IOException;
@@ -30,4 +31,6 @@ public interface ModelStore {
   boolean modelExists(String modelId) throws IOException;
 
   boolean deleteModel(String modelId) throws IOException;
+
+  List<String> listModels() throws IOException;
 }

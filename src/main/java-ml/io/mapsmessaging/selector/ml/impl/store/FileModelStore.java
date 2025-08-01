@@ -20,12 +20,16 @@
 
 package io.mapsmessaging.selector.ml.impl.store;
 
-import io.mapsmessaging.selector.ml.ModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class FileModelStore implements ModelStore {
 
@@ -36,8 +40,8 @@ public class FileModelStore implements ModelStore {
   }
 
   @Override
-  public void saveModel(String s, byte[] bytes) throws IOException {
-    File file = new File(rootDirectory, s);
+  public void saveModel(String modelId, byte[] bytes) throws IOException {
+    File file = resolveModelPath(modelId);
     file.getParentFile().mkdirs();
     try(FileOutputStream fos = new FileOutputStream(file)) {
       fos.write(bytes);
@@ -45,8 +49,8 @@ public class FileModelStore implements ModelStore {
   }
 
   @Override
-  public byte[] loadModel(String s) throws IOException {
-    File file = new File(rootDirectory, s);
+  public byte[] loadModel(String modelId) throws IOException {
+    File file = resolveModelPath(modelId);
     byte[] buffer;
     try(FileInputStream fis = new FileInputStream(file)) {
       long pos = 0;
@@ -63,22 +67,46 @@ public class FileModelStore implements ModelStore {
   }
 
   @Override
-  public boolean modelExists(String s) {
-    File file = new File(rootDirectory, s);
+  public boolean modelExists(String modelId) {
+    File file = resolveModelPath(modelId);
     if(file.exists()){
       return true;
     }
-    file = new File(rootDirectory, s+".zip");
+    file = new File(rootDirectory, modelId+".zip");
     return file.exists();
   }
 
   @Override
   public boolean deleteModel(String modelId) throws IOException {
-    File file = new File(rootDirectory, modelId);
+    File file = resolveModelPath(modelId);
     if(file.exists()) {
       Files.delete(file.toPath());
       return true;
     }
     return false;
+  }
+
+  private File resolveModelPath(String modelId) {
+    int lastDot = modelId.lastIndexOf('.');
+    String path = (lastDot <= 0)
+        ? modelId.replace('.', File.separatorChar)
+        : modelId.substring(0, lastDot).replace('.', File.separatorChar) + modelId.substring(lastDot);
+    return new File(rootDirectory, path);
+  }
+
+
+  @Override
+  public List<String> listModels() throws IOException {
+    List<String> result = new ArrayList<>();
+    Path root = new File(rootDirectory).toPath();
+    try (Stream<Path> paths = Files.walk(root)) {
+      paths.filter(Files::isRegularFile)
+          .forEach(path -> {
+            Path rel = root.relativize(path);
+            String name = rel.toString().replace(File.separatorChar, '.');
+            result.add(name);
+          });
+    }
+    return result;
   }
 }
