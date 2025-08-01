@@ -22,7 +22,6 @@ package io.mapsmessaging.selector.ml.impl.store;
 
 import io.mapsmessaging.selector.model.ModelStore;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
