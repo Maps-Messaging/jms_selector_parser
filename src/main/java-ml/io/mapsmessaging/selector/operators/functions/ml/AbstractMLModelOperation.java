@@ -77,6 +77,12 @@ public abstract class AbstractMLModelOperation extends AbstractModelOperations {
         }
       }
       if (isModelTrained) {
+        // Do NOT proceed if all the data points do not exist
+        for(Double d : data){
+          if(Double.isNaN(d)){
+            return Double.NaN;
+          }
+        }
         return applyModel(data);
       }
     } catch (Exception e) {
