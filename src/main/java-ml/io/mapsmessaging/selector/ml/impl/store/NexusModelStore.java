@@ -102,8 +102,6 @@ public class NexusModelStore implements ModelStore {
   public List<String> listModels() throws IOException {
     String searchUrl = baseUrl.replaceFirst("/repository/[^/]+/?$", "") +
         "/service/rest/v1/search/assets?repository=" + getRepositoryName();
-
-
     HttpRequest.Builder builder = HttpRequest.newBuilder()
         .uri(URI.create(searchUrl))
         .GET();
