@@ -39,6 +39,10 @@ abstract class BaseModelStoreTest {
   void testPushListDeleteModels() throws Exception {
     ModelStore modelStore = getModelStore();
 
+    removeRevisions(modelStore,"isoTest.arff");
+    removeRevisions(modelStore,"sensor_safety_model.zip");
+
+
     uploadAndVerify(modelStore, "isoTest.arff");
     uploadAndVerify(modelStore, "sensor_safety_model.zip");
 
@@ -52,6 +56,14 @@ abstract class BaseModelStoreTest {
     models = modelStore.listModels();
     assertFalse(models.contains("isoTest.arff"));
     assertFalse(models.contains("sensor_safety_model.zip"));
+  }
+
+  private void removeRevisions(ModelStore store, String name) throws IOException {
+    int breakLoop  = 0;
+    while(store.modelExists(name)&& breakLoop < 20) {
+      store.deleteModel(name);
+      breakLoop++;
+    }
   }
 
   private void uploadAndVerify(ModelStore modelStore, String name) throws IOException {
