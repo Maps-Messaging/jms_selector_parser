@@ -22,6 +22,7 @@ package io.mapsmessaging.selector.resolvers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import io.mapsmessaging.selector.IdentifierMutator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -120,6 +121,17 @@ public class JsonEvaluator extends IdentifierMutator {
         lookup instanceof Integer ||
         lookup instanceof Long) {
       return lookup;
+    }
+    else if(lookup instanceof JsonPrimitive primitive){
+      if(primitive.isBoolean()){
+        return primitive.getAsBoolean();
+      }
+      if(primitive.isNumber()){
+        return primitive.getAsNumber();
+      }
+      if(primitive.isString()){
+        return primitive.getAsString();
+      }
     }
     else if(lookup instanceof BigDecimal bigDecimal){
       return bigDecimal.doubleValue();

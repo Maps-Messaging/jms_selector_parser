@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 class JsonFilteringTest {
 
-  private final static int LIST_SIZE = 1000;
+  private static final int LIST_SIZE = 1000;
 
   @Test
   void simpleJsonFiltering() throws ParseException {
@@ -42,7 +42,7 @@ class JsonFilteringTest {
     ParserExecutor executor = SelectorParser.compile("state = 'Alaska'");
     for(int x=0;x<addressList.size();x++){
       JsonObject jsonObject = addressList.get(x).getAsJsonObject();
-      if(jsonObject.get("state").equals("Alaska")){
+      if(jsonObject.get("state").getAsString().equals("Alaska")){
         alaskaCount++;
       }
       if(executor.evaluate(jsonObject)){

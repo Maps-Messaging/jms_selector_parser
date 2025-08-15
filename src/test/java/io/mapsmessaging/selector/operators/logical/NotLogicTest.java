@@ -57,6 +57,6 @@ class NotLogicTest {
     Assertions.assertNotEquals(notOperator1, notOperator2);
 
     notOperator1 = new NotOperator(true);
-    Assertions.assertNotEquals(notOperator1, this);
+    Assertions.assertNotEquals(this, notOperator1);
   }
 }
