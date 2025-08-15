@@ -78,7 +78,7 @@ class JsonFilteringTest {
     ParserExecutor executor = SelectorParser.compile("address.state = 'Alaska'");
     for(int x=0;x<people.size();x++){
       JsonObject person = people.get(x).getAsJsonObject();
-      if(person.getAsJsonObject("address").get("state").equals("Alaska")){
+      if(person.getAsJsonObject("address").get("state").getAsString().equals("Alaska")){
         alaskaCount++;
       }
       if(executor.evaluate(person)){
