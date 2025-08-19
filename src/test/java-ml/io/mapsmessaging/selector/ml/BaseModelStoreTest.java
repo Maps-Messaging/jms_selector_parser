@@ -45,6 +45,7 @@ abstract class BaseModelStoreTest {
 
     uploadAndVerify(modelStore, "isoTest.arff");
     uploadAndVerify(modelStore, "sensor_safety_model.zip");
+    Thread.sleep(1000); // allow the models to be removed from cache
 
     List<String> models = modelStore.listModels();
     assertTrue(models.contains("isoTest.arff"));
