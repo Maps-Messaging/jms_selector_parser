@@ -1,0 +1,8 @@
+steps:
+  - label: ":maven: Build and Deploy"
+    command:
+      - mvn clean deploy -P ml,release
+
+    agents:
+      queue: "java_build_queue"
+
