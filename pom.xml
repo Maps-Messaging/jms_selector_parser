@@ -24,7 +24,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mapsmessaging</groupId>
   <artifactId>jms_selector_parser</artifactId>
-  <version>ml-2.0.0</version>
+  <version>ml-2.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Extensible JMS Selector Parser</name>
