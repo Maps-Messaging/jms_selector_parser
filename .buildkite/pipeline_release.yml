@@ -2,7 +2,7 @@ steps:
   - label: ":maven: Build and Deploy"
     command:
       - sed -i 's/<version>ml-\(.*\)<\/version>/<version>\1<\/version>/g' pom.xml
-      - mvn clean deploy -P release
+      - mvn clean deploy -P standard,release
 
     agents:
       queue: "java_build_queue"
