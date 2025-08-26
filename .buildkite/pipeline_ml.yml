@@ -1,0 +1,23 @@
+steps:
+  - label: ":maven: Build and Deploy"
+    command:
+      - export SONAR_TOKEN=$(buildkite-agent secret get SONAR_TOKEN)
+      - export NVD_API_KEY=$(buildkite-agent secret get nvd_api_key)
+      - export MODEL_USER=$(buildkite-agent secret get NEXUS_USER)
+      - export MODEL_PASSWORD=$(buildkite-agent secret get NEXUS_PASSWORD)
+      - export S3_ACCESS_KEY=$(buildkite-agent secret get S3_ACCESS_KEY)
+      - export S3_SECRET_KEY=$(buildkite-agent secret get S3_SECRET_KEY)
+      - export S3_REGION="ap-southeast-2"
+      - mvn -Dgpg.skip=true clean deploy -Pml
+      - mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}
+    plugins:
+      - test-collector#v1.0.0:
+          files: "target/surefire-reports/*.xml"
+          format: "junit"
+    env:
+      SONAR_TOKEN: "${SONAR_TOKEN}"
+      BUILDKITE_ANALYTICS_TOKEN: "$(buildkite-agent secret get JmsSelectorMLBuildKiteAnalytics)"
+
+    agents:
+      queue: "java_build_queue"
+

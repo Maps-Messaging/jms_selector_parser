@@ -1,28 +1,30 @@
 /*
  *
- *   Copyright [ 2020 - 2023 ] [Matthew Buckton]
+ *  Copyright [ 2020 - 2024 ] Matthew Buckton
+ *  Copyright [ 2024 - 2025 ] MapsMessaging B.V.
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 with the Commons Clause
+ *  (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at:
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://commonsclause.com/
  *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 
 package io.mapsmessaging.selector.operators.functions;
 
-import io.mapsmessaging.selector.operators.Operation;
+import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.ComparisonOperator;
 import io.mapsmessaging.selector.operators.FunctionOperator;
-import io.mapsmessaging.selector.IdentifierResolver;
+import io.mapsmessaging.selector.operators.Operation;
 import io.mapsmessaging.selector.operators.comparison.GreaterOrEqualOperator;
 import io.mapsmessaging.selector.operators.comparison.LessOrEqualOperator;
 
@@ -32,13 +34,12 @@ public class BetweenOperator extends FunctionOperator {
   private final ComparisonOperator bottomOperator;
   private final ComparisonOperator topOperator;
 
-
   public BetweenOperator(Object lhs, Object lowest, Object highest){
-    if(lowest instanceof Operation){
-      lowest = ((Operation)lowest).compile();
+    if(lowest instanceof Operation operation){
+      lowest = operation.compile();
     }
-    if(highest instanceof Operation){
-      highest = ((Operation)highest).compile();
+    if(highest instanceof Operation operation){
+      highest = operation.compile();
     }
 
     this.lhs = lhs;
@@ -67,16 +68,17 @@ public class BetweenOperator extends FunctionOperator {
     return false;
   }
 
+  @Override
   public String toString(){
     return "("+lhs.toString() +") BETWEEN ("+ bottomOperator.getRHS()+" AND "+topOperator.getRHS()+")";
   }
 
   @Override
   public boolean equals(Object test){
-    if(test instanceof BetweenOperator){
-      return (lhs.equals(((BetweenOperator) test).lhs) &&
-          bottomOperator.equals(((BetweenOperator) test).bottomOperator) &&
-          topOperator.equals(((BetweenOperator) test).topOperator));
+    if(test instanceof BetweenOperator between){
+      return (lhs.equals(between.lhs) &&
+          bottomOperator.equals(between.bottomOperator) &&
+          topOperator.equals(between.topOperator));
     }
     return false;
   }

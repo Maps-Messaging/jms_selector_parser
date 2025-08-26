@@ -1,18 +1,20 @@
 /*
  *
- *   Copyright [ 2020 - 2023 ] [Matthew Buckton]
+ *  Copyright [ 2020 - 2024 ] Matthew Buckton
+ *  Copyright [ 2024 - 2025 ] MapsMessaging B.V.
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 with the Commons Clause
+ *  (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at:
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://commonsclause.com/
  *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 
@@ -23,33 +25,34 @@ import io.mapsmessaging.selector.ParseException;
 
 /**
  * From the JMS 2.0 Specification
- *<p>
- * String and Boolean comparison is restricted to = and &lt;&gt;. Two strings are equal if and only if they contain the same sequence of characters.
+ *
+ * <p>String and Boolean comparison is restricted to = and &lt;&gt;. Two strings are equal if and
+ * only if they contain the same sequence of characters.
  */
 public abstract class ComparisonOperator extends ComputableOperator {
 
   protected Object lhs;
   protected Object rhs;
 
-  protected ComparisonOperator(Object lhs, Object rhs)  {
+  protected ComparisonOperator(Object lhs, Object rhs) {
     this.lhs = lhs;
     this.rhs = rhs;
   }
 
-  public Object getRHS(){
+  public Object getRHS() {
     return rhs;
   }
 
-  public Object compile(){
-    if(lhs instanceof Operation){
-      lhs = ((Operation)lhs).compile();
+  public Object compile() {
+    if (lhs instanceof Operation operation) {
+      lhs = operation.compile();
     }
-    if(rhs instanceof Operation){
-      rhs = ((Operation)rhs).compile();
+    if (rhs instanceof Operation operation) {
+      rhs = operation.compile();
     }
-    if( (lhs instanceof Number && rhs instanceof Number) ||
-        (lhs instanceof Boolean && rhs instanceof Boolean) ||
-        (lhs instanceof String && rhs instanceof String)){
+    if ((lhs instanceof Number && rhs instanceof Number)
+        || (lhs instanceof Boolean && rhs instanceof Boolean)
+        || (lhs instanceof String && rhs instanceof String)) {
       return evaluate(lhs, rhs);
     }
     return this;
@@ -61,43 +64,41 @@ public abstract class ComparisonOperator extends ComputableOperator {
     return evaluate(lhsValue, rhsValue);
   }
 
-  public Object evaluate(Object lhsValue, Object rhsValue){
-    if(lhsValue instanceof String && rhsValue instanceof String){
-      return compute((String) lhsValue, (String)rhsValue);
+  public Object evaluate(Object lhsValue, Object rhsValue) {
+    if (lhsValue instanceof String  lhsString && rhsValue instanceof String rhsString) {
+      return compute(lhsString, rhsString);
     }
 
-    if(lhsValue instanceof Boolean && rhsValue instanceof Boolean){
-      return compute((Boolean)lhsValue, (Boolean) rhsValue);
+    if (lhsValue instanceof Boolean lhsBoolean && rhsValue instanceof Boolean rhsBoolean) {
+      return compute(lhsBoolean,rhsBoolean);
     }
 
-    if(lhsValue instanceof Number && rhsValue instanceof Number){
-      return processNumber((Number)lhsValue,  (Number)rhsValue);
+    if (lhsValue instanceof Number lhsNumber && rhsValue instanceof Number rhsNumber) {
+      return processNumber(lhsNumber, rhsNumber);
     }
 
-    if(lhsValue instanceof String && rhsValue != null){
-      var lhsNumber = parseStringToNumber((String)lhsValue);
-      if(lhsNumber != null) {
+    if (lhsValue instanceof String lhsString && rhsValue != null) {
+      var lhsNumber = parseStringToNumber(lhsString);
+      if (lhsNumber != null) {
         return evaluate(lhsNumber, rhsValue);
       }
-    }
-    else if(rhsValue instanceof String && lhsValue != null){
-      var rhsNumber = parseStringToNumber((String)rhsValue);
-      if(rhsNumber != null) {
+    } else if (rhsValue instanceof String rhsString && lhsValue != null) {
+      var rhsNumber = parseStringToNumber(rhsString);
+      if (rhsNumber != null) {
         return evaluate(lhsValue, rhsNumber);
       }
     }
     return false;
   }
 
-  private Object processNumber(Number lhsNumber, Number rhsNumber){
-    if (lhsNumber instanceof Double) {
-      return processDouble((Double) lhsNumber, rhsNumber);
-    }
-    else if(lhsNumber instanceof Float){
-      return processFloat((Float) lhsNumber, rhsNumber);
+  private Object processNumber(Number lhsNumber, Number rhsNumber) {
+    if (lhsNumber instanceof Double lhsDouble) {
+      return processDouble(lhsDouble, rhsNumber);
+    } else if (lhsNumber instanceof Float lhsFloat) {
+      return processFloat(lhsFloat, rhsNumber);
 
     } else {
-      return processInteger((Long)lhsNumber, rhsNumber);
+      return processInteger((Long) lhsNumber, rhsNumber);
     }
   }
 
@@ -109,8 +110,7 @@ public abstract class ComparisonOperator extends ComputableOperator {
 
   // Regardless of the arguments we can not compare boolean by default
   @java.lang.SuppressWarnings("squid:S1172")
-  protected Boolean compute(Boolean lhs, Boolean rhs){
+  protected Boolean compute(Boolean lhs, Boolean rhs) {
     return false;
   }
-
 }

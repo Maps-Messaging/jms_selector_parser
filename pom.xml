@@ -1,11 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~  Copyright [ 2020 - 2024 ] Matthew Buckton
+  ~  Copyright [ 2024 - 2025 ] MapsMessaging B.V.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 with the Commons Clause
+  ~  (the "License"); you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at:
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~      https://commonsclause.com/
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mapsmessaging</groupId>
   <artifactId>jms_selector_parser</artifactId>
-  <version>1.1.15</version>
+  <version>ml-2.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Extensible JMS Selector Parser</name>
@@ -14,25 +33,29 @@
 
   <developers>
     <developer>
-      <id>mbuckton</id>
-      <name>Matthew Buckton</name>
-      <organization>Maps Messaging</organization>
-      <organizationUrl>http://mapsmessaging.io/</organizationUrl>
+      <id>mapsmessaging</id>
+      <name>MapsMessaging B.V.</name>
+      <organization>MapsMessaging B.V.</organization>
+      <organizationUrl>https://mapsmessaging.io/</organizationUrl>
       <roles>
-        <role>founder</role>
+        <role>developer</role>
+        <role>maintainer</role>
       </roles>
-      <timezone>Australia/Sydney</timezone>
+      <timezone>Europe/Amsterdam</timezone>
+      <properties>
+        <location>Eindhoven, Netherlands</location>
+      </properties>
     </developer>
   </developers>
 
   <licenses>
     <license>
-      <name>Mozilla Public License Version 2.0</name>
-      <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+      <name>Apache License, Version 2.0 with Commons Clause</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
       <distribution>repo</distribution>
     </license>
     <license>
-      <name>CommonsClause</name>
+      <name>Commons Clause</name>
       <url>https://commonsclause.com/</url>
       <distribution>repo</distribution>
     </license>
@@ -43,12 +66,11 @@
   </scm>
 
   <properties>
-    <maven.compiler.source>13</maven.compiler.source>
-    <maven.compiler.target>13</maven.compiler.target>
-
+    <nvd.api.key>${env.NVD_API_KEY}</nvd.api.key>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.sources>src/main</sonar.sources>
-    <!-- Below property indicates the pattern of the test suite -->
     <runSuite>**/*Suite.class</runSuite>
     <sonar.test.exclusions>
       **/*Test.*,**.*JMH.*
@@ -93,7 +115,7 @@
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
             <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.13</version>
+            <version>1.7.0</version>
             <extensions>true</extensions>
             <configuration>
               <serverId>mapsmessaging.io</serverId>
@@ -104,14 +126,218 @@
         </plugins>
       </build>
     </profile>
-  </profiles>
+    <profile>
+      <id>standard</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <test.profile>standard</test.profile>
+        <java.version>17</java.version>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.helger.maven</groupId>
+            <artifactId>ph-javacc-maven-plugin</artifactId>
+            <version>4.1.5</version>
+            <executions>
+              <execution>
+                <id>javacc</id>
+                <goals>
+                  <goal>javacc</goal>
+                </goals>
+                <configuration>
+                  <sourceDirectory>${basedir}/src/main/javacc/standard</sourceDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.4.2</version>
+          </plugin>
 
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <excludePackageNames>io.mapsmessaging.selector</excludePackageNames>
+              <charset>UTF-8</charset>
+              <encoding>UTF-8</encoding>
+              <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+              <outputDirectory>${project.build.directory}/site/docs</outputDirectory>
+              <show>public</show>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <id>attach-javadocs</id>
+              </execution>
+            </executions>
+            <groupId>org.apache.maven.plugins</groupId>
+            <version>3.11.3</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>ml</id>
+      <properties>
+        <test.profile>ml</test.profile>
+        <java.version>21</java.version>
+      </properties>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+              <include>META-INF/services/io.mapsmessaging.selector.extensions.ParserExtension</include>
+            </includes>
+          </resource>
+        </resources>
+        <plugins>
+          <plugin>
+            <groupId>com.helger.maven</groupId>
+            <artifactId>ph-javacc-maven-plugin</artifactId>
+            <version>4.1.5</version>
+            <executions>
+              <execution>
+                <id>javacc</id>
+                <goals>
+                  <goal>javacc</goal>
+                </goals>
+                <configuration>
+                  <sourceDirectory>${basedir}/src/main/javacc/ml</sourceDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.6.1</version>
+            <executions>
+              <execution>
+                <id>add-source</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/main/java-ml</source>
+                  </sources>
+                </configuration>
+              </execution>
+
+              <execution>
+                <id>add-test-source</id>
+                <phase>generate-test-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <!-- Add the test ML-specific sources -->
+                    <source>src/test/java-ml</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Main JAR with -ml suffix -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.4.2</version>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <excludePackageNames>io.mapsmessaging.selector</excludePackageNames>
+              <charset>UTF-8</charset>
+              <encoding>UTF-8</encoding>
+              <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+              <outputDirectory>${project.build.directory}/site/docs</outputDirectory>
+              <show>public</show>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <id>attach-javadocs</id>
+              </execution>
+            </executions>
+            <groupId>org.apache.maven.plugins</groupId>
+            <version>3.11.3</version>
+          </plugin>
+        </plugins>
+      </build>
+      <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.github.haifengl/smile-core -->
+        <dependency>
+          <groupId>com.github.haifengl</groupId>
+          <artifactId>smile-core</artifactId>
+          <version>4.4.0</version>
+          <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>org.tensorflow</groupId>
+          <artifactId>tensorflow-core-platform</artifactId>
+          <version>1.1.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
+        <dependency>
+          <groupId>software.amazon.awssdk</groupId>
+          <artifactId>s3</artifactId>
+          <version>2.32.29</version>
+        </dependency>
+
+      </dependencies>
+    </profile>
+  </profiles>
 
   <distributionManagement>
     <snapshotRepository>
-        <id>maps_snapshots</id>
-        <name>maps_snapshot_repository</name>
-        <url>https://repository.mapsmessaging.io:8081/repository/maps_snapshots/</url>
+      <id>maps_snapshots</id>
+      <name>maps_snapshot_repository</name>
+      <url>https://repository.mapsmessaging.io/repository/maps_snapshots/</url>
     </snapshotRepository>
     <repository>
       <id>ossrh</id>
@@ -119,13 +345,28 @@
     </repository>
   </distributionManagement>
 
-
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.8</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>
@@ -145,11 +386,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.2</version>
+        <version>3.5.3</version>
         <configuration>
-          <argLine>
-            @{argLine} -Dfile.encoding=UTF-8
-          </argLine>
+          <argLine>-Xmx8G -Dfile.encoding=UTF-8 @{argLine}</argLine>
           <includes>
             <include>**/*Test.java</include>
             <include>**/Test**.java</include>
@@ -157,44 +396,10 @@
         </configuration>
       </plugin>
 
-      <!-- build the source jar as well -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.0</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Compile the javacc file -->
-      <plugin>
-        <groupId>com.helger.maven</groupId>
-        <artifactId>ph-javacc-maven-plugin</artifactId>
-        <version>4.1.5</version>
-        <executions>
-          <execution>
-            <id>javacc</id>
-            <goals>
-              <goal>javacc</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${basedir}/src/main/javacc</sourceDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Code coverage -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.11</version>
+        <version>0.8.13</version>
         <configuration>
           <excludes>
             <!-- test code, lets not track the testing -->
@@ -210,9 +415,24 @@
           <!-- attached to Maven test phase -->
           <execution>
             <id>report</id>
-            <phase>test</phase>
+            <phase>verify</phase>
             <goals>
               <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- sBOM  generator -->
+      <plugin>
+        <groupId>org.cyclonedx</groupId>
+        <artifactId>cyclonedx-maven-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>makeAggregateBom</goal>
             </goals>
           </execution>
         </executions>
@@ -222,60 +442,55 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.14.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
-          <source>11</source>
-          <target>11</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
           <compilerArgs>
             <arg>-h</arg>
             <arg>src/main/cpp/</arg>
           </compilerArgs>
         </configuration>
       </plugin>
-
-      <!-- JavaDoc -->
       <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>12.1.3</version>
         <configuration>
-          <excludePackageNames>
-            io.mapsmessaging.selector
-          </excludePackageNames>
-          <charset>UTF-8</charset>
-          <encoding>UTF-8</encoding>
-          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-          <reportOutputDirectory>${project.build.directory}/site/docs</reportOutputDirectory>
-          <show>public</show>
+          <nvdApiKey>${nvd.api.key}</nvdApiKey>
+          <failBuildOnCVSS>10</failBuildOnCVSS>
+          <failOnError>false</failOnError>
+          <skipArtifactType>test-jar</skipArtifactType>
+          <skipTestScope>true</skipTestScope>
         </configuration>
         <executions>
           <execution>
             <goals>
-              <goal>jar</goal>
+              <goal>check</goal>
             </goals>
-            <id>attach-javadocs</id>
           </execution>
         </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.6.2</version>
       </plugin>
+
     </plugins>
   </build>
 
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.json/json -->
+
     <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20231013</version>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.13.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
+      <version>1.18.38</version>
+      <scope>provided</scope>
     </dependency>
 
-    <!-- Micro Benchmarking -->
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-core</artifactId>
@@ -294,13 +509,20 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.10.1</version>
+      <version>5.13.4</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>5.13.4</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
-      <artifactId>javafaker</artifactId>
       <groupId>com.github.javafaker</groupId>
+      <artifactId>javafaker</artifactId>
       <version>1.0.2</version>
       <scope>test</scope>
     </dependency>

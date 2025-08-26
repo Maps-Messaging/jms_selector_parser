@@ -1,18 +1,20 @@
 /*
  *
- *   Copyright [ 2020 - 2023 ] [Matthew Buckton]
+ *  Copyright [ 2020 - 2024 ] Matthew Buckton
+ *  Copyright [ 2024 - 2025 ] MapsMessaging B.V.
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 with the Commons Clause
+ *  (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at:
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://commonsclause.com/
  *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 
@@ -52,54 +54,54 @@ class GreaterOrEqualComparatorTest extends ComparisonOperatorTest {
     greaterOrEqualOperator2 = new GreaterOrEqualOperator(10.0, 20.2);
     Assertions.assertNotEquals(greaterOrEqualOperator, greaterOrEqualOperator2);
     Assertions.assertNotEquals(greaterOrEqualOperator.hashCode(), greaterOrEqualOperator2.hashCode());
-    Assertions.assertNotEquals(greaterOrEqualOperator, this);
+    Assertions.assertNotEquals(this, greaterOrEqualOperator);
   }
 
   @Test
   void evaluationCheck() throws ParseException {
     GreaterOrEqualOperator operator = new GreaterOrEqualOperator(new Identifier("textKey"), "text data");
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("textKey"), "text 1 data");
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
 
     operator = new GreaterOrEqualOperator(new Identifier("textNumericLongKey"), 10L);
-    Assertions.assertEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("textNumericLongKey"), 122L);
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
 
     operator = new GreaterOrEqualOperator(new Identifier("textNumericRealKey"), 10.11);
-    Assertions.assertEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("textNumericRealKey"), 102.12);
     Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
 
     operator = new GreaterOrEqualOperator(new Identifier("longKey"), 10L);
-    Assertions.assertEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("longKey"), 10200.12);
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
 
     operator = new GreaterOrEqualOperator(new Identifier("intKey"), 10L);
-    Assertions.assertEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("intKey"), 10200.12);
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
 
     operator = new GreaterOrEqualOperator(new Identifier("shortKey"), 10L);
-    Assertions.assertEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("shortKey"), 10200.12);
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
 
     operator = new GreaterOrEqualOperator(new Identifier("byteKey"), 0x1);
-    Assertions.assertEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("byteKey"), 10200.12);
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
 
     operator = new GreaterOrEqualOperator(new Identifier("doubleKey"), 10.12);
-    Assertions.assertEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("doubleKey"), 10200.12);
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
 
     operator = new GreaterOrEqualOperator(new Identifier("floatKey"), 10.12f);
-    Assertions.assertEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertEquals(Boolean.TRUE, operator.evaluate(getResolver()));
     operator = new GreaterOrEqualOperator(new Identifier("floatKey"), 10200.12);
-    Assertions.assertNotEquals(operator.evaluate(getResolver()), Boolean.TRUE);
+    Assertions.assertNotEquals(Boolean.TRUE, operator.evaluate(getResolver()));
   }
 }

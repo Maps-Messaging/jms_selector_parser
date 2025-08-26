@@ -1,18 +1,20 @@
 /*
  *
- *   Copyright [ 2020 - 2023 ] [Matthew Buckton]
+ *  Copyright [ 2020 - 2024 ] Matthew Buckton
+ *  Copyright [ 2024 - 2025 ] MapsMessaging B.V.
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 with the Commons Clause
+ *  (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at:
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://commonsclause.com/
  *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 
@@ -22,12 +24,12 @@ import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.FunctionOperator;
 
-public class LikeOperator  extends FunctionOperator {
+public class LikeOperator extends FunctionOperator {
 
   private static final char MULTI_CHARACTER = '%';
   private static final char SINGLE_CHARACTER = '_';
 
-  private static final String MULTI_STRING  = String.valueOf(MULTI_CHARACTER);
+  private static final String MULTI_STRING = String.valueOf(MULTI_CHARACTER);
 
   private final Object lhs;
   private final String searchPattern;
@@ -41,38 +43,62 @@ public class LikeOperator  extends FunctionOperator {
   public LikeOperator(Object lhs, Object rhs, Object escape) throws ParseException {
     this.lhs = lhs;
     var workingPattern = rhs.toString();
-    if(workingPattern.length() > 100*1024){
+    if (workingPattern.length() > 100 * 1024) {
       throw new ParseException("Wildcard pattern exceeds size limit");
     }
-    if(escape != null) {
+    if (escape != null) {
       this.escape = escape.toString().charAt(0);
       hasEscape = true;
-      workingPattern = removeDuplicates(workingPattern,MULTI_STRING+SINGLE_CHARACTER);// Since a wild card eats single character wild cards
-      workingPattern = removeDuplicates(workingPattern,SINGLE_CHARACTER+MULTI_STRING);// Since a wild card eats single character wild cards
-      workingPattern = removeDuplicates(workingPattern,MULTI_STRING+MULTI_STRING);// This syntax is the same as having 1 global wildcard, so lets simplify
-    }
-    else{
-      workingPattern = removeDuplicates(workingPattern,MULTI_STRING+SINGLE_CHARACTER);// Since a wild card eats single character wild cards
-      workingPattern = removeDuplicates(workingPattern,SINGLE_CHARACTER+MULTI_STRING);// Since a wild card eats single character wild cards
-      workingPattern = removeDuplicates(workingPattern,MULTI_STRING+MULTI_STRING);// This syntax is the same as having 1 global wildcard, so lets simplify
+      workingPattern =
+          removeDuplicates(
+              workingPattern,
+              MULTI_STRING
+                  + SINGLE_CHARACTER); // Since a wild card eats single character wild cards
+      workingPattern =
+          removeDuplicates(
+              workingPattern,
+              SINGLE_CHARACTER
+                  + MULTI_STRING); // Since a wild card eats single character wild cards
+      workingPattern =
+          removeDuplicates(
+              workingPattern,
+              MULTI_STRING
+                  + MULTI_STRING); // This syntax is the same as having 1 global wildcard, so lets
+                                   // simplify
+    } else {
+      workingPattern =
+          removeDuplicates(
+              workingPattern,
+              MULTI_STRING
+                  + SINGLE_CHARACTER); // Since a wild card eats single character wild cards
+      workingPattern =
+          removeDuplicates(
+              workingPattern,
+              SINGLE_CHARACTER
+                  + MULTI_STRING); // Since a wild card eats single character wild cards
+      workingPattern =
+          removeDuplicates(
+              workingPattern,
+              MULTI_STRING
+                  + MULTI_STRING); // This syntax is the same as having 1 global wildcard, so lets
+                                   // simplify
       this.escape = '\\';
       hasEscape = false;
     }
     searchPattern = workingPattern;
   }
 
-  public Object compile(){
-    if(lhs instanceof String){
-      return compare((String)lhs, searchPattern);
+  public Object compile() {
+    if (lhs instanceof String lhsString) {
+      return compare(lhsString, searchPattern);
     }
     return this;
   }
 
-  private String removeDuplicates(String source, String pattern){
-    if(hasEscape){
+  private String removeDuplicates(String source, String pattern) {
+    if (hasEscape) {
       return removeDuplicatesWithEscape(source);
-    }
-    else {
+    } else {
       while (source.contains(pattern)) {
         source = source.replaceAll(pattern, MULTI_STRING);
       }
@@ -80,26 +106,27 @@ public class LikeOperator  extends FunctionOperator {
     return source;
   }
 
-  private String removeDuplicatesWithEscape(String source){
+  private String removeDuplicatesWithEscape(String source) {
     var position = 0;
-    while(position < source.length()-1){
-      if(source.charAt(position) == escape){
+    while (position < source.length() - 1) {
+      if (source.charAt(position) == escape) {
         position++; // skip the next char, regardless of its type
-      }
-      else{
-        //if the current char is a multichar wild card check the next and see if we need to remove it
-        if(source.charAt(position) == MULTI_CHARACTER &&
-            ( source.charAt(position+1) == MULTI_CHARACTER || source.charAt(position+1) == SINGLE_CHARACTER)){
-          var start = source.substring(0, position+1);
-          var end = source.substring(position+2);
-          source = start+end;
+      } else {
+        // if the current char is a multichar wild card check the next and see if we need to remove
+        // it
+        if (source.charAt(position) == MULTI_CHARACTER
+            && (source.charAt(position + 1) == MULTI_CHARACTER
+                || source.charAt(position + 1) == SINGLE_CHARACTER)) {
+          var start = source.substring(0, position + 1);
+          var end = source.substring(position + 2);
+          source = start + end;
           position--;
-        }
-        else if(source.charAt(position) == SINGLE_CHARACTER && source.charAt(position+1) == MULTI_CHARACTER){
+        } else if (source.charAt(position) == SINGLE_CHARACTER
+            && source.charAt(position + 1) == MULTI_CHARACTER) {
           // Remove the single char
           var start = source.substring(0, position);
-          var end = source.substring(position+1);
-          source = start+end;
+          var end = source.substring(position + 1);
+          source = start + end;
           position--;
         }
       }
@@ -109,22 +136,21 @@ public class LikeOperator  extends FunctionOperator {
     return source;
   }
 
-
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
     Object lookup = evaluate(lhs, resolver);
-    if(lookup != null){
+    if (lookup != null) {
       var sourceString = lookup.toString();
       return compare(sourceString, searchPattern);
     }
     return false;
   }
 
-  private boolean compare( String sourceString, String wildcard)
-  {
+  private boolean compare(String sourceString, String wildcard) {
 
-    // We have detected the escape character, so we need to test the next char as a literal and not a wild card element
-    if(hasEscape && (wildcard.length()>0 &&wildcard.charAt(0) == escape)) {
+    // We have detected the escape character, so we need to test the next char as a literal and not
+    // a wild card element
+    if (hasEscape && (!wildcard.isEmpty() && wildcard.charAt(0) == escape)) {
       // skip the escape char and now we do a direct test
       wildcard = wildcard.substring(1);
       if (wildcard.charAt(0) != sourceString.charAt(0)) { // Doesn't match
@@ -134,51 +160,55 @@ public class LikeOperator  extends FunctionOperator {
     }
 
     // This is the end of the strings, we have matched to here
-    if (wildcard.length() == 0 && sourceString.length() == 0) {
+    if (wildcard.isEmpty() && sourceString.isEmpty()) {
       return true;
     }
 
     // Check for multiple character wild cards and see if we have run off the end of the string
-    if (wildcard.length() > 1 && wildcard.charAt(0) == MULTI_CHARACTER && sourceString.length() == 0)
-      return false;
+    if (wildcard.length() > 1
+        && wildcard.charAt(0) == MULTI_CHARACTER
+        && sourceString.isEmpty()) return false;
 
-    // Check both the first and last entry in the wildcard and see if we can handle a single character
-    if ((wildcard.length() > 0 && wildcard.charAt(0) == SINGLE_CHARACTER) ||
-        (wildcard.length() > 0 && sourceString.length() > 0 && wildcard.charAt(0) == sourceString.charAt(0))) {
+    // Check both the first and last entry in the wildcard and see if we can handle a single
+    // character
+    if ((!wildcard.isEmpty() && wildcard.charAt(0) == SINGLE_CHARACTER)
+        || (!wildcard.isEmpty()
+            && !sourceString.isEmpty()
+            && wildcard.charAt(0) == sourceString.charAt(0))) {
       return compare(sourceString.substring(1), wildcard.substring(1));
     }
 
     // We are either at the end of the wild card and its a multiple wildcard or there is more to go
-    if (wildcard.length() > 0 && wildcard.charAt(0) == MULTI_CHARACTER) {
-      return compare(sourceString, wildcard.substring(1)) || compare(sourceString.substring(1), wildcard);
+    if (!wildcard.isEmpty() && wildcard.charAt(0) == MULTI_CHARACTER) {
+      return compare(sourceString, wildcard.substring(1))
+          || compare(sourceString.substring(1), wildcard);
     }
     return false;
   }
 
-  public String toString(){
-    if(hasEscape) {
+  public String toString() {
+    if (hasEscape) {
       return "(" + lhs.toString() + ") LIKE (" + searchPattern + ", ESCAPE " + escape + ")";
     }
     return "(" + lhs.toString() + ") LIKE (" + searchPattern + ")";
   }
 
-  protected String getSearchPattern(){
+  protected String getSearchPattern() {
     return searchPattern;
   }
 
   @Override
-  public boolean equals(Object test){
-    if(test instanceof LikeOperator){
-      return (lhs.equals(((LikeOperator) test).lhs) &&
-          searchPattern.equals(((LikeOperator) test).searchPattern) &&
-          escape == (((LikeOperator) test).escape));
+  public boolean equals(Object test) {
+    if (test instanceof LikeOperator operator) {
+      return (lhs.equals(operator.lhs)
+          && searchPattern.equals(operator.searchPattern)
+          && escape == (operator.escape));
     }
     return false;
   }
 
   @Override
-  public int hashCode(){
+  public int hashCode() {
     return lhs.hashCode() ^ searchPattern.hashCode() + escape;
   }
-
 }

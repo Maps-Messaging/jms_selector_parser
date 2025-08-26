@@ -21,14 +21,14 @@
 // OPTIONS
 // ----------------------------------------------------------------------------
 options {
-  STATIC = false;
   UNICODE_INPUT = true;
-  ERROR_REPORTING = false;
+  ERROR_REPORTING = true;
   LOOKAHEAD = 3;
   FORCE_LA_CHECK = true;
   DEBUG_PARSER = false;
   DEBUG_LOOKAHEAD = false;
   DEBUG_TOKEN_MANAGER = false;
+  STATIC = false;
 }
 
 PARSER_BEGIN(SelectorParser)
@@ -129,7 +129,7 @@ SKIP :
 
 TOKEN [IGNORE_CASE]:
 {
-    < TRUE:      "TRUE" >
+   < TRUE:      "TRUE" >
   | < FALSE:     "FALSE" >
   | < NULL:      "NULL" >
   | < AND:       "AND" >
@@ -198,6 +198,7 @@ TOKEN :
      "\u00d8"-"\u00f6",
      "\u00f8"-"\u00ff",
      "\u0100"-"\u1fff",
+     "\u2070"-"\u209F",
      "\u3040"-"\u318f",
      "\u3300"-"\u337f",
      "\u3400"-"\u3d2d",
@@ -411,6 +412,7 @@ Object unaryExpressionNotPlusMinus() :
    Token t = null;
    Object exp = null;
    List<String> list = null;
+   Token model = null;
 }
 {
    t=<IDENTIFIER>
@@ -513,4 +515,19 @@ void stringToken(List<String> list) :
 {
    [ t=<STRING> ]
       { if( t != null ) list.add(stripQuotes(t.image)); }
+}
+
+void tokenList(List<String> list) :
+{}
+{
+    token(list) ( <COMMA> token(list))*
+}
+
+void token(List<String> list) :
+{
+   Token t = null;
+}
+{
+   t=<IDENTIFIER>
+      { list.add(t.image); }
 }

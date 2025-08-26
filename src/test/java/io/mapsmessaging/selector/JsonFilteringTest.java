@@ -1,26 +1,48 @@
+/*
+ *
+ *  Copyright [ 2020 - 2024 ] Matthew Buckton
+ *  Copyright [ 2024 - 2025 ] MapsMessaging B.V.
+ *
+ *  Licensed under the Apache License, Version 2.0 with the Commons Clause
+ *  (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://commonsclause.com/
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 package io.mapsmessaging.selector;
 
 import com.github.javafaker.Faker;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.mapsmessaging.selector.operators.ParserExecutor;
 import lombok.Data;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class JsonFilteringTest {
 
-  private final static int LIST_SIZE = 1000;
+  private static final int LIST_SIZE = 1000;
 
   @Test
   void simpleJsonFiltering() throws ParseException {
-    JSONArray addressList = buildList();
+    JsonArray addressList = buildList();
     int alaskaCount = 0;
     int filtered = 0;
     ParserExecutor executor = SelectorParser.compile("state = 'Alaska'");
-    for(int x=0;x<addressList.length();x++){
-      JSONObject jsonObject = addressList.getJSONObject(x);
-      if(jsonObject.get("state").equals("Alaska")){
+    for(int x=0;x<addressList.size();x++){
+      JsonObject jsonObject = addressList.get(x).getAsJsonObject();
+      if(jsonObject.get("state").getAsString().equals("Alaska")){
         alaskaCount++;
       }
       if(executor.evaluate(jsonObject)){
@@ -34,26 +56,29 @@ class JsonFilteringTest {
   @Test
   void nestedJsonFiltering() throws ParseException {
     Faker faker = new Faker();
-    JSONArray addressList = buildList();
-    JSONArray people = new JSONArray();
-    for(int x=0;x<addressList.length();x++){
-      JSONObject address = addressList.getJSONObject(x);
-      JSONObject person = new JSONObject();
-      person.put("address", address);
-      person.put("first", faker.name().firstName());
-      person.put("last", faker.name().lastName());
-      person.put("phone", faker.phoneNumber().phoneNumber());
-      person.put("email", faker.internet().emailAddress());
-      people.put(person);
+    JsonArray addressList = buildList();
+    JsonArray people = new JsonArray();
+    for (int x = 0; x < addressList.size(); x++) {
+      JsonObject address = addressList.get(x).getAsJsonObject();
+      JsonObject person = new JsonObject();
+
+      person.add("address", address);
+      person.addProperty("first", faker.name().firstName());
+      person.addProperty("last", faker.name().lastName());
+      person.addProperty("phone", faker.phoneNumber().phoneNumber());
+      person.addProperty("email", faker.internet().emailAddress());
+
+      people.add(person); // assuming people is a JsonArray
     }
+
 
 
     int alaskaCount = 0;
     int filtered = 0;
     ParserExecutor executor = SelectorParser.compile("address.state = 'Alaska'");
-    for(int x=0;x<people.length();x++){
-      JSONObject person = people.getJSONObject(x);
-      if(person.getJSONObject("address").get("state").equals("Alaska")){
+    for(int x=0;x<people.size();x++){
+      JsonObject person = people.get(x).getAsJsonObject();
+      if(person.getAsJsonObject("address").get("state").getAsString().equals("Alaska")){
         alaskaCount++;
       }
       if(executor.evaluate(person)){
@@ -64,17 +89,14 @@ class JsonFilteringTest {
   }
 
 
-  private static JSONArray buildList(){
-    JSONArray addressList = new JSONArray();
+  private static JsonArray buildList(){
+    JsonArray addressList = new JsonArray();
     Faker faker = new Faker();
+    Gson gson = new Gson();
     for (int x = 0; x < LIST_SIZE; x++) {
-      JSONObject jsonObject = new JSONObject();
       Address address = new Address(faker.address());
-      jsonObject.put("street", address.getStreet());
-      jsonObject.put("suburb", address.getSuburb());
-      jsonObject.put("zipCode", address.getZipCode());
-      jsonObject.put("state", address.getState());
-      addressList.put(jsonObject);
+      JsonElement jsonElement = gson.toJsonTree(address);
+      addressList.add(jsonElement);
     }
     return addressList;
   }
