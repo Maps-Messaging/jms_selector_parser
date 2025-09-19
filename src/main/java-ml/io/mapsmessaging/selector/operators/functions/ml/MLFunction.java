@@ -35,6 +35,8 @@ import io.mapsmessaging.selector.operators.functions.ml.impl.functions.linearreg
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.logisticregression.LogisticRegressionOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.mlp.MLPOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.naivebayes.NaiveBayesOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.onnx.OnnxOperation;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.onnx.OnnxRuntimeGate;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCACorOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca.PCAFitOperation;
 import io.mapsmessaging.selector.operators.functions.ml.impl.functions.qda.QDAOperation;
@@ -147,6 +149,11 @@ public class MLFunction extends Operation {
           throw new UnsupportedOperationException("Not yet implemented: " + functionName);
         case "tensorflow":
           return new TensorFlowOperation(modelName, identifiers, modelStore);
+        case "onnx":
+          if (!OnnxRuntimeGate.AVAILABLE) {
+            throw new UnsupportedOperationException("ONNX disabled/unavailable on this node");
+          }
+          return new OnnxOperation(modelName, identifiers, modelStore);
         case "model_exists":
           return new io.mapsmessaging.selector.operators.functions.ml.impl.functions.ModelExistFunction(modelName, modelStore);
         default:
