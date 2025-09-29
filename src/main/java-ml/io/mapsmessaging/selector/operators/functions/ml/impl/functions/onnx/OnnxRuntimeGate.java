@@ -32,6 +32,7 @@ public class OnnxRuntimeGate {
       OrtEnvironment.getEnvironment().close(); // no-op safe
       ok = true;
     } catch (Throwable t) {
+      t.printStackTrace();
       ok = false; // UnsatisfiedLinkError, missing deps, etc.
     }
     AVAILABLE = ok && !Boolean.getBoolean("maps.ml.onnx.disabled")

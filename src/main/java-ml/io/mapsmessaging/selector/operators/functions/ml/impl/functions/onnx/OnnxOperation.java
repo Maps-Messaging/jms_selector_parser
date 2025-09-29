@@ -172,4 +172,9 @@ public class OnnxOperation extends AbstractModelOperations {
       }
     }
   }
+
+  @Override
+  public String toString() {
+    return "onnx ("+ super.toString() + ")";
+  }
 }

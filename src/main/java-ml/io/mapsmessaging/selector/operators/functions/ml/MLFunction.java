@@ -84,7 +84,12 @@ public class MLFunction extends Operation {
     List<String> identifiers = new ArrayList<>();
     int startIdx;
 
-    if ("tensorFlow".equalsIgnoreCase(functionName) || list.size() <=1) {
+    boolean isMl = ("tensorFlow".equalsIgnoreCase(functionName) ||
+                   "onnx".equalsIgnoreCase(functionName) ||
+            list.size() <=1);
+
+
+    if (isMl) {
       modelName = list.getFirst();
       startIdx = 1;
     } else {

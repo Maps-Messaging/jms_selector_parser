@@ -55,8 +55,7 @@ public final class OnnxModelRegistry {
       return cached;
     }
 
-    byte[] modelBytes = java.util.Objects.requireNonNull(
-        modelStore.loadModel(modelName), "Model bytes are null for " + modelName);
+    byte[] modelBytes = modelStore.loadModel(modelName);
 
     // Try engines in the precomputed order until a session is created.
     OrtSession ortSession = null;
