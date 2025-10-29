@@ -21,7 +21,6 @@
 package io.mapsmessaging.selector.operators.functions.ml.impl.functions.pca;
 
 import smile.feature.extraction.PCA;
-import smile.tensor.Vector;
 
 public class ExplainedVarianceFunction implements PCAFunction {
 
@@ -33,11 +32,7 @@ public class ExplainedVarianceFunction implements PCAFunction {
 
   @Override
   public double compute(PCA pca, double[] data) {
-    Vector v = pca.varianceProportion();
-    if(v != null && v.size() > 0) {
-      return v.get(0);
-    }
-    return 0.0;
+    return pca.varianceProportion()[index];
   }
 
   @Override
