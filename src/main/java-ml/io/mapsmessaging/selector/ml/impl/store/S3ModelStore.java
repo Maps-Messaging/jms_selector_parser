@@ -98,15 +98,18 @@ public class S3ModelStore implements ModelStore {
 
         partNumber++;
       }
+      CompletedMultipartUpload upload = CompletedMultipartUpload.builder()
+          .parts(completedParts)
+          .build();
 
-      s3.completeMultipartUpload(CompleteMultipartUploadRequest.builder()
+      CompleteMultipartUploadRequest request = CompleteMultipartUploadRequest.builder()
           .bucket(bucket)
           .key(key)
           .uploadId(uploadId)
-          .multipartUpload(CompletedMultipartUpload.builder()
-              .parts(completedParts)
-              .build())
-          .build());
+          .multipartUpload(upload)
+          .build();
+
+      s3.completeMultipartUpload(request);
 
     } catch (S3Exception e) {
       throw new IOException("Failed to multipart upload model: " + modelId, e);

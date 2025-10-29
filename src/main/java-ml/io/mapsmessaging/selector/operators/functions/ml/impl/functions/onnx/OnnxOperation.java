@@ -23,6 +23,7 @@ package io.mapsmessaging.selector.operators.functions.ml.impl.functions.onnx;
 
 import ai.onnxruntime.*;
 import io.mapsmessaging.selector.IdentifierResolver;
+import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.model.ModelStore;
 import io.mapsmessaging.selector.operators.functions.ml.AbstractModelOperations;
 
@@ -66,7 +67,7 @@ public class OnnxOperation extends AbstractModelOperations {
   }
 
   @Override
-  public Object evaluate(final IdentifierResolver resolver) {
+  public Object evaluate(final IdentifierResolver resolver) throws ParseException {
     if (onnxModelEntry == null) {
       throw new IllegalStateException("Model not initialized: " + modelName);
     }
@@ -138,9 +139,10 @@ public class OnnxOperation extends AbstractModelOperations {
         }
       }
     } catch (OrtException e) {
-      e.printStackTrace();
+      ParseException ex = new ParseException();
+      ex.initCause(e);
+      throw ex;
     }
-    return null;
   }
 
 

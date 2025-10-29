@@ -442,6 +442,17 @@
             <arg>-h</arg>
             <arg>src/main/cpp/</arg>
           </compilerArgs>
+
+          <!-- Lombok & JMH annotation processing -->
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.42</version>
+            </path>
+          </annotationProcessorPaths>
+
+
         </configuration>
       </plugin>
       <plugin>
