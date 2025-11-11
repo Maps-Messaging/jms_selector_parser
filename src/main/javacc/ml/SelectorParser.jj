@@ -132,6 +132,7 @@ TOKEN [IGNORE_CASE]:
 {
     < ML_FUNCTION:
           "TensorFlow"           // External model (e.g., TensorFlow SavedModel)
+        | "onnx"                 // External ONNX formatted model
         | "k-means"              // K-Means clustering
         | "g-means"              // G-Means clustering
         | "x-means"              // X-Means clustering

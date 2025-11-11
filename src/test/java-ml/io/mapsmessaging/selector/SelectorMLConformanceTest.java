@@ -20,8 +20,14 @@
 
 package io.mapsmessaging.selector;
 
+import io.mapsmessaging.selector.ml.impl.store.FileModelStore;
+import io.mapsmessaging.selector.model.ModelStore;
 import io.mapsmessaging.selector.operators.ParserExecutor;
+import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
+import io.mapsmessaging.selector.operators.functions.ml.impl.functions.onnx.OnnxRuntimeGate;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -69,7 +75,17 @@ public class SelectorMLConformanceTest {
         "lda (predictprob, model_lda.arff, temp, humidity) = 1",
         "knn (classify, model_knn.arff, temp, humidity) = 1",
 
-        /*
+
+        // PCA
+        "pca_fit (explainedvariance[1], model_pca_fit.arff) > 0.7",
+        "pca_fit (explainedvariance[2], model_pca_fit.arff, temp, humidity) > 0.7",
+        "pca_cor (explainedvariance[3], model_pca_cor.arff) > 0.7",
+        "pca_cor (explainedvariance[4], model_pca_cor.arff, temp, humidity) > 0.7",
+        "tensorflow (sensor_safety_model, temp, humidity, co2) < 10",
+        "onnx (model.onnx, temp, humidity, co2) < 10"
+
+                /*
+
 
         "svm (classify, model_svm.arff) = 1",
         "svm (classify, model_svm.arff, temp, humidity) = 1",
@@ -78,20 +94,29 @@ public class SelectorMLConformanceTest {
         "one_class_svm (anomaly, model_ocsvm.arff) = 1",
         "one_class_svm (anomaly, model_ocsvm.arff, temp, humidity) = 1",
 */
-        // PCA
-        "pca_fit (explainedvariance[1], model_pca_fit.arff) > 0.7",
-        "pca_fit (explainedvariance[2], model_pca_fit.arff, temp, humidity) > 0.7",
-        "pca_cor (explainedvariance[3], model_pca_cor.arff) > 0.7",
-        "pca_cor (explainedvariance[4], model_pca_cor.arff, temp, humidity) > 0.7",
-        "tensorflow (sensor_safety_model, temp, humidity, co2) < 10"
     );
 
+  }
+
+  private static ModelStore init;
+  @BeforeAll
+  static void setup(){
+    init = MLFunction.getModelStore();
+    MLFunction.setModelStore(new FileModelStore("./src/test/resources/"));
+  }
+
+  @AfterAll
+  static void tearDown(){
+    MLFunction.setModelStore(init);
   }
 
   @ParameterizedTest(name = "Syntax test for: {0}")
   @MethodSource("selectors")
   void syntaxTest(String selector) {
     try {
+      if(selector.contains("onnx") && !OnnxRuntimeGate.AVAILABLE) {
+        return; // we can not run onnx if not installed
+      }
       Constants.setThreshold(0.000000001);
       ParserExecutor parser = SelectorParser.compile(selector);
       Assertions.assertNotNull(parser.toString());
@@ -104,6 +129,9 @@ public class SelectorMLConformanceTest {
   @MethodSource("selectors")
   void selectorEqualityTests(String selector) {
     try {
+      if(selector.contains("onnx") && !OnnxRuntimeGate.AVAILABLE) {
+        return; // we can not run onnx if not installed
+      }
       Object parser1 = SelectorParser.compile(selector);
       Object parser2 = SelectorParser.compile(selector);
       Assertions.assertEquals(parser1.toString(), parser2.toString());
