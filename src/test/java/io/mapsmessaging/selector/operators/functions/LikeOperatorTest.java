@@ -24,9 +24,23 @@ import io.mapsmessaging.selector.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LikeOperatorTest {
+class LikeOperatorTest {
 
   private static final String SOURCE_STRING = "This is a source string pattern that We use for checking";
+
+  @Test
+  void danglingEscapeDoesNotThrowRawStringIndexException() throws ParseException {
+    LikeOperator likeOperator = new LikeOperator("x", "\\", "\\");
+
+    Assertions.assertFalse((Boolean) likeOperator.evaluate(null));
+  }
+
+  @Test
+  void escapedWildcardAgainstEmptySourceReturnsFalse() throws ParseException {
+    LikeOperator likeOperator = new LikeOperator("", "\\_", "\\");
+
+    Assertions.assertFalse((Boolean) likeOperator.evaluate(null));
+  }
 
   @Test
   public void duplicateWildcardWithEscapeConstructorTests() throws ParseException {

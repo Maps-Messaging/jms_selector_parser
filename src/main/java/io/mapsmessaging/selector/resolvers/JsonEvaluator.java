@@ -95,20 +95,39 @@ public class JsonEvaluator extends IdentifierMutator {
     return null;
   }
 
-  private static Object arrayLookup(JsonArray array, String[] path){
-    // We have an array, so the next element in the path must be an index ( ie number)
-    var idx = Integer.parseInt(path[0]);
-    Object lookup = array.get(idx);
-    if(lookup instanceof JsonObject jsonObject){
-      var sub = new String[path.length-1];
-      System.arraycopy(path, 1, sub, 0, sub.length);
-      return locateObject( jsonObject, sub);
+  private static Object arrayLookup(JsonArray array, String[] path) {
+    if (array == null || path == null || path.length == 0) {
+      return null;
     }
-    else if(lookup instanceof JsonArray jsonArray){
-      var sub = new String[path.length-1];
-      System.arraycopy(path, 1, sub, 0, sub.length);
-      return arrayLookup( jsonArray, sub);
+
+    int index;
+    try {
+      index = Integer.parseInt(path[0]);
+    } catch (NumberFormatException e) {
+      return null;
     }
+
+    if (index < 0 || index >= array.size()) {
+      return null;
+    }
+
+    Object lookup = array.get(index);
+    if (lookup instanceof JsonObject jsonObject) {
+      String[] subPath = new String[path.length - 1];
+      System.arraycopy(path, 1, subPath, 0, subPath.length);
+      return locateObject(jsonObject, subPath);
+    }
+
+    if (lookup instanceof JsonArray jsonArray) {
+      String[] subPath = new String[path.length - 1];
+      System.arraycopy(path, 1, subPath, 0, subPath.length);
+      return arrayLookup(jsonArray, subPath);
+    }
+
+    if (path.length > 1) {
+      return null;
+    }
+
     return lookup;
   }
 

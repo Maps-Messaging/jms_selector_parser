@@ -17,32 +17,27 @@
  *  limitations under the License.
  *
  */
-package io.mapsmessaging.selector.resolvers;
 
-import io.mapsmessaging.selector.IdentifierMutator;
-import java.util.Map;
+package io.mapsmessaging.selector.operators.functions;
 
-public class MapEvaluator extends IdentifierMutator {
+import io.mapsmessaging.selector.IdentifierResolver;
 
-  private final Map<String, Object> map;
+import java.util.Collections;
+import java.util.List;
 
-  public MapEvaluator(Map<String, Object> map) {
-    this.map = map;
-  }
+
+public class ThrowingResolver implements IdentifierResolver {
 
   @Override
   public Object get(String key) {
-    return map.get(key);
+    if ("bad".equals(key)) {
+      throw new IllegalStateException("Right-hand side should not be evaluated");
+    }
+    return null;
   }
 
   @Override
-  public Object remove(String key) {
-    return map.remove(key) != null;
-  }
-
-  @Override
-  public Object set(String key, Object value) {
-    map.put(key, value);
-    return true;
+  public List<String> getKeys() {
+    return Collections.emptyList();
   }
 }

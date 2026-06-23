@@ -33,32 +33,46 @@ public class AndOperator extends LogicalOperator {
 
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    Boolean lhsResult = test(lhs, resolver);
-    Boolean rhsResult = test(rhs, resolver);
-    if (lhsResult == null || rhsResult == null) {
+    Object lhsValue = evaluate(lhs, resolver);
+
+    if (!(lhsValue instanceof Boolean lhsBoolean)) {
       return false;
     }
-    return (lhsResult && rhsResult);
+
+    if (!lhsBoolean) {
+      return false;
+    }
+
+    Object rhsValue = evaluate(rhs, resolver);
+    if (!(rhsValue instanceof Boolean rhsBoolean)) {
+      return false;
+    }
+
+    return rhsBoolean;
   }
 
+  @Override
   public Object compile() {
-    if (lhs instanceof Operation operation) {
-      lhs = operation.compile();
+    Object compiledLeftHandSide = compile(lhs);
+    Object compiledRightHandSide = compile(rhs);
+
+    if (Boolean.FALSE.equals(compiledLeftHandSide) || Boolean.FALSE.equals(compiledRightHandSide)) {
+      return false;
     }
-    if (rhs instanceof Operation operation) {
-      rhs = operation.compile();
+
+    if (Boolean.TRUE.equals(compiledLeftHandSide)) {
+      return compiledRightHandSide;
     }
-    if (lhs instanceof Boolean lhsBoolean && rhs instanceof Boolean rhsBoolean) {
-      return (lhsBoolean  && rhsBoolean);
+
+    if (Boolean.TRUE.equals(compiledRightHandSide)) {
+      return compiledLeftHandSide;
     }
-    if (rhs instanceof Boolean) {
-      if (Boolean.TRUE.equals(rhs)) {
-        return lhs;
-      } else {
-        return false;
-      }
+
+    if (compiledLeftHandSide == lhs && compiledRightHandSide == rhs) {
+      return this;
     }
-    return this;
+
+    return new AndOperator(compiledLeftHandSide, compiledRightHandSide);
   }
 
   @Override

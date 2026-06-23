@@ -54,16 +54,19 @@ public abstract class ArithmeticOperator extends ComputableOperator implements N
     return compile(lhs, rhs);
   }
 
+  @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    var lhsNumber = evaluateToNumber(lhs, resolver);
-    var rhsNumber = evaluateToNumber(rhs, resolver);
+    Number lhsNumber = evaluateToNumber(lhs, resolver);
+    Number rhsNumber = evaluateToNumber(rhs, resolver);
     if (lhsNumber == null || rhsNumber == null) {
       return false;
     }
-    if (lhsNumber instanceof Double doubleLhs) {
-      return processDouble(doubleLhs, rhsNumber);
-    } else {
-      return processInteger((Long) lhsNumber, rhsNumber);
+
+    if (lhsNumber instanceof Double || lhsNumber instanceof Float ||
+        rhsNumber instanceof Double || rhsNumber instanceof Float) {
+      return processDouble(lhsNumber.doubleValue(), rhsNumber);
     }
+
+    return processInteger(lhsNumber.longValue(), rhsNumber);
   }
 }

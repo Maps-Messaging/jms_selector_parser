@@ -36,6 +36,9 @@ public class EvaluatorFactory {
     if(obj instanceof JsonObject jsonObject){
       return new JsonEvaluator(jsonObject);
     }
+    if (obj == null) {
+      return new NullEvaluator();
+    }
     return new BeanEvaluator(obj);
   }
 

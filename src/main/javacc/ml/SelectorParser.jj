@@ -257,15 +257,27 @@ Object logicExpression() :
    Object exp2 = null;
 }
 {
+   exp1=andExpression()
+   (
+      <OR> exp2=andExpression()
+      {
+         exp1 = new OrOperator(exp1, exp2);
+      }
+   )*
+   { return exp1; }
+}
+
+Object andExpression() :
+{
+   Object exp1 = null;
+   Object exp2 = null;
+}
+{
    exp1=notExpression()
    (
       <AND> exp2=notExpression()
       {
-         exp1 = new AndOperator( exp1, exp2);
-      }
-      | <OR> exp2=notExpression()
-      {
-         exp1 = new OrOperator(exp1, exp2);
+         exp1 = new AndOperator(exp1, exp2);
       }
    )*
    { return exp1; }
@@ -276,12 +288,13 @@ Object notExpression() :
    Object exp1 = null;
 }
 {
-  exp1=relationalExpression()
+   exp1=relationalExpression()
    { return exp1; }
-  | <NOT> exp1=relationalExpression()
-      {
-         return new NotOperator(exp1);
-      }
+   |
+   <NOT> exp1=relationalExpression()
+   {
+      return new NotOperator(exp1);
+   }
 }
 
 Object relationalExpression() :
@@ -337,39 +350,44 @@ Object equalExpression() :
 }
 {
     exp1=additiveExpression()
-    (  <NE> exp2=additiveExpression()
-       {
-   exp1 = new DifferentOperator(exp1, exp2);
-}
- 	| <EQ> exp2=additiveExpression()
-       {
-          exp1 = new EqualOperator( exp1, exp2);
-       }
-   | <IS> exp1=nullExp(exp1)
-   | <BETWEEN> exp2=additiveExpression() <AND> exp3=additiveExpression()
-       {
-          exp1 = new BetweenOperator(exp1, exp2, exp3);
-       }
-   | <IS> exp1=nullExp(exp1)
-   | <NOT> <BETWEEN> exp2=additiveExpression() <AND> exp3=additiveExpression()
-       {
-          exp1 = new BetweenOperator(exp1, exp2, exp3);
-          exp1 = new NotOperator(exp1);
-       }
-   | <LIKE> exp1=likeExp(exp1)
-   | <NOT> <LIKE> exp1=likeExp(exp1)
-       {
-          exp1 = new NotOperator(exp1);
-       }
-   | <IN> <LPAREN> { set = new HashSet<String>(); } stringSet(set) <RPAREN>
-       {
-          exp1 = new InOperator(exp1, set);
-       }
-   | <NOT> <IN> <LPAREN> { set = new HashSet<String>(); } stringSet(set) <RPAREN>
-       {
-          exp1 = new InOperator(exp1, set);
-          exp1 = new NotOperator(exp1);
-       }
+    (
+      <NE> exp2=additiveExpression()
+      {
+         exp1 = new DifferentOperator(exp1, exp2);
+      }
+   |  <EQ> exp2=additiveExpression()
+      {
+         exp1 = new EqualOperator(exp1, exp2);
+      }
+   |  <IS> exp1=nullExp(exp1)
+   |  <BETWEEN> exp2=additiveExpression() <AND> exp3=additiveExpression()
+      {
+         exp1 = new BetweenOperator(exp1, exp2, exp3);
+      }
+   |  <LIKE> exp1=likeExp(exp1)
+   |  <IN> <LPAREN> { set = new HashSet<String>(); } stringSet(set) <RPAREN>
+      {
+         exp1 = new InOperator(exp1, set);
+      }
+   |  <NOT>
+      (
+        <BETWEEN> exp2=additiveExpression() <AND> exp3=additiveExpression()
+        {
+           exp1 = new BetweenOperator(exp1, exp2, exp3);
+           exp1 = new NotOperator(exp1);
+        }
+      |
+        <LIKE> exp1=likeExp(exp1)
+        {
+           exp1 = new NotOperator(exp1);
+        }
+      |
+        <IN> <LPAREN> { set = new HashSet<String>(); } stringSet(set) <RPAREN>
+        {
+           exp1 = new InOperator(exp1, set);
+           exp1 = new NotOperator(exp1);
+        }
+      )
     )*
     { return exp1; }
 }

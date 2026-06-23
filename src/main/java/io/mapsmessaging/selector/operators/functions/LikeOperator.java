@@ -147,42 +147,37 @@ public class LikeOperator extends FunctionOperator {
   }
 
   private boolean compare(String sourceString, String wildcard) {
+    if (wildcard.isEmpty()) {
+      return sourceString.isEmpty();
+    }
 
-    // We have detected the escape character, so we need to test the next char as a literal and not
-    // a wild card element
-    if (hasEscape && (!wildcard.isEmpty() && wildcard.charAt(0) == escape)) {
-      // skip the escape char and now we do a direct test
+    if (hasEscape && wildcard.charAt(0) == escape) {
       wildcard = wildcard.substring(1);
-      if (wildcard.charAt(0) != sourceString.charAt(0)) { // Doesn't match
+
+      if (wildcard.isEmpty() || sourceString.isEmpty()) {
         return false;
       }
+
+      if (wildcard.charAt(0) != sourceString.charAt(0)) {
+        return false;
+      }
+
       return compare(sourceString.substring(1), wildcard.substring(1));
     }
 
-    // This is the end of the strings, we have matched to here
-    if (wildcard.isEmpty() && sourceString.isEmpty()) {
-      return true;
+    if (sourceString.isEmpty()) {
+      return wildcard.length() == 1 && wildcard.charAt(0) == MULTI_CHARACTER;
     }
 
-    // Check for multiple character wild cards and see if we have run off the end of the string
-    if (wildcard.length() > 1
-        && wildcard.charAt(0) == MULTI_CHARACTER
-        && sourceString.isEmpty()) return false;
-
-    // Check both the first and last entry in the wildcard and see if we can handle a single
-    // character
-    if ((!wildcard.isEmpty() && wildcard.charAt(0) == SINGLE_CHARACTER)
-        || (!wildcard.isEmpty()
-            && !sourceString.isEmpty()
-            && wildcard.charAt(0) == sourceString.charAt(0))) {
+    if (wildcard.charAt(0) == SINGLE_CHARACTER || wildcard.charAt(0) == sourceString.charAt(0)) {
       return compare(sourceString.substring(1), wildcard.substring(1));
     }
 
-    // We are either at the end of the wild card and its a multiple wildcard or there is more to go
-    if (!wildcard.isEmpty() && wildcard.charAt(0) == MULTI_CHARACTER) {
+    if (wildcard.charAt(0) == MULTI_CHARACTER) {
       return compare(sourceString, wildcard.substring(1))
           || compare(sourceString.substring(1), wildcard);
     }
+
     return false;
   }
 
