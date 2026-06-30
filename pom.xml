@@ -314,7 +314,7 @@
         <dependency>
           <groupId>com.microsoft.onnxruntime</groupId>
           <artifactId>onnxruntime</artifactId>
-          <version>1.23.2</version>
+          <version>1.27.0</version>
         </dependency>
 
         <!-- Source: https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
