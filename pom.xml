@@ -79,7 +79,7 @@
     <!-- Sonar-JaCoCo properties -->
     <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-    <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.language>java</sonar.language>
 
     <sonar.projectKey>Maps-Messaging_jms_selector</sonar.projectKey>
@@ -455,6 +455,12 @@
 
 
         </configuration>
+      </plugin>
+      <!-- Sonar -->
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>5.7.0.6970</version>
       </plugin>
       <plugin>
         <groupId>org.owasp</groupId>
