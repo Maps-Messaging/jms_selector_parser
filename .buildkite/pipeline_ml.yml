@@ -9,7 +9,7 @@ steps:
       - export S3_SECRET_KEY=$(buildkite-agent secret get S3_SECRET_KEY)
       - export S3_REGION="ap-southeast-2"
       - mvn -Dgpg.skip=true clean deploy -Pml
-      - mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN}
+      - mvn sonar:sonar -Pml -Dsonar.token=${SONAR_TOKEN}
     plugins:
       - test-collector#v1.0.0:
           files: "target/surefire-reports/*.xml"
