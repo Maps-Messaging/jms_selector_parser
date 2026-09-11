@@ -5,13 +5,13 @@ steps:
       - export SONAR_TOKEN=$(buildkite-agent secret get SONAR_TOKEN)
       - export NVD_API_KEY=$(buildkite-agent secret get nvd_api_key)
       - mvn -Dgpg.skip=true clean deploy -Pstandard
-      - mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN}
+      - mvn sonar:sonar -Dsonar.token=$${SONAR_TOKEN}
     plugins:
       - test-collector#v1.0.0:
           files: "target/surefire-reports/*.xml"
           format: "junit"
-    env:
-      BUILDKITE_ANALYTICS_TOKEN: "$(buildkite-agent secret get JmsSelectorBuildKiteAnalytics)"
+    secrets:
+      BUILDKITE_ANALYTICS_TOKEN: "JmsSelectorBuildKiteAnalytics"
 
     agents:
       queue: "java_build_queue_aws"

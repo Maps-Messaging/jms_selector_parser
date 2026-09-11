@@ -9,13 +9,13 @@ steps:
       - export S3_SECRET_KEY=$(buildkite-agent secret get S3_SECRET_KEY)
       - export S3_REGION="ap-southeast-2"
       - mvn -Dgpg.skip=true clean deploy -Pml
-      - mvn sonar:sonar -Pml -Dsonar.token=${SONAR_TOKEN}
+      - mvn sonar:sonar -Pml -Dsonar.token=$${SONAR_TOKEN}
     plugins:
       - test-collector#v1.0.0:
           files: "target/surefire-reports/*.xml"
           format: "junit"
-    env:
-      BUILDKITE_ANALYTICS_TOKEN: "$(buildkite-agent secret get JmsSelectorMLBuildKiteAnalytics)"
+    secrets:
+      BUILDKITE_ANALYTICS_TOKEN: "JmsSelectorMLBuildKiteAnalytics"
 
     agents:
       queue: "java_build_queue_aws"
