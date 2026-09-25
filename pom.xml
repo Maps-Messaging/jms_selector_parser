@@ -93,7 +93,7 @@
 
     <github.global.server>github</github.global.server>
     <project.scm.id>github</project.scm.id>
-    <gpg.keyname>matthew.buckton@mapsmessaging.io</gpg.keyname>
+    <gpg.keyname>admin@mapsmessaging.io</gpg.keyname>
   </properties>
 
 
@@ -383,8 +383,12 @@
             </goals>
             <configuration>
               <keyname>${gpg.keyname}</keyname>
-              <passphraseServerId>${gpg.keyname}</passphraseServerId>
-            </configuration>
+              <passphraseEnvName>MAVEN_GPG_PASSPHRASE</passphraseEnvName>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+</configuration>
           </execution>
         </executions>
       </plugin>
