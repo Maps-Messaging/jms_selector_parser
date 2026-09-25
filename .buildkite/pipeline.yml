@@ -3,7 +3,7 @@ steps:
     command:
       - sed -i 's/<version>ml-\(.*\)<\/version>/<version>\1<\/version>/g' pom.xml
       - export SONAR_TOKEN=$(buildkite-agent secret get SONAR_TOKEN)
-      - mvn -Dgpg.skip=true clean deploy -Pstandard
+      - mvn clean deploy -Pstandard
       - mvn sonar:sonar -Dsonar.token=$${SONAR_TOKEN}
     plugins:
       - test-collector#v1.0.0:
