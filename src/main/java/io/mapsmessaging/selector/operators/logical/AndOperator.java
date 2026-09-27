@@ -23,7 +23,6 @@ package io.mapsmessaging.selector.operators.logical;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.LogicalOperator;
-import io.mapsmessaging.selector.operators.Operation;
 
 public class AndOperator extends LogicalOperator {
 
@@ -56,7 +55,11 @@ public class AndOperator extends LogicalOperator {
     Object compiledLeftHandSide = compile(lhs);
     Object compiledRightHandSide = compile(rhs);
 
-    if (Boolean.FALSE.equals(compiledLeftHandSide) || Boolean.FALSE.equals(compiledRightHandSide)) {
+    if (Boolean.FALSE.equals(compiledLeftHandSide)) {
+      return false;
+    }
+
+    if (Boolean.FALSE.equals(compiledRightHandSide)) {
       return false;
     }
 
