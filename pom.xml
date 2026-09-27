@@ -82,6 +82,17 @@
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.java.test.binaries>target/test-classes</sonar.java.test.binaries>
+    <sonar.coverage.exclusions>
+      **/AbstractCharStream.java,
+      **/CharStream.java,
+      **/ParseException.java,
+      **/SelectorParser.java,
+      **/SelectorParserConstants.java,
+      **/SelectorParserTokenManager.java,
+      **/SimpleCharStream.java,
+      **/Token.java,
+      **/TokenMgrError.java
+    </sonar.coverage.exclusions>
     <sonar.language>java</sonar.language>
 
     <sonar.projectKey>Maps-Messaging_jms_selector</sonar.projectKey>
@@ -416,6 +427,16 @@
           <excludes>
             <!-- test code, lets not track the testing -->
             <exclude>**/*Test.*</exclude>
+            <!-- JavaCC generated parser/runtime classes -->
+            <exclude>**/AbstractCharStream.class</exclude>
+            <exclude>**/CharStream.class</exclude>
+            <exclude>**/ParseException.class</exclude>
+            <exclude>**/SelectorParser.class</exclude>
+            <exclude>**/SelectorParserConstants.class</exclude>
+            <exclude>**/SelectorParserTokenManager.class</exclude>
+            <exclude>**/SimpleCharStream.class</exclude>
+            <exclude>**/Token.class</exclude>
+            <exclude>**/TokenMgrError.class</exclude>
           </excludes>
         </configuration>
         <executions>
