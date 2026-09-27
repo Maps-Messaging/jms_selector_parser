@@ -1,16 +1,8 @@
 steps:
   - label: ":maven: Build and Deploy"
     command:
-      - sed -i 's/<version>ml-\(.*\)<\/version>/<version>\1<\/version>/g' pom.xml
-      - export SONAR_TOKEN=$(buildkite-agent secret get SONAR_TOKEN)
+      - sed -i 's/<version>ml-\\(.*\\)<\\/version>/<version>\\1<\\/version>/g' pom.xml
       - mvn clean deploy -Pstandard
-      - mvn sonar:sonar -Dsonar.token=$${SONAR_TOKEN} -Dsonar.branch.name=development
-    plugins:
-      - test-collector#v1.0.0:
-          files: "target/surefire-reports/*.xml"
-          format: "junit"
-    secrets:
-      BUILDKITE_ANALYTICS_TOKEN: "JmsSelectorBuildKiteAnalytics"
 
     agents:
       queue: "java_build_queue_aws"

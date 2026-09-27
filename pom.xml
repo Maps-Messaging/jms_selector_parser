@@ -77,22 +77,6 @@
       **/*Test.*,**.*JMH.*
     </sonar.test.exclusions>
 
-    <!-- Sonar-JaCoCo properties -->
-    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-    <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-    <sonar.java.test.binaries>target/test-classes</sonar.java.test.binaries>
-    <sonar.coverage.exclusions>
-      **/AbstractCharStream.java,
-      **/CharStream.java,
-      **/ParseException.java,
-      **/SelectorParser.java,
-      **/SelectorParserConstants.java,
-      **/SelectorParserTokenManager.java,
-      **/SimpleCharStream.java,
-      **/Token.java,
-      **/TokenMgrError.java
-    </sonar.coverage.exclusions>
     <sonar.language>java</sonar.language>
 
     <sonar.projectKey>Maps-Messaging_jms_selector</sonar.projectKey>
@@ -218,6 +202,21 @@
       <properties>
         <test.profile>ml</test.profile>
         <java.version>21</java.version>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.java.test.binaries>target/test-classes</sonar.java.test.binaries>
+        <sonar.coverage.exclusions>
+          **/AbstractCharStream.java,
+          **/CharStream.java,
+          **/ParseException.java,
+          **/SelectorParser.java,
+          **/SelectorParserConstants.java,
+          **/SelectorParserTokenManager.java,
+          **/SimpleCharStream.java,
+          **/Token.java,
+          **/TokenMgrError.java
+        </sonar.coverage.exclusions>
       </properties>
       <build>
         <resources>
@@ -229,6 +228,40 @@
           </resource>
         </resources>
         <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.15</version>
+            <configuration>
+              <excludes>
+                <exclude>**/*Test.*</exclude>
+                <exclude>**/AbstractCharStream.class</exclude>
+                <exclude>**/CharStream.class</exclude>
+                <exclude>**/ParseException.class</exclude>
+                <exclude>**/SelectorParser.class</exclude>
+                <exclude>**/SelectorParserConstants.class</exclude>
+                <exclude>**/SelectorParserTokenManager.class</exclude>
+                <exclude>**/SimpleCharStream.class</exclude>
+                <exclude>**/Token.class</exclude>
+                <exclude>**/TokenMgrError.class</exclude>
+              </excludes>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>report</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
           <plugin>
             <groupId>com.helger.maven</groupId>
             <artifactId>ph-javacc-maven-plugin</artifactId>
@@ -417,43 +450,6 @@
             <include>**/Test**.java</include>
           </includes>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.15</version>
-        <configuration>
-          <excludes>
-            <!-- test code, lets not track the testing -->
-            <exclude>**/*Test.*</exclude>
-            <!-- JavaCC generated parser/runtime classes -->
-            <exclude>**/AbstractCharStream.class</exclude>
-            <exclude>**/CharStream.class</exclude>
-            <exclude>**/ParseException.class</exclude>
-            <exclude>**/SelectorParser.class</exclude>
-            <exclude>**/SelectorParserConstants.class</exclude>
-            <exclude>**/SelectorParserTokenManager.class</exclude>
-            <exclude>**/SimpleCharStream.class</exclude>
-            <exclude>**/Token.class</exclude>
-            <exclude>**/TokenMgrError.class</exclude>
-          </excludes>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <!-- attached to Maven test phase -->
-          <execution>
-            <id>report</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <!-- sBOM  generator -->
