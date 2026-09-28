@@ -27,7 +27,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -166,17 +165,6 @@ public class JsonParserExtension implements ParserExtension {
       } else if (primitive.isString()) {
         return primitive.getAsString();
       }
-    }
-    if (lookup instanceof String
-        || lookup instanceof Float
-        || lookup instanceof Double
-        || lookup instanceof Byte
-        || lookup instanceof Short
-        || lookup instanceof Integer
-        || lookup instanceof Long) {
-      return lookup;
-    } else if (lookup instanceof BigDecimal bigDecimal) {
-      return bigDecimal.doubleValue();
     }
     return null;
   }
