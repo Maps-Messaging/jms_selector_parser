@@ -49,8 +49,10 @@ public class S3ModelStoreTest extends BaseModelStoreTest {
     assertNotNull(regionName, "Missing AWS_REGION environment variable");
 
     Region region = Region.of(regionName);
+    String endpoint = System.getenv("S3_TEST_ENDPOINT");
     modelStore = new S3ModelStore(
-        bucket, "test", region, accessKey, secretKey, System.getenv("S3_TEST_ENDPOINT"));
+        bucket, "test", region, accessKey, secretKey,
+        endpoint == null || endpoint.isBlank() ? null : endpoint);
   }
 
   @Override
