@@ -28,6 +28,7 @@ import org.junit.jupiter.api.TestInstance;
 import software.amazon.awssdk.regions.Region;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class S3ModelStoreTest extends BaseModelStoreTest {
@@ -36,6 +37,9 @@ public class S3ModelStoreTest extends BaseModelStoreTest {
 
   @BeforeAll
   void setup() {
+    String bucket = System.getenv("S3_TEST_BUCKET");
+    assumeTrue(bucket != null && !bucket.isBlank(), "S3_TEST_BUCKET not configured");
+
     String accessKey = System.getenv("S3_ACCESS_KEY");
     String secretKey = System.getenv("S3_SECRET_KEY");
     String regionName = System.getenv("S3_REGION");
@@ -45,7 +49,10 @@ public class S3ModelStoreTest extends BaseModelStoreTest {
     assertNotNull(regionName, "Missing AWS_REGION environment variable");
 
     Region region = Region.of(regionName);
-    modelStore = new S3ModelStore("modelstoretest", "test",region, accessKey, secretKey);
+    String endpoint = System.getenv("S3_TEST_ENDPOINT");
+    modelStore = new S3ModelStore(
+        bucket, "test", region, accessKey, secretKey,
+        endpoint == null || endpoint.isBlank() ? null : endpoint);
   }
 
   @Override
