@@ -24,7 +24,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.mapsmessaging.selector.IdentifierMutator;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -132,30 +131,17 @@ public class JsonEvaluator extends IdentifierMutator {
   }
 
   private static Object parseJSON(Object lookup){
-    if (lookup instanceof String ||
-        lookup instanceof Float ||
-        lookup instanceof Double ||
-        lookup instanceof Byte ||
-        lookup instanceof Short ||
-        lookup instanceof Integer ||
-        lookup instanceof Long) {
-      return lookup;
-    }
-    else if(lookup instanceof JsonPrimitive primitive){
-      if(primitive.isBoolean()){
+    if (lookup instanceof JsonPrimitive primitive) {
+      if (primitive.isBoolean()) {
         return primitive.getAsBoolean();
       }
-      if(primitive.isNumber()){
+      if (primitive.isNumber()) {
         return primitive.getAsNumber();
       }
-      if(primitive.isString()){
+      if (primitive.isString()) {
         return primitive.getAsString();
       }
     }
-    else if(lookup instanceof BigDecimal bigDecimal){
-      return bigDecimal.doubleValue();
-    }
     return null;
   }
-
 }
