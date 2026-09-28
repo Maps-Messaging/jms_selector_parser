@@ -63,6 +63,16 @@ public class S3ModelStore implements ModelStore {
     this.s3 = buildS3Client(region);
   }
 
+  // Allows tests to exercise the store protocol without a live S3 endpoint.
+  S3ModelStore(String bucket, String prefix, S3Client s3) {
+    this.bucket = bucket;
+    this.prefix = normalizePrefix(prefix);
+    this.accessKey = null;
+    this.secretKey = null;
+    this.endpoint = null;
+    this.s3 = s3;
+  }
+
   @Override
   public void saveModel(String modelId, byte[] modelData) throws IOException {
     String key = resolveKey(modelId);
