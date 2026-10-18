@@ -28,7 +28,6 @@ options {
   DEBUG_PARSER = false;
   DEBUG_LOOKAHEAD = false;
   DEBUG_TOKEN_MANAGER = false;
-  STATIC = false;
 }
 
 PARSER_BEGIN(SelectorParser)
@@ -230,15 +229,27 @@ Object logicExpression() :
    Object exp2 = null;
 }
 {
+   exp1=andExpression()
+   (
+      <OR> exp2=andExpression()
+      {
+         exp1 = new OrOperator(exp1, exp2);
+      }
+   )*
+   { return exp1; }
+}
+
+Object andExpression() :
+{
+   Object exp1 = null;
+   Object exp2 = null;
+}
+{
    exp1=notExpression()
    (
       <AND> exp2=notExpression()
       {
-         exp1 = new AndOperator( exp1, exp2);
-      }
-      | <OR> exp2=notExpression()
-      {
-         exp1 = new OrOperator(exp1, exp2);
+         exp1 = new AndOperator(exp1, exp2);
       }
    )*
    { return exp1; }
@@ -310,39 +321,44 @@ Object equalExpression() :
 }
 {
     exp1=additiveExpression()
-    (  <NE> exp2=additiveExpression()
-       {
-   exp1 = new DifferentOperator(exp1, exp2);
-}
- 	| <EQ> exp2=additiveExpression()
-       {
-          exp1 = new EqualOperator( exp1, exp2);
-       }
-   | <IS> exp1=nullExp(exp1)
-   | <BETWEEN> exp2=additiveExpression() <AND> exp3=additiveExpression()
-       {
-          exp1 = new BetweenOperator(exp1, exp2, exp3);
-       }
-   | <IS> exp1=nullExp(exp1)
-   | <NOT> <BETWEEN> exp2=additiveExpression() <AND> exp3=additiveExpression()
-       {
-          exp1 = new BetweenOperator(exp1, exp2, exp3);
-          exp1 = new NotOperator(exp1);
-       }
-   | <LIKE> exp1=likeExp(exp1)
-   | <NOT> <LIKE> exp1=likeExp(exp1)
-       {
-          exp1 = new NotOperator(exp1);
-       }
-   | <IN> <LPAREN> { set = new HashSet<String>(); } stringSet(set) <RPAREN>
-       {
-          exp1 = new InOperator(exp1, set);
-       }
-   | <NOT> <IN> <LPAREN> { set = new HashSet<String>(); } stringSet(set) <RPAREN>
-       {
-          exp1 = new InOperator(exp1, set);
-          exp1 = new NotOperator(exp1);
-       }
+    (
+      <NE> exp2=additiveExpression()
+      {
+         exp1 = new DifferentOperator(exp1, exp2);
+      }
+   |  <EQ> exp2=additiveExpression()
+      {
+         exp1 = new EqualOperator(exp1, exp2);
+      }
+   |  <IS> exp1=nullExp(exp1)
+   |  <BETWEEN> exp2=additiveExpression() <AND> exp3=additiveExpression()
+      {
+         exp1 = new BetweenOperator(exp1, exp2, exp3);
+      }
+   |  <LIKE> exp1=likeExp(exp1)
+   |  <IN> <LPAREN> { set = new HashSet<String>(); } stringSet(set) <RPAREN>
+      {
+         exp1 = new InOperator(exp1, set);
+      }
+   |  <NOT>
+      (
+        <BETWEEN> exp2=additiveExpression() <AND> exp3=additiveExpression()
+        {
+           exp1 = new BetweenOperator(exp1, exp2, exp3);
+           exp1 = new NotOperator(exp1);
+        }
+      |
+        <LIKE> exp1=likeExp(exp1)
+        {
+           exp1 = new NotOperator(exp1);
+        }
+      |
+        <IN> <LPAREN> { set = new HashSet<String>(); } stringSet(set) <RPAREN>
+        {
+           exp1 = new InOperator(exp1, set);
+           exp1 = new NotOperator(exp1);
+        }
+      )
     )*
     { return exp1; }
 }
@@ -498,8 +514,8 @@ void stringSetToken(Set<String> set) :
    Token t = null;
 }
 {
-   [ t=<STRING> ]
-      { if( t != null ) set.add(stripQuotes(t.image)); }
+   t=<STRING>
+      { set.add(stripQuotes(t.image)); }
 }
 
 void stringList(List<String> list):
@@ -513,21 +529,6 @@ void stringToken(List<String> list) :
    Token t = null;
 }
 {
-   [ t=<STRING> ]
-      { if( t != null ) list.add(stripQuotes(t.image)); }
-}
-
-void tokenList(List<String> list) :
-{}
-{
-    token(list) ( <COMMA> token(list))*
-}
-
-void token(List<String> list) :
-{
-   Token t = null;
-}
-{
-   t=<IDENTIFIER>
-      { list.add(t.image); }
+   t=<STRING>
+      { list.add(stripQuotes(t.image)); }
 }

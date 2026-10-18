@@ -1,8 +1,8 @@
 steps:
   - label: ":maven: Build and Deploy"
     command:
-      - sed -i 's/<version>ml-\(.*\)<\/version>/<version>\1<\/version>/g' pom.xml
+      - sed -i '0,/<version>ml-/s//<version>/' pom.xml
       - mvn clean deploy -P standard,release
 
     agents:
-      queue: "java_build_queue"
+      queue: "java_build_queue_aws"

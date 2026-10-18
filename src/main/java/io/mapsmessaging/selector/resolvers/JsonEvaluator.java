@@ -24,7 +24,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.mapsmessaging.selector.IdentifierMutator;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -95,48 +94,54 @@ public class JsonEvaluator extends IdentifierMutator {
     return null;
   }
 
-  private static Object arrayLookup(JsonArray array, String[] path){
-    // We have an array, so the next element in the path must be an index ( ie number)
-    var idx = Integer.parseInt(path[0]);
-    Object lookup = array.get(idx);
-    if(lookup instanceof JsonObject jsonObject){
-      var sub = new String[path.length-1];
-      System.arraycopy(path, 1, sub, 0, sub.length);
-      return locateObject( jsonObject, sub);
+  private static Object arrayLookup(JsonArray array, String[] path) {
+    if (array == null || path == null || path.length == 0) {
+      return null;
     }
-    else if(lookup instanceof JsonArray jsonArray){
-      var sub = new String[path.length-1];
-      System.arraycopy(path, 1, sub, 0, sub.length);
-      return arrayLookup( jsonArray, sub);
+
+    int index;
+    try {
+      index = Integer.parseInt(path[0]);
+    } catch (NumberFormatException e) {
+      return null;
     }
+
+    if (index < 0 || index >= array.size()) {
+      return null;
+    }
+
+    Object lookup = array.get(index);
+    if (lookup instanceof JsonObject jsonObject) {
+      String[] subPath = new String[path.length - 1];
+      System.arraycopy(path, 1, subPath, 0, subPath.length);
+      return locateObject(jsonObject, subPath);
+    }
+
+    if (lookup instanceof JsonArray jsonArray) {
+      String[] subPath = new String[path.length - 1];
+      System.arraycopy(path, 1, subPath, 0, subPath.length);
+      return arrayLookup(jsonArray, subPath);
+    }
+
+    if (path.length > 1) {
+      return null;
+    }
+
     return lookup;
   }
 
   private static Object parseJSON(Object lookup){
-    if (lookup instanceof String ||
-        lookup instanceof Float ||
-        lookup instanceof Double ||
-        lookup instanceof Byte ||
-        lookup instanceof Short ||
-        lookup instanceof Integer ||
-        lookup instanceof Long) {
-      return lookup;
-    }
-    else if(lookup instanceof JsonPrimitive primitive){
-      if(primitive.isBoolean()){
+    if (lookup instanceof JsonPrimitive primitive) {
+      if (primitive.isBoolean()) {
         return primitive.getAsBoolean();
       }
-      if(primitive.isNumber()){
+      if (primitive.isNumber()) {
         return primitive.getAsNumber();
       }
-      if(primitive.isString()){
+      if (primitive.isString()) {
         return primitive.getAsString();
       }
     }
-    else if(lookup instanceof BigDecimal bigDecimal){
-      return bigDecimal.doubleValue();
-    }
     return null;
   }
-
 }

@@ -27,7 +27,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -76,10 +75,14 @@ public class JsonParserExtension implements ParserExtension {
   public Object evaluate(IdentifierResolver resolver) {
     byte[] payload = resolver.getOpaqueData();
     if (payload != null && payload.length > 0) {
-      JsonObject json = JsonParser.parseString(new String(payload)).getAsJsonObject();
-      if (!json.isEmpty()) {
-        var located = locateObject(json, keyPath);
-        return parseJSON(located);
+      try {
+        JsonObject json = JsonParser.parseString(new String(payload)).getAsJsonObject();
+        if (!json.isEmpty()) {
+          var located = locateObject(json, keyPath);
+          return parseJSON(located);
+        }
+      } catch (RuntimeException e) {
+        return null;
       }
     }
     return null;
@@ -94,7 +97,7 @@ public class JsonParserExtension implements ParserExtension {
   }
 
   public Object locateObject(JsonObject json, String[] searchPath) {
-    if (keyPath != null) {
+    if (searchPath != null) {
       // Walk the JSON path first
       for (var x = 0; x < searchPath.length; x++) {
         var path = searchPath[x];
@@ -114,18 +117,38 @@ public class JsonParserExtension implements ParserExtension {
   }
 
   private Object arrayLookup(JsonArray array, String[] path) {
-    // We have an array, so the next element in the path must be an index ( ie number)
-    var idx = Integer.parseInt(path[0]);
-    Object lookup = array.get(idx);
-    if (lookup instanceof JsonObject jsonObject) {
-      var sub = new String[path.length - 1];
-      System.arraycopy(path, 1, sub, 0, sub.length);
-      return locateObject(jsonObject, sub);
-    } else if (lookup instanceof JsonArray jsonArray) {
-      var sub = new String[path.length - 1];
-      System.arraycopy(path, 1, sub, 0, sub.length);
-      return arrayLookup(jsonArray, sub);
+    if (array == null || path == null || path.length == 0) {
+      return null;
     }
+
+    int index;
+    try {
+      index = Integer.parseInt(path[0]);
+    } catch (NumberFormatException e) {
+      return null;
+    }
+
+    if (index < 0 || index >= array.size()) {
+      return null;
+    }
+
+    Object lookup = array.get(index);
+    if (lookup instanceof JsonObject jsonObject) {
+      String[] subPath = new String[path.length - 1];
+      System.arraycopy(path, 1, subPath, 0, subPath.length);
+      return locateObject(jsonObject, subPath);
+    }
+
+    if (lookup instanceof JsonArray jsonArray) {
+      String[] subPath = new String[path.length - 1];
+      System.arraycopy(path, 1, subPath, 0, subPath.length);
+      return arrayLookup(jsonArray, subPath);
+    }
+
+    if (path.length > 1) {
+      return null;
+    }
+
     return lookup;
   }
 
@@ -142,17 +165,6 @@ public class JsonParserExtension implements ParserExtension {
       } else if (primitive.isString()) {
         return primitive.getAsString();
       }
-    }
-    if (lookup instanceof String
-        || lookup instanceof Float
-        || lookup instanceof Double
-        || lookup instanceof Byte
-        || lookup instanceof Short
-        || lookup instanceof Integer
-        || lookup instanceof Long) {
-      return lookup;
-    } else if (lookup instanceof BigDecimal bigDecimal) {
-      return bigDecimal.doubleValue();
     }
     return null;
   }

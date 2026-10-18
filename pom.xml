@@ -24,7 +24,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mapsmessaging</groupId>
   <artifactId>jms_selector_parser</artifactId>
-  <version>ml-2.1.1</version>
+  <version>ml-2.1.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Extensible JMS Selector Parser</name>
@@ -66,20 +66,18 @@
   </scm>
 
   <properties>
-    <nvd.api.key>${env.NVD_API_KEY}</nvd.api.key>
+    <dependency.check.autoUpdate>true</dependency.check.autoUpdate>
+    <dependency.check.dataDirectory>${user.home}/.m2/repository/org/owasp/dependency-check-data/</dependency.check.dataDirectory>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <argLine></argLine>
     <sonar.sources>src/main</sonar.sources>
     <runSuite>**/*Suite.class</runSuite>
     <sonar.test.exclusions>
       **/*Test.*,**.*JMH.*
     </sonar.test.exclusions>
 
-    <!-- Sonar-JaCoCo properties -->
-    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-    <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.language>java</sonar.language>
 
     <sonar.projectKey>Maps-Messaging_jms_selector</sonar.projectKey>
@@ -92,12 +90,26 @@
 
     <github.global.server>github</github.global.server>
     <project.scm.id>github</project.scm.id>
-    <gpg.keyname>matthew.buckton@mapsmessaging.io</gpg.keyname>
+    <gpg.keyname>admin@mapsmessaging.io</gpg.keyname>
   </properties>
 
 
 
   <profiles>
+    <profile>
+      <id>buildkite-dependency-check-cache</id>
+      <activation>
+        <property>
+          <name>env.BUILDKITE</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <properties>
+        <dependency.check.autoUpdate>false</dependency.check.autoUpdate>
+        <dependency.check.dataDirectory>/var/cache/dependency-check/13</dependency.check.dataDirectory>
+      </properties>
+    </profile>
+
     <profile>
       <id>release</id>
       <build>
@@ -105,7 +117,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.10.0</version>
+            <version>0.11.0</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
@@ -145,7 +157,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.5.0</version>
+            <version>3.5.1</version>
           </plugin>
 
           <plugin>
@@ -191,6 +203,21 @@
       <properties>
         <test.profile>ml</test.profile>
         <java.version>21</java.version>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.java.test.binaries>target/test-classes</sonar.java.test.binaries>
+        <sonar.coverage.exclusions>
+          **/AbstractCharStream.java,
+          **/CharStream.java,
+          **/ParseException.java,
+          **/SelectorParser.java,
+          **/SelectorParserConstants.java,
+          **/SelectorParserTokenManager.java,
+          **/SimpleCharStream.java,
+          **/Token.java,
+          **/TokenMgrError.java
+        </sonar.coverage.exclusions>
       </properties>
       <build>
         <resources>
@@ -202,6 +229,40 @@
           </resource>
         </resources>
         <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.15</version>
+            <configuration>
+              <excludes>
+                <exclude>**/*Test.*</exclude>
+                <exclude>**/AbstractCharStream.class</exclude>
+                <exclude>**/CharStream.class</exclude>
+                <exclude>**/ParseException.class</exclude>
+                <exclude>**/SelectorParser.class</exclude>
+                <exclude>**/SelectorParserConstants.class</exclude>
+                <exclude>**/SelectorParserTokenManager.class</exclude>
+                <exclude>**/SimpleCharStream.class</exclude>
+                <exclude>**/Token.class</exclude>
+                <exclude>**/TokenMgrError.class</exclude>
+              </excludes>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>report</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
           <plugin>
             <groupId>com.helger.maven</groupId>
             <artifactId>ph-javacc-maven-plugin</artifactId>
@@ -257,7 +318,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.5.0</version>
+            <version>3.5.1</version>
           </plugin>
 
           <plugin>
@@ -317,11 +378,12 @@
           <version>1.23.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
+        <!-- Source: https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
         <dependency>
           <groupId>software.amazon.awssdk</groupId>
           <artifactId>s3</artifactId>
-          <version>2.41.14</version>
+          <version>2.55.6</version>
+          <scope>compile</scope>
         </dependency>
 
       </dependencies>
@@ -341,7 +403,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.6.1</version>
+        <version>3.6.2</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -367,8 +429,12 @@
             </goals>
             <configuration>
               <keyname>${gpg.keyname}</keyname>
-              <passphraseServerId>${gpg.keyname}</passphraseServerId>
-            </configuration>
+              <passphraseEnvName>MAVEN_GPG_PASSPHRASE</passphraseEnvName>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+</configuration>
           </execution>
         </executions>
       </plugin>
@@ -377,7 +443,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.6</version>
         <configuration>
           <argLine>-Xmx8G -Dfile.encoding=UTF-8 @{argLine}</argLine>
           <includes>
@@ -387,38 +453,11 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.14</version>
-        <configuration>
-          <excludes>
-            <!-- test code, lets not track the testing -->
-            <exclude>**/*Test.*</exclude>
-          </excludes>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <!-- attached to Maven test phase -->
-          <execution>
-            <id>report</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <!-- sBOM  generator -->
       <plugin>
         <groupId>org.cyclonedx</groupId>
         <artifactId>cyclonedx-maven-plugin</artifactId>
-        <version>2.9.1</version>
+        <version>2.9.3</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -433,7 +472,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.15.0</version>
+        <version>3.16.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
           <source>${java.version}</source>
@@ -448,19 +487,26 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.46</version>
+              <version>1.18.48</version>
             </path>
           </annotationProcessorPaths>
 
 
         </configuration>
       </plugin>
+      <!-- Sonar -->
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>5.7.0.6970</version>
+      </plugin>
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
-        <version>12.2.1</version>
+        <version>13.0.0</version>
         <configuration>
-          <nvdApiKey>${nvd.api.key}</nvdApiKey>
+          <autoUpdate>${dependency.check.autoUpdate}</autoUpdate>
+          <dataDirectory>${dependency.check.dataDirectory}</dataDirectory>
           <failBuildOnCVSS>10</failBuildOnCVSS>
           <failOnError>false</failOnError>
           <skipArtifactType>test-jar</skipArtifactType>
@@ -483,13 +529,13 @@
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
-      <version>2.13.2</version>
+      <version>2.14.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.46</version>
+      <version>1.18.48</version>
       <scope>provided</scope>
     </dependency>
 
@@ -511,14 +557,14 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>6.0.3</version>
+      <version>6.1.3</version>
       <scope>test</scope>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>6.0.3</version>
+      <version>6.1.2</version>
       <scope>test</scope>
     </dependency>
 

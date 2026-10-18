@@ -23,7 +23,6 @@ package io.mapsmessaging.selector.operators.logical;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.LogicalOperator;
-import io.mapsmessaging.selector.operators.Operation;
 
 public class AndOperator extends LogicalOperator {
 
@@ -33,32 +32,50 @@ public class AndOperator extends LogicalOperator {
 
   @Override
   public Object evaluate(IdentifierResolver resolver) throws ParseException {
-    Boolean lhsResult = test(lhs, resolver);
-    Boolean rhsResult = test(rhs, resolver);
-    if (lhsResult == null || rhsResult == null) {
+    Object lhsValue = evaluate(lhs, resolver);
+
+    if (!(lhsValue instanceof Boolean lhsBoolean)) {
       return false;
     }
-    return (lhsResult && rhsResult);
+
+    if (!lhsBoolean) {
+      return false;
+    }
+
+    Object rhsValue = evaluate(rhs, resolver);
+    if (!(rhsValue instanceof Boolean rhsBoolean)) {
+      return false;
+    }
+
+    return rhsBoolean;
   }
 
+  @Override
   public Object compile() {
-    if (lhs instanceof Operation operation) {
-      lhs = operation.compile();
+    Object compiledLeftHandSide = compile(lhs);
+    Object compiledRightHandSide = compile(rhs);
+
+    if (Boolean.FALSE.equals(compiledLeftHandSide)) {
+      return false;
     }
-    if (rhs instanceof Operation operation) {
-      rhs = operation.compile();
+
+    if (Boolean.FALSE.equals(compiledRightHandSide)) {
+      return false;
     }
-    if (lhs instanceof Boolean lhsBoolean && rhs instanceof Boolean rhsBoolean) {
-      return (lhsBoolean  && rhsBoolean);
+
+    if (Boolean.TRUE.equals(compiledLeftHandSide)) {
+      return compiledRightHandSide;
     }
-    if (rhs instanceof Boolean) {
-      if (Boolean.TRUE.equals(rhs)) {
-        return lhs;
-      } else {
-        return false;
-      }
+
+    if (Boolean.TRUE.equals(compiledRightHandSide)) {
+      return compiledLeftHandSide;
     }
-    return this;
+
+    if (compiledLeftHandSide == lhs && compiledRightHandSide == rhs) {
+      return this;
+    }
+
+    return new AndOperator(compiledLeftHandSide, compiledRightHandSide);
   }
 
   @Override
