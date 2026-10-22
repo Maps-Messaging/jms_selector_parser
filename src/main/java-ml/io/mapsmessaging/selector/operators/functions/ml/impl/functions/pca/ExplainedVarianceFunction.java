@@ -32,7 +32,7 @@ public class ExplainedVarianceFunction implements PCAFunction {
 
   @Override
   public double compute(PCA pca, double[] data) {
-    return pca.varianceProportion()[index];
+    return pca.varianceProportion().get(index);
   }
 
   @Override

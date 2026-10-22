@@ -204,7 +204,7 @@ public class ModelUtils {
     try {
       Files.write(temp, data);
       return Read.data(temp.toString(), format);
-    } catch (URISyntaxException | ParseException e) {
+    } catch (Exception e) {
       throw new IOException(e);
     } finally {
       Files.deleteIfExists(temp);
