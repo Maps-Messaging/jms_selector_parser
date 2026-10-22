@@ -1,6 +1,8 @@
 steps:
   - label: ":maven: Build and Deploy"
     command:
+      - export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
+      - export PATH="$$JAVA_HOME/bin:$$PATH"
       - sed -i '0,/<version>ml-/s//<version>/' pom.xml
       - mvn clean deploy -P standard,release
 

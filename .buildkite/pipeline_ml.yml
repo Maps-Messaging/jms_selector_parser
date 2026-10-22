@@ -1,6 +1,8 @@
 steps:
   - label: ":maven: Build and Deploy"
     command:
+      - export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
+      - export PATH="$$JAVA_HOME/bin:$$PATH"
       - export SONAR_TOKEN=$(buildkite-agent secret get SONAR_TOKEN)
       - export MODEL_USER=$(buildkite-agent secret get NEXUS_USER)
       - export MODEL_PASSWORD=$(buildkite-agent secret get NEXUS_PASSWORD)
