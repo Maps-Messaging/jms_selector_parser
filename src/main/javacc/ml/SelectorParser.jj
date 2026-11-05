@@ -45,6 +45,7 @@ import io.mapsmessaging.selector.operators.functions.ml.MLFunction;
 import io.mapsmessaging.selector.operators.logical.*;
 import io.mapsmessaging.selector.operators.functions.*;
 import io.mapsmessaging.selector.operators.extentions.ParserFactory;
+import java.nio.charset.StandardCharsets;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
@@ -104,7 +105,7 @@ public class SelectorParser {
    private static Object compile(String selector,  boolean trace)
       throws ParseException
    {
-      SelectorParser parser = new SelectorParser(new ByteArrayInputStream(selector.getBytes()), "UTF-8");
+      SelectorParser parser = new SelectorParser(new ByteArrayInputStream(selector.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
       return parser.parse(selector, trace);
    }
 }
