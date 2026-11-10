@@ -23,6 +23,9 @@ package io.mapsmessaging.selector.operators;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /**
  * From the JMS 2.0 Specification
  *
@@ -91,7 +94,21 @@ public abstract class ComparisonOperator extends ComputableOperator {
     return false;
   }
 
+  @Override
+  protected Object computeWide(Number lhsNumber, Number rhsNumber) {
+    if (lhsNumber instanceof BigDecimal || rhsNumber instanceof BigDecimal) {
+      int comparison = toBigDecimal(lhsNumber).compareTo(toBigDecimal(rhsNumber));
+      return compute((long) comparison, 0L);
+    }
+    int comparison = toBigInteger(lhsNumber).compareTo(toBigInteger(rhsNumber));
+    return compute((long) comparison, 0L);
+  }
+
   private Object processNumber(Number lhsNumber, Number rhsNumber) {
+    if (lhsNumber instanceof BigInteger || rhsNumber instanceof BigInteger
+        || lhsNumber instanceof BigDecimal || rhsNumber instanceof BigDecimal) {
+      return processWide(lhsNumber, rhsNumber);
+    }
     if (lhsNumber instanceof Double lhsDouble) {
       return processDouble(lhsDouble, rhsNumber);
     } else if (lhsNumber instanceof Float lhsFloat) {

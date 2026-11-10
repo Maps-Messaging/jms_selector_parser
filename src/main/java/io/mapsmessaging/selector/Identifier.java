@@ -21,6 +21,8 @@
 package io.mapsmessaging.selector;
 
 import io.mapsmessaging.selector.operators.Operation;
+
+import java.math.BigInteger;
 import lombok.Getter;
 
 public class Identifier extends Operation {
@@ -37,6 +39,9 @@ public class Identifier extends Operation {
     }
     Object response = resolver.get(key);
     if (response != null) {
+      if (response instanceof BigInteger) {
+        return response;
+      }
       if (response instanceof Number number) {
         if (response instanceof Double) {
           return number.doubleValue();
