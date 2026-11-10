@@ -23,12 +23,17 @@ package io.mapsmessaging.selector.operators;
 import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 
+import java.math.BigInteger;
+
 public abstract class FunctionOperator extends Operation {
 
   @Override
   public abstract Object evaluate(IdentifierResolver resolver) throws ParseException;
 
   protected Object convertResult(Object result) {
+    if (result instanceof BigInteger) {
+      return result;
+    }
     if (result instanceof Number || result instanceof String || result instanceof Boolean) {
       if (result instanceof Double) {
         return result;
