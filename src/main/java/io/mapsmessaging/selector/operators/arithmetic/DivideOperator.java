@@ -30,6 +30,11 @@ public class DivideOperator extends ArithmeticOperator {
   }
 
   @Override
+  protected Number computeWide(Number lhs, Number rhs) {
+    return toBigInteger(rhs).signum() == 0 ? Double.NaN : toBigInteger(lhs).divide(toBigInteger(rhs));
+  }
+
+  @Override
   protected Number compute(double lhs, double rhs) {
     if (rhs == 0.0) {
       return Double.NaN;
