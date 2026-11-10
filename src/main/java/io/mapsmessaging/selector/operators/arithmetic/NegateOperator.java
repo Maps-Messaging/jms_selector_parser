@@ -24,6 +24,8 @@ import io.mapsmessaging.selector.IdentifierResolver;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.operators.Operation;
 
+import java.math.BigInteger;
+
 public class NegateOperator extends Operation {
 
   private Object lhs;
@@ -41,6 +43,9 @@ public class NegateOperator extends Operation {
   }
 
   private Object compute(Object result) {
+    if (result instanceof BigInteger integer) {
+      return integer.negate();
+    }
     if (result instanceof Double dResult) {
       return -1.0 * (dResult);
     } else if (result instanceof Float fResult) {
