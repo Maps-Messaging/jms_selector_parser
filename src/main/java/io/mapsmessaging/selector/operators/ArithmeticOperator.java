@@ -25,6 +25,8 @@ import io.mapsmessaging.selector.NumericOperator;
 import io.mapsmessaging.selector.ParseException;
 import io.mapsmessaging.selector.validators.NumericValidator;
 
+import java.math.BigInteger;
+
 public abstract class ArithmeticOperator extends ComputableOperator implements NumericOperator {
 
   protected Object lhs;
@@ -62,6 +64,9 @@ public abstract class ArithmeticOperator extends ComputableOperator implements N
       return false;
     }
 
+    if (lhsNumber instanceof BigInteger || rhsNumber instanceof BigInteger) {
+      return processWide(lhsNumber, rhsNumber);
+    }
     if (lhsNumber instanceof Double || lhsNumber instanceof Float ||
         rhsNumber instanceof Double || rhsNumber instanceof Float) {
       return processDouble(lhsNumber.doubleValue(), rhsNumber);
