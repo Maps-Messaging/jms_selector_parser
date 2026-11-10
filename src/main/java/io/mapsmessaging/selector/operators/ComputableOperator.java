@@ -20,6 +20,9 @@
 
 package io.mapsmessaging.selector.operators;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 public abstract class ComputableOperator extends Operation {
 
   protected Object processDouble(Double arg0, Number arg1) {
@@ -46,10 +49,38 @@ public abstract class ComputableOperator extends Operation {
     }
   }
 
+  protected static BigDecimal toBigDecimal(Number number) {
+    if (number instanceof BigDecimal decimal) {
+      return decimal;
+    }
+    if (number instanceof BigInteger integer) {
+      return new BigDecimal(integer);
+    }
+    return BigDecimal.valueOf(number.longValue());
+  }
+
+  protected static BigInteger toBigInteger(Number number) {
+    return number instanceof BigInteger integer ? integer : BigInteger.valueOf(number.longValue());
+  }
+
+  protected Object processWide(Number lhs, Number rhs) {
+    if (lhs instanceof Double || lhs instanceof Float || rhs instanceof Double || rhs instanceof Float) {
+      return compute(lhs.doubleValue(), rhs.doubleValue());
+    }
+    return computeWide(lhs, rhs);
+  }
+
+  protected Object computeWide(Number lhs, Number rhs) {
+    throw new UnsupportedOperationException("Wide integer operation is not implemented");
+  }
+
   public Object compile(Object lhs, Object rhs) {
     lhs = compile(lhs);
     rhs = compile(rhs);
     if (lhs instanceof Number && rhs instanceof Number) {
+      if (lhs instanceof BigInteger || rhs instanceof BigInteger || lhs instanceof BigDecimal || rhs instanceof BigDecimal) {
+        return processWide((Number) lhs, (Number) rhs);
+      }
       if (lhs instanceof Double lhsDouble) {
         return processDouble(lhsDouble, (Number) rhs);
       }
