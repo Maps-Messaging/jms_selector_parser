@@ -30,6 +30,11 @@ public class SubtractOperator extends ArithmeticOperator {
   }
 
   @Override
+  protected Number computeWide(Number lhs, Number rhs) {
+    return toBigInteger(lhs).subtract(toBigInteger(rhs));
+  }
+
+  @Override
   protected Number compute(double lhs, double rhs) {
     return lhs - rhs;
   }
